@@ -100,19 +100,18 @@ void WorldImp::SetAutoDisableFlag(bool flag, long worldID)
 
 void WorldImp::SetContactSurfaceLayer(float depth, long worldID)
 {
-    //TODO: Should use setMargin() but it has no global default but rather
+    //TODO: Should this use setMargin()? but it has no global default but rather
     //      per class defaults
-    //dWorldID WorldImp = (dWorldID) worldID;
-    //dWorldSetContactSurfaceLayer(WorldImp, depth);
+    btDynamicsWorld *WorldImp = (btDynamicsWorld *) worldID;
+    WorldImp->getDispatchInfo().m_allowedCcdPenetration=btScalar(depth);
 }
 
 float WorldImp::GetContactSurfaceLayer(long worldID) const
 {
-    //TODO: Should use getMargin() but it has no global default but rather
+    //TODO: Should this use getMargin()? but it has no global default but rather
     //      per class defaults
-    //dWorldID WorldImp = (dWorldID) worldID;
-    //return dWorldGetContactSurfaceLayer(WorldImp);
-    return 0.04f; /* best estimation based on the bullet physics forums*/
+    btDynamicsWorld *WorldImp = (btDynamicsWorld *) worldID;
+    return (float) WorldImp->getDispatchInfo().m_allowedCcdPenetration;
 }
 
 long WorldImp::CreateWorld()
