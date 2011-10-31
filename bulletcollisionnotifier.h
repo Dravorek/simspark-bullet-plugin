@@ -30,8 +30,8 @@ class BulletCollisionNotifier : public btActionInterface
 {
 public:
     std::vector<btVector3FloatData> collisions;
-    CollisionNotifier(void);
-    ~CollisionNotifier(void);
+    BulletCollisionNotifier(void);
+    ~BulletCollisionNotifier(void);
     virtual void 	updateAction (btCollisionWorld *collisionWorld, btScalar deltaTimeStep);
     virtual void 	debugDraw (btIDebugDraw *debugDrawer);
 };

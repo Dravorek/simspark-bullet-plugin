@@ -53,7 +53,7 @@ public:
                         long geomID1, long geomID2);
     
 private:
-    static void collisionNearCallback(void* data, dGeomID obj1, dGeomID obj2);
+    static void collisionNearCallback(void* data, long* obj1, long *obj2);
 };
 
 DECLARE_CLASS(SpaceImp);
