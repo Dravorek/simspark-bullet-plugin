@@ -49,7 +49,7 @@
 //#include "bulletrigidbody.h"
 //#include "bulletsliderjoint.h"
 //#include "bulletsoftbody.h"
-//#include "bulletspace.h"
+#include "bulletspace.h"
 //#include "bulletspherecollider.h"
 //#include "bulletstaticbody.h"
 //#include "bullettransformcollider.h"
@@ -84,7 +84,7 @@ ZEITGEIST_EXPORT_BEGIN()
 //    ZEITGEIST_EXPORT(RigidBodyImp);
 //    ZEITGEIST_EXPORT(SliderJointImp);
 //    ZEITGEIST_EXPORT(SoftBodyImp);
-//    ZEITGEIST_EXPORT(SpaceImp);
+    ZEITGEIST_EXPORT(SpaceImp);
 //    ZEITGEIST_EXPORT(SphereColliderImp);
 //    ZEITGEIST_EXPORT(StaticBodyImp);
 //    ZEITGEIST_EXPORT(TransformColliderImp);
