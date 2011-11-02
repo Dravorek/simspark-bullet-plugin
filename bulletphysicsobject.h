@@ -29,6 +29,12 @@
 #include <oxygen/physicsserver/genericphysicsobjects.h>
 #include <oxygen/sceneserver/basenode.h>
 
+struct btGeom{
+    btCollisionObject *obj;
+    btCollisionShape *shp;
+};
+typedef btGeom* btGeomID;
+
 class PhysicsObjectImp : public oxygen::PhysicsObjectInt, public oxygen::BaseNode
 {
     /** See physicsserver/int/physicsobjectint.h for documentation */

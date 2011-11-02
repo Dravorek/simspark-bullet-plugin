@@ -25,7 +25,7 @@
 
 using namespace oxygen;
 
-void SpaceImp::collisionNearCallback(void* data, long *obj1, long *obj2)
+void SpaceImp::collisionNearCallback(void* data, long obj1, long obj2)
 {
     //handled by the narrowphase collision handler which gets called in
     //stepWorld();
