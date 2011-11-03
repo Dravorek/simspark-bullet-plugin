@@ -38,31 +38,31 @@ ColliderImp::~ColliderImp()
 }
 
 Collider* ColliderImp::GetColliderPointer(long geomID){
-    btCollisionObject *BulletGeom = (btCollisionObject *) geomID;
+    btGeom *BulletGeom = (btGeom *) geomID;
     //TODO: not very safe, check if geomID reallly is the right type
-    return static_cast<Collider*>(BulletGeom->getUserPointer());
+    return static_cast<Collider*>(BulletGeom->obj->getUserPointer());
 }
 
 void ColliderImp::SetRotation(const Matrix& rot, long geomID)
 {
-    btCollisionObject *BulletGeom = (btCollisionObject *) geomID;
+    btGeom *BulletGeom = (btGeom *) geomID;
     btMatrix3x3 BulletMatrix;
     GenericPhysicsMatrix& matrixRef = (GenericPhysicsMatrix&) BulletMatrix; 
     ConvertRotationMatrix(rot, matrixRef);
-    btTransform trans = BulletGeom->getWorldTransform();
+    btTransform trans = BulletGeom->obj->getWorldTransform();
     trans.setBasis(BulletMatrix);
-    BulletGeom->setWorldTransform(trans);
+    BulletGeom->obj->setWorldTransform(trans);
 }
 
 void ColliderImp::SetPosition(const Vector3f& globalPos, long geomID)
 {
-    btCollisionObject *BulletGeom = (btCollisionObject *) geomID;
-    btTransform trans = BulletGeom->getWorldTransform();
+    btGeom *BulletGeom = (btGeom *) geomID;
+    btTransform trans = BulletGeom->obj->getWorldTransform();
     trans.setOrigin(btVector3(
             btScalar(globalPos[0]),
             btScalar(globalPos[1]),
             btScalar(globalPos[2])));    
-    BulletGeom->setWorldTransform(trans);
+    BulletGeom->obj->setWorldTransform(trans);
 }
 
 void ColliderImp::SetLocalPosition(const Vector3f& pos, long geomID)
@@ -72,8 +72,8 @@ void ColliderImp::SetLocalPosition(const Vector3f& pos, long geomID)
 
 Vector3f ColliderImp::GetPosition(long geomID) const
 {
-    btCollisionObject  *BulletGeom = (btCollisionObject  *) geomID;
-    btTransform trans = BulletGeom->getWorldTransform();
+    btGeom *BulletGeom = (btGeom *) geomID;
+    btTransform trans = BulletGeom->obj->getWorldTransform();
     return Vector3f(
                 (float)trans.getOrigin().x(),
                 (float)trans.getOrigin().y(),
@@ -108,7 +108,7 @@ bool ColliderImp::Intersect(boost::shared_ptr<Collider> collider, long geomID)
 
 void ColliderImp::DestroyGeom(long geomID)
 {
-    btCollisionObject *BulletGeom = (btCollisionObject *) geomID;
+    btGeom *BulletGeom = (btGeom *) geomID;
     //TODO: check if deleting the internal pointer is necessary
     //delete (Collider *)BulletGeom->getUserPointer() or
     //even removing the collisionobject from the world
@@ -135,15 +135,15 @@ void ColliderImp::DestroyGeom(long geomID)
          world->removeCollisionObject(BulletGeom);
     }
     */
-    delete BulletGeom;
-
+    //TODO: elegant deleting in tune with what bulletrigidbody.cpp
+    if(BulletGeom->obj!=0)
+    {
+        //TODO: REMOVE FROM WORLD and every constraint
+        delete BulletGeom->obj;
+    }
+    delete BulletGeom->shp;
 }
 
-///<todo>see this damnit</todo>
-///<!todo>work</todo>
-///!<todo>now</todo>
-///<TODO>now</TODO> do something
-//<TODO>now</TODO> do something
 
 void ColliderImp::TransformSetGeom(long parentGeomID, long geomID){
     /// TODO : figure out how to handle parenting in bullet
@@ -156,10 +156,10 @@ void ColliderImp::SetSpace(long spaceID, long geomID, Collider* collider){
     //dSpaceID ODESpace = (dSpaceID) spaceID;
     // TODO add space handling if necessary
     
-    btCollisionObject *BulletGeom = (btCollisionObject *) geomID;
+    btGeom *BulletGeom = (btGeom *) geomID;
     
-    if(BulletGeom->getUserPointer() ==0){
-        BulletGeom->setUserPointer(collider);
+    if(BulletGeom->obj->getUserPointer() ==0){
+        BulletGeom->obj->setUserPointer(collider);
     }
 
 

@@ -30,7 +30,7 @@
 #include <oxygen/sceneserver/basenode.h>
 
 struct btGeom{
-    btCollisionObject *obj;
+    btRigidBody *obj;
     btCollisionShape *shp;
 };
 typedef btGeom* btGeomID;
