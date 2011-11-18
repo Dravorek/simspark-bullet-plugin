@@ -25,7 +25,11 @@
 #include "bulletbody.h"
 #include <oxygen/physicsserver/int/rigidbodyint.h>
 
-typedef btVector3 btMass;
+struct btMass{
+    btTransform transform;
+    btScalar mass;
+};
+//typedef btVector3 btMass;
 
 class RigidBodyImp : public oxygen::RigidBodyInt, public BodyImp
 {
@@ -99,6 +103,8 @@ protected:
     //These methods are only called internally and are not declared in the interface.
     salt::Vector3f AddMass(const btMass& mass, const salt::Matrix& matrix, salt::Vector3f massTrans, const long ODEBody);
     
+    bool CheckCompoundStatus(long BodyID, bool prepareAddition);
+    bool CheckShapeHasCollider(long BodyID);
     /** sets up an ode mass struct representing a box of the given
         size and total_mass
     */

@@ -23,7 +23,7 @@
 #include "bulletrigidbody.h"
 
 //TODO get default mass from world or sonething
-#define DEFAULT_MASS 0.0f
+#define DEFAULT_MASS 1.0f
 
 
 using namespace oxygen;
@@ -54,7 +54,7 @@ void RigidBodyImp::Disable(long bodyID)
 {
     dBodyID BulletBody = (dBodyID) bodyID;
     btRigidBody *bdy = BulletBody->obj;
-    //maybe WANTS_DEACTIVATION isnoreappropriate
+    //TODO: maybe WANTS_DEACTIVATION isnoreappropriate
     bdy->setActivationState(DISABLE_SIMULATION);
 }
 
@@ -100,6 +100,9 @@ long RigidBodyImp::CreateBody(long worldID)
    dBodyID NewBdy = new btGeom();
 
    NewBdy->shp = new btEmptyShape();
+   //HACK: shapes that are created in the RigidBody Class don't have their own
+   //Colliders and to identify them they point the userPointer to themselves
+   NewBdy->shp->setUserPointer(NewBdy->shp);
    NewBdy->shp->calculateLocalInertia( btScalar(DEFAULT_MASS), btVector3(
                                                         btScalar(0.0f),
                                                         btScalar(0.0f),
@@ -110,6 +113,8 @@ long RigidBodyImp::CreateBody(long worldID)
                                   MState,
                                   NewBdy->shp
                                   );
+   btDynamicsWorld *Wrld = (btDynamicsWorld *)worldID;
+   Wrld->addRigidBody(NewBdy->obj);
    return (long) NewBdy; 
 }
 
@@ -123,11 +128,13 @@ void RigidBodyImp::DestroyRigidBody(long bodyID)
     delete MState;
 
     //No shape has been set, delete placeholder
-    if(BulletBody->shp->getShapeType()== EMPTY_SHAPE_PROXYTYPE )
+    //if(BulletBody->shp->getShapeType()== EMPTY_SHAPE_PROXYTYPE )
+    if( !CheckShapeHasCollider( (long) BulletBody ) )
     {
         delete BulletBody->shp;
         delete BulletBody;
     }
+    
 }
 
 void RigidBodyImp::BodySetData(RigidBody* rb, long bodyID)
@@ -157,7 +164,7 @@ float RigidBodyImp::GetMass(long bodyID) const
                             :1.0f/BulletBody->obj->getInvMass();
 }
 
-Vector3f RigidBodyImp::AddMass(const btMass& ODEMass, const Matrix& matrix, Vector3f massTrans, const long bodyID)
+Vector3f RigidBodyImp::AddMass(const btMass& Mass, const Matrix& matrix, Vector3f massTrans, const long bodyID)
 {
     dBodyID BulletBody = (dBodyID) bodyID;
     dMass transMass(ODEMass);
@@ -192,6 +199,81 @@ Vector3f RigidBodyImp::AddMass(const btMass& ODEMass, const Matrix& matrix, Vect
     return massTrans - trans2;
 }
 
+bool RigidBodyImp::CheckCompoundStatus(long BodyID, bool prepareAddition)
+{
+    dBodyID BulletBody = (dBodyID) BodyID;
+    bool isCompound = (BulletBody->shp->getShapeType() == COMPOUND_SHAPE_PROXYTYPE);
+    //TODO: evaluate if this is faster:
+    /*
+        return isCompound;
+    */
+    if(isCompound)
+    {
+        if(prepareAddition)
+        {
+            return true;//isCompound
+        }
+        else
+        {
+            btCompoundShape *shp = static_cast<btCompoundShape *>(BulletBody->shp);
+            //is the compound shape irreducable
+            if(shp->getNumChildShapes()>1 || 
+                (shp->getNumChildShapes()==1 && shp->getChildTransform(0)!=btTransform::getIdentity() )
+                || shp->getUserPointer()!= shp)
+            {
+                return true;//isCompound
+            }
+            else //delete Compound
+            {
+                btCollisionShape *shp_new;
+                if(shp->getNumChildShapes()==1)
+                {
+                    shp_new = shp->getChildShape(0);
+                }
+                else
+                {
+                    shp_new = new btEmptyShape();
+                    shp_new->setUserPointer(shp_new);
+                }
+                //TODO: remove and re-add rigidbody to World
+                BulletBody->obj->setCollisionShape(shp_new);
+                delete shp;
+                BulletBody->shp = shp_new;
+                return false;
+            }
+        }
+    }
+    else //is not a compound
+    {
+        if(prepareAddition){
+            btCompoundShape *shp_new = new btCompoundShape();
+            shp_new->setUserPointer(shp_new);
+            if(CheckShapeHasCollider(BodyID))
+            {
+                shp_new->addChildShape(btTransform::getIdentity(),BulletBody->shp);
+            }
+            else
+            {
+                delete BulletBody->shp;
+                BulletBody->shp=0;
+            }
+            BulletBody->shp = shp_new;
+            return true;
+        }
+        else
+        {
+            return false;//isCompound
+        }
+    }
+}
+    
+bool RigidBodyImp::CheckShapeHasCollider(long BodyID)
+{
+    //HACK: as described in createRigidBody()
+    dBodyID BulletBody = (dBodyID) BodyID;
+    return BulletBody->shp->getUserPointer()!=BulletBody->shp;
+}
+    
 void RigidBodyImp::SetMassParameters(const GenericMass& mass, long bodyID)
 {
     dBodyID BulletBody = (dBodyID) bodyID;
