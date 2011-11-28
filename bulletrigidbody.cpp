@@ -599,29 +599,38 @@ Vector3f RigidBodyImp::GetForce(long bodyID) const
 {
     dBodyID BulletBody = (dBodyID) bodyID;
     const btVector3& f = BulletBody->obj->getTotalForce();
-    //return Vector3f(f[0], f[1], f[2]);
     return Vector3f(f.getX(),f.getY(),f.getZ());
 }
 
 void RigidBodyImp::AddTorque(const Vector3f& torque, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dBodyAddTorque(BulletBody, torque.x(), torque.y(), torque.z());
+    dBodyID BulletBody = (dBodyID) bodyID;
+    BulletBody->obj->applyTorque(btVector3( 
+                                          btScalar(torque[0]),
+                                          btScalar(torque[1]),
+                                          btScalar(torque[2])
+                                          ));
 }
 
 void RigidBodyImp::SetPosition(const Vector3f& pos, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dBodySetPosition(BulletBody, pos.x(), pos.y(), pos.z());
+    //TODO: use MotionStates?
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btTransform & trans = BulletBody->obj->getWorldTransform();
+    trans.setOrigin(btVector3( 
+                             btScalar(pos[0]),
+                             btScalar(pos[1]),
+                             btScalar(pos[2])
+                             ));
+    BulletBody->obj->setWorldTransform(trans);
     //// the parent node will be updated in the next physics cycle
 }
 
 Vector3f RigidBodyImp::GetPosition(long bodyID) const
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //const dReal* pos = dBodyGetPosition(BulletBody);
-    //return Vector3f(pos[0], pos[1], pos[2]);
-    return Vector3f();
+    dBodyID BulletBody = (dBodyID) bodyID;
+    const btVector3& pos = BulletBody->obj->getWorldTransform().getOrigin();
+    return Vector3f(pos.getX(), pos.getY(), pos.getZ());
 }
 
 void RigidBodyImp::TranslateMass(const Vector3f& v, long bodyID)
@@ -634,15 +643,11 @@ void RigidBodyImp::TranslateMass(const Vector3f& v, long bodyID)
 
 GenericMass& RigidBodyImp::CreateMass(float mass, salt::Vector3f cVector)
 {
-    //dMass ODEMass;
-    //ODEMass.mass = mass;
-    //ODEMass.c[0] = cVector[0];
-    //ODEMass.c[1] = cVector[1];
-    //ODEMass.c[2] = cVector[2];
-    //
-    //GenericMass& massRef = (GenericMass&) ODEMass;
-    //return massRef;
-    return GenericMass();
+    btMass BulletMass;
+    BulletMass.mass = btScalar(0.0f);
+    BulletMass.transform = btTransform::getIdentity();
+    GenericMass& massRef = (GenericMass&) BulletMass;
+    return massRef;
 }
 
 void RigidBodyImp::SetInertiaTensorAt(int i, float value, GenericMass& mass)
