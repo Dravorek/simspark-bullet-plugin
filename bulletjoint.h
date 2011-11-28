@@ -33,7 +33,7 @@ class JointImp : public oxygen::JointInt, public PhysicsObjectImp
 public:
     //TODO: REMOVE THIS STATIC OBJECT
     //it is only a dummy object
-    static Joint dummy;
+    //static Joint dummy;
     JointImp();
 
     oxygen::Joint* GetJoint(long jointID);

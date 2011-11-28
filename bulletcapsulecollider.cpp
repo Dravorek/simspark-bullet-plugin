@@ -59,6 +59,7 @@ float CapsuleColliderImp::GetRadius(long geomID)
     //float radius;
     //GetParams(radius, length, geomID);
     //return radius;
+    return 0.0f;
 }
 
 float CapsuleColliderImp::GetLength(long geomID)
@@ -67,12 +68,14 @@ float CapsuleColliderImp::GetLength(long geomID)
     //float length;
     //GetParams(radius, length, geomID);
     //return length;
+    return 0.0f;
 }
 
 long CapsuleColliderImp::CreateCapsule()
 {
     //dGeomID ODEGeom = dCreateCapsule(0, 1.0f, 1.0f);
     //return (long) ODEGeom;
+    return 0l;
 }
 
 float CapsuleColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
@@ -80,4 +83,5 @@ float CapsuleColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomCapsulePointDepth
     //    (ODEGeom,pos[0],pos[1],pos[2]);
+    return 0.0f;
 }

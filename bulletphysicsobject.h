@@ -32,6 +32,7 @@
 struct btGeom{
     btRigidBody *obj;
     btCollisionShape *shp;
+    btDynamicsWorld *wrld;
 };
 typedef btGeom* btGeomID;
 

@@ -54,7 +54,7 @@ void RigidBodyImp::Disable(long bodyID)
 {
     dBodyID BulletBody = (dBodyID) bodyID;
     btRigidBody *bdy = BulletBody->obj;
-    //TODO: maybe WANTS_DEACTIVATION isnoreappropriate
+    //TODO: maybe WANTS_DEACTIVATION ismoreappropriate
     bdy->setActivationState(DISABLE_SIMULATION);
 }
 
@@ -66,32 +66,48 @@ bool RigidBodyImp::IsEnabled(long bodyID) const
 
 void RigidBodyImp::UseGravity(bool f, long bodyID)
 {
-    //TODO retrieve world gravity
+    //TODO decide if STATIC or Kinematic is appropriate
+    //Also if the gravity from the world should be read
     dBodyID BulletBody = (dBodyID) bodyID;
     if (f == true)
         {
-            // body is affected by gravity
-            BulletBody->obj->setGravity(btVector3( 
-                        btScalar(0.0f),
-                        btScalar(-9.81f),
-                        btScalar(0.0f)
-                        ));
+            //erase the CF_KINEMATIC_OBJECT and CF_STATIC_FLAGS
+            BulletBody->obj->setFlags(BulletBody->obj->getFlags() 
+                & ~(BulletBody->obj->CF_KINEMATIC_OBJECT 
+                  | BulletBody->obj->CF_STATIC_OBJECT));
+            //// body is affected by gravity
+            //BulletBody->obj->setGravity(btVector3( 
+            //            btScalar(0.0f),
+            //            btScalar(-9.81f),
+            //            btScalar(0.0f)
+            //            ));
         }
     else
         {
             // body is not affected by gravity
-            BulletBody->obj->setGravity(btVector3( 
-                        btScalar(0.0f),
-                        btScalar(0.0f),
-                        btScalar(0.0f)
-                        ));
+            // set the CF_KINEMATIC_OBJECT flag
+            BulletBody->obj->setFlags(BulletBody->obj->getFlags() |
+                                      BulletBody->obj->CF_KINEMATIC_OBJECT);
+            //BulletBody->obj->setGravity(btVector3( 
+            //            btScalar(0.0f),
+            //            btScalar(0.0f),
+            //            btScalar(0.0f)
+            //            ));
         }
 }
 
 bool RigidBodyImp::UsesGravity(long bodyID) const
 {
     dBodyID BulletBody = (dBodyID) bodyID;
-    return !(BulletBody->obj->getGravity().isZero());
+    //if the rigid body has the STATIC or KINEMATIC flag
+    //it's not affected by gravity
+    return ((
+              BulletBody->obj->CF_STATIC_OBJECT 
+              | BulletBody->obj->CF_KINEMATIC_OBJECT
+            )
+            & BulletBody->obj->getFlags()
+           );
+    //return !(BulletBody->obj->getGravity().isZero());
 }
 
 long RigidBodyImp::CreateBody(long worldID)
@@ -103,11 +119,11 @@ long RigidBodyImp::CreateBody(long worldID)
    //HACK: shapes that are created in the RigidBody Class don't have their own
    //Colliders and to identify them they point the userPointer to themselves
    NewBdy->shp->setUserPointer(NewBdy->shp);
-   NewBdy->shp->calculateLocalInertia( btScalar(DEFAULT_MASS), btVector3(
-                                                        btScalar(0.0f),
-                                                        btScalar(0.0f),
-                                                        btScalar(0.0f)
-                                                    ));
+   //NewBdy->shp->calculateLocalInertia( btScalar(DEFAULT_MASS), btVector3(
+   //                                                     btScalar(0.0f),
+   //                                                     btScalar(0.0f),
+   //                                                     btScalar(0.0f)
+   //                                                 ));
    btMotionState *MState = new btDefaultMotionState();
    NewBdy->obj = new btRigidBody( btScalar(0.0f),
                                   MState,
@@ -115,6 +131,7 @@ long RigidBodyImp::CreateBody(long worldID)
                                   );
    btDynamicsWorld *Wrld = (btDynamicsWorld *)worldID;
    Wrld->addRigidBody(NewBdy->obj);
+   NewBdy->wrld = Wrld;
    return (long) NewBdy; 
 }
 
@@ -145,14 +162,16 @@ void RigidBodyImp::BodySetData(RigidBody* rb, long bodyID)
 
 void RigidBodyImp::SetMass(float mass, long bodyID)
 {
-    //TODO remove rigid body from world and readd it after adjusting mass
+    //TODO remove rigid body from world and read it after adjusting mass
     dBodyID BulletBody = (dBodyID) bodyID;
     btVector3 inertia = BulletBody->obj->getInvInertiaDiagLocal();
     //HACK possibly reduces precision
     inertia.setValue(inertia.x() != btScalar(0.0) ? btScalar(1.0) / inertia.x(): btScalar(0.0),
                      inertia.y() != btScalar(0.0) ? btScalar(1.0) / inertia.y(): btScalar(0.0),
                      inertia.z() != btScalar(0.0) ? btScalar(1.0) / inertia.z(): btScalar(0.0));
-    BulletBody->obj->setMassProps( btScalar(mass),inertia); 
+    BulletBody->obj->setMassProps( btScalar(mass),inertia);
+    BulletBody->wrld->removeRigidBody(BulletBody->obj);
+    BulletBody->wrld->addRigidBody(BulletBody->obj);
 }
 
 float RigidBodyImp::GetMass(long bodyID) const
@@ -220,7 +239,7 @@ bool RigidBodyImp::CheckCompoundStatus(long BodyID, bool prepareAddition)
             btCompoundShape *shp = static_cast<btCompoundShape *>(BulletBody->shp);
             //is the compound shape irreducable
             if(shp->getNumChildShapes()>1 || 
-                (shp->getNumChildShapes()==1 && shp->getChildTransform(0)!=btTransform::getIdentity() )
+                (shp->getNumChildShapes()==1 && shp->getChildTransform(0).getOrigin()!=btTransform::getIdentity().getOrigin() )
                 || shp->getUserPointer()!= shp)
             {
                 return true;//isCompound
@@ -278,297 +297,310 @@ bool RigidBodyImp::CheckShapeHasCollider(long BodyID)
     
 void RigidBodyImp::SetMassParameters(const GenericMass& mass, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //btMass& ODEMass = (btMass&) mass;
+    //TODO: apply btMass->transform to the rigid body
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMass& BulletMass = (btMass&) mass;
+
+    this->SetMass(BulletMass.mass,bodyID);
     //dBodySetMass(BulletBody, &ODEMass);
 }
 
 void RigidBodyImp::PrepareSphere(btMass& mass, float density, float radius) const
 {
+    //TODO: calculate weight of the sphere
     //btMassSetSphere(&mass, density, radius);
+    mass.transform = btTransform::getIdentity();
+    mass.mass = btScalar( density * (radius * radius * radius * M_PI * 4.0/3.0) );
 }
 
 void RigidBodyImp::SetSphere(float density, float radius, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass ODEMass;
-    //PrepareSphere(ODEMass, density, radius);
-    //dBodySetMass(BulletBody, &ODEMass);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMass BulletMass;
+    PrepareSphere(BulletMass, density, radius);
+    SetMassParameters(*(reinterpret_cast<oxygen::GenericMass*>(&BulletMass)),bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddSphere(float density, float radius, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
 {
-    //dMass ODEMass;
-    //PrepareSphere(ODEMass, density, radius);
-    //return AddMass(ODEMass, matrix, massTrans, bodyID);
-    return Vector3f();
+    btMass BulletMass;
+    PrepareSphere(BulletMass, density, radius);
+    return AddMass(BulletMass, matrix, massTrans, bodyID);
 }
 
 void RigidBodyImp::PrepareSphereTotal(btMass& mass, float total_mass, float radius) const
 {
-    //btMassSetSphereTotal(&mass, total_mass, radius);
+    mass.mass = btScalar(total_mass);
+    mass.transform = btTransform::getIdentity();
 }
 
 void RigidBodyImp::SetSphereTotal(float total_mass, float radius, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass ODEMass;
-    //PrepareSphereTotal(ODEMass, total_mass, radius);
-    //dBodySetMass(BulletBody, &ODEMass);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMass BulletMass;
+    PrepareSphereTotal(BulletMass, total_mass, radius);
+    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddSphereTotal(float total_mass, float radius, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
 {
-    //dMass ODEMass;
-    //PrepareSphereTotal(ODEMass, total_mass, radius);
-    //return AddMass(ODEMass, matrix, massTrans, bodyID);
-    return Vector3f();
+    btMass BulletMass;
+    PrepareSphereTotal(BulletMass, total_mass, radius);
+    return AddMass(BulletMass, matrix, massTrans, bodyID);
 }
 
 void RigidBodyImp::PrepareBox(btMass& mass, float density, const Vector3f& size) const
 {
-    //btMassSetBox(&mass, density, size[0], size[1], size[2]);
+    mass.transform = btTransform::getIdentity();
+    mass.mass = btScalar( size[0] * size[1] * size[2] * density );
 }
 
 void RigidBodyImp::SetBox(float density, const Vector3f& size, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass ODEMass;
-    //PrepareBox(ODEMass, density, size);
-    //dBodySetMass(BulletBody, &ODEMass);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMass BulletMass;
+    PrepareBox(BulletMass, density, size);
+    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddBox(float density, const Vector3f& size, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
 {
-    //dMass ODEMass;
-    //PrepareBox(ODEMass, density, size);
-    //return AddMass(ODEMass, matrix, massTrans, bodyID);
-    return Vector3f();
+    btMass BulletMass;
+    PrepareBox(BulletMass, density, size);
+    return AddMass(BulletMass, matrix, massTrans, bodyID);
 }
 
 void RigidBodyImp::PrepareBoxTotal(btMass& mass, float total_mass, const Vector3f& size) const
 {
-    //btMassSetBoxTotal(&mass, total_mass, size[0], size[1], size[2]);
+    mass.mass = btScalar( total_mass );
+    mass.transform = btTransform::getIdentity();
 }
 
 void RigidBodyImp::SetBoxTotal(float total_mass, const Vector3f& size, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass ODEMass;
-    //PrepareBoxTotal(ODEMass, total_mass, size);
-    //dBodySetMass(BulletBody, &ODEMass);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMass BulletMass;
+    PrepareBoxTotal(BulletMass, total_mass, size);
+    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
 }
 
 salt::Vector3f RigidBodyImp::AddBoxTotal(float total_mass, const Vector3f& size, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
 {
-    //dMass ODEMass;
-    //PrepareBoxTotal(ODEMass, total_mass, size);
-    //return AddMass(ODEMass, matrix, massTrans, bodyID);
-    return Vector3f();
+    btMass BulletMass;
+    PrepareBoxTotal(BulletMass, total_mass, size);
+    return AddMass(BulletMass, matrix, massTrans, bodyID);
 }
 
 void RigidBodyImp::PrepareCylinder (btMass& mass, float density, float radius, float length) const
 {
     //// direction: (1=x, 2=y, 3=z)
     //int direction = 3;
-
-    //btMassSetCylinder (&mass, density, direction, radius, length);
+    mass.mass = btScalar( density * M_PI * radius * radius * length );
+    mass.transform = btTransform::getIdentity();
 }
 
 void RigidBodyImp::SetCylinder (float density, float radius, float length, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass ODEMass;
-    //PrepareCylinder(ODEMass, density, radius, length);
-    //dBodySetMass(BulletBody, &ODEMass);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMass BulletMass;
+    PrepareCylinder(BulletMass, density, radius, length);
+    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
 }
 
 salt::Vector3f RigidBodyImp::AddCylinder(float density, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
 {
-    //dMass ODEMass;
-    //PrepareCylinder(ODEMass, density, radius, length);
-    //return AddMass(ODEMass, matrix, massTrans, bodyID);
-    return Vector3f();
+    btMass BulletMass;
+    PrepareCylinder(BulletMass, density, radius, length);
+    return AddMass(BulletMass, matrix, massTrans, bodyID);
 }
 
 void RigidBodyImp::PrepareCylinderTotal(btMass& mass, float total_mass, float radius, float length) const
 {
     //// direction: (1=x, 2=y, 3=z)
     //int direction = 3;
-    //btMassSetCylinderTotal(&mass, total_mass, direction, radius, length);
+    mass.mass = btScalar( total_mass );
+    mass.transform = btTransform::getIdentity();
 }
 
 void RigidBodyImp::SetCylinderTotal(float total_mass, float radius, float length, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass ODEMass;
-    //PrepareCylinderTotal(ODEMass, total_mass, radius, length);
-    //dBodySetMass(BulletBody, &ODEMass);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMass BulletMass;
+    PrepareCylinderTotal(BulletMass, total_mass, radius, length);
+    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
 }
 
 salt::Vector3f RigidBodyImp::AddCylinderTotal(float total_mass, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
 {
-    //dMass ODEMass;
-    //PrepareCylinderTotal(ODEMass, total_mass, radius, length);
-    //return AddMass(ODEMass, matrix, massTrans, bodyID);
-    return Vector3f();
+    btMass BulletMass;
+    PrepareCylinderTotal(BulletMass, total_mass, radius, length);
+    return AddMass(BulletMass, matrix, massTrans, bodyID);
 }
 
 void RigidBodyImp::PrepareCapsule (btMass& mass, float density, float radius, float length) const
 {
     //// direction: (1=x, 2=y, 3=z)
     //int direction = 3;
-
-    //btMassSetCapsule (&mass, density, direction, radius, length);
+    mass.mass = btScalar( M_PI * radius * radius * ((4.0/3.0)*radius + length) );
+    mass.transform = btTransform::getIdentity();
 }
 
 void RigidBodyImp::SetCapsule (float density, float radius, float length, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass ODEMass;
-    //PrepareCapsule(ODEMass, density, radius, length);
-    //dBodySetMass(BulletBody, &ODEMass);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMass BulletMass;
+    PrepareCapsule(BulletMass, density, radius, length);
+    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
 }
 
 salt::Vector3f RigidBodyImp::AddCapsule (float density, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
 {
-    //dMass ODEMass;
-    //PrepareCapsule(ODEMass, density, radius, length);
-    //return AddMass(ODEMass, matrix, massTrans, bodyID);
-    return Vector3f();
+    btMass BulletMass;
+    PrepareCapsule(BulletMass, density, radius, length);
+    return AddMass(BulletMass, matrix, massTrans, bodyID);
 }
 
 void RigidBodyImp::PrepareCapsuleTotal(btMass& mass, float total_mass, float radius, float length) const
 {
     //// direction: (1=x, 2=y, 3=z)
     //int direction = 3;
-
-    //btMassSetCapsuleTotal(&mass, total_mass, direction, radius, length);
+    mass.mass = btScalar ( total_mass );
+    mass.transform = btTransform::getIdentity();
 }
 
 void RigidBodyImp::SetCapsuleTotal(float total_mass, float radius, float length, long bodyID)
 {
     //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass ODEMass;
-    //PrepareCapsuleTotal(ODEMass, total_mass, radius, length);
+    btMass BulletMass;
+    PrepareCapsuleTotal(BulletMass, total_mass, radius, length);
+    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
     //dBodySetMass(BulletBody, &ODEMass);
 }
 
 salt::Vector3f RigidBodyImp::AddCapsuleTotal(float total_mass, float radius, float length, const salt::Matrix& matrix, salt::Vector3f massTrans, long bodyID)
 {
-    //dMass ODEMass;
-    //PrepareCapsuleTotal(ODEMass, total_mass, radius, length);
-    //return AddMass(ODEMass, matrix, massTrans, bodyID);
-    return Vector3f();
+    btMass BulletMass;
+    PrepareCapsuleTotal(BulletMass, total_mass, radius, length);
+    return AddMass(BulletMass, matrix, massTrans, bodyID);
 }
 
 Vector3f RigidBodyImp::GetVelocity(long bodyID) const
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //const dReal* vel = dBodyGetLinearVel(BulletBody);
-    //return Vector3f(vel[0], vel[1], vel[2]);
-    return Vector3f();
+    dBodyID BulletBody = (dBodyID) bodyID;
+    const btVector3 &vel = BulletBody->obj->getLinearVelocity();
+    return Vector3f(vel.getX(), vel.getY(), vel.getZ());
 }
 
 void RigidBodyImp::SetVelocity(const Vector3f& vel, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dBodySetLinearVel(BulletBody, vel[0], vel[1], vel[2]);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    BulletBody->obj->setLinearVelocity( btVector3( btScalar(vel[0]), btScalar(vel[1]), btScalar(vel[2]) ) );
 }
 
 void RigidBodyImp::SetRotation(const Matrix& rot, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMatrix3 ODEMatrix;
-    //GenericPhysicsMatrix& matrixRef = (GenericPhysicsMatrix&) ODEMatrix;
-    //ConvertRotationMatrix(rot, matrixRef);
-    //dBodySetRotation(BulletBody, ODEMatrix);
+    //TODO: check whether to use MotionStates here instead of getWorldTransform()
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btTransform BulletMatrix = BulletBody->obj->getWorldTransform();
+    GenericPhysicsMatrix& matrixRef = (GenericPhysicsMatrix&) BulletMatrix.getBasis();
+    ConvertRotationMatrix(rot, matrixRef);
+    BulletMatrix.setBasis((btMatrix3x3 &)matrixRef);
+    BulletBody->obj->setWorldTransform(BulletMatrix);
 }
 
 salt::Matrix RigidBodyImp::GetRotation(long bodyID) const
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //const dReal* ODEMatrix = dBodyGetRotation(BulletBody);
-    //GenericPhysicsMatrix* matrixPtr = (GenericPhysicsMatrix*) ODEMatrix;
-    //salt::Matrix rot;
-    //ConvertRotationMatrix(matrixPtr,rot);
-    //return rot;
-    return Matrix();
+    //TODO: check whether to use MotionStates here instead of getWorldTransform()
+    dBodyID BulletBody = (dBodyID) bodyID;
+    btMatrix3x3 BulletMatrix = BulletBody->obj->getWorldTransform().getBasis();
+    GenericPhysicsMatrix* matrixPtr = (GenericPhysicsMatrix*) &BulletMatrix;
+    salt::Matrix rot;
+    ConvertRotationMatrix(matrixPtr,rot);
+    return rot;
 }
 
 Vector3f RigidBodyImp::GetLocalAngularVelocity(long bodyID) const
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //const dReal* vel = dBodyGetAngularVel(BulletBody);
-    //dReal w[3];
-    //dBodyVectorFromWorld(BulletBody, vel[0], vel[1], vel[2], w);
-    //return Vector3f(w[0], w[1], w[2]);
-    return Vector3f();
+    //TODO: check whether motion states are better
+    dBodyID BulletBody = (dBodyID) bodyID;
+    const btVector3& vel = BulletBody->obj->getAngularVelocity();
+    //Tranlate vector into local coordinates by mutliplying with rotation 
+    //matrix translation is ignored because a vector is a direction and is
+    //unaffected by movement
+    btVector3 relvel = BulletBody->obj->getWorldTransform().getBasis()*vel;
+    return Vector3f(relvel.getX(), relvel.getY(), relvel.getZ());
 }
 
 Vector3f RigidBodyImp::GetAngularVelocity(long bodyID) const
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //const dReal* vel = dBodyGetAngularVel(BulletBody);
-    //return Vector3f(vel[0], vel[1], vel[2]);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    const btVector3& vel = BulletBody->obj->getAngularVelocity();
+    return Vector3f(vel.getX(), vel.getY(), vel.getZ());
 }
 
 void RigidBodyImp::SetAngularVelocity(const Vector3f& vel, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dBodySetAngularVel(BulletBody, vel[0], vel[1], vel[2]);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    BulletBody->obj->setAngularVelocity(btVector3( 
+                                                   btScalar(vel[0]),
+                                                   btScalar(vel[1]),
+                                                   btScalar(vel[2])
+                                                 )
+                                       );
 }
 
 salt::Matrix RigidBodyImp::GetSynchronisationMatrix(long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //const dReal* pos = dBodyGetPosition(BulletBody);
-    //const dReal* rot = dBodyGetRotation(BulletBody);
-    //
-    //Matrix mat;
-    //mat.m[0] = rot[0];
-    //mat.m[1] = rot[4];
-    //mat.m[2] = rot[8];
-    //mat.m[3] = 0;
-    //mat.m[4] = rot[1];
-    //mat.m[5] = rot[5];
-    //mat.m[6] = rot[9];
-    //mat.m[7] = 0;
-    //mat.m[8] = rot[2];
-    //mat.m[9] = rot[6];
-    //mat.m[10] = rot[10];
-    //mat.m[11] = 0;
-    //mat.m[12] = pos[0];
-    //mat.m[13] = pos[1];
-    //mat.m[14] = pos[2];
-    //mat.m[15] = 1;
-
-    //return mat;
-    return Matrix();
+    //TODO: check whether getWorldTransform or MotionState is better
+    dBodyID BulletBody = (dBodyID) bodyID;
+    const btTransform& trans = BulletBody->obj->getWorldTransform();
+    const btVector3& pos = trans.getOrigin();
+    const btMatrix3x3& rot = trans.getBasis();
+    
+    Matrix mat;
+    //*rot[row] returns a const btScalar to the first element
+    //in that row, & turns that into a pointer to cycle through
+    //all 3 elements of the vector (x,y,z) with [].
+    mat.m[0] = (&*rot[0])[0];
+    mat.m[1] = (&*rot[0])[1];
+    mat.m[2] = (&*rot[0])[2];
+    mat.m[3] = 0;
+    mat.m[4] = (&*rot[1])[0];
+    mat.m[5] = (&*rot[1])[1];
+    mat.m[6] = (&*rot[1])[2];
+    mat.m[7] = 0;
+    mat.m[8] =  (&*rot[1])[0];
+    mat.m[9] =  (&*rot[1])[1];
+    mat.m[10] = (&*rot[1])[2];
+    mat.m[11] = 0;
+    mat.m[12] = (&*pos)[0];
+    mat.m[13] = (&*pos)[1];
+    mat.m[14] = (&*pos)[2];
+    mat.m[15] = 1;
+    return mat;
 }
 
 RigidBody* RigidBodyImp::BodyGetData(long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //RigidBody* bodyPtr =
-    //    static_cast<RigidBody*>(dBodyGetData(BulletBody));
-
-    //return bodyPtr;
     return (RigidBody*) ((dBodyID)bodyID)->obj->getUserPointer();
 }
 
 void RigidBodyImp::AddForce(const Vector3f& force, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dBodyAddForce(BulletBody, force.x(), force.y(), force.z());
+    dBodyID BulletBody = (dBodyID) bodyID;
+    BulletBody->obj->applyCentralForce(btVector3( 
+                                                btScalar(force[0]),
+                                                btScalar(force[1]),
+                                                btScalar(force[2])
+                                                ));
 }
 
 Vector3f RigidBodyImp::GetForce(long bodyID) const
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //const dReal* f = dBodyGetForce(BulletBody);
+    dBodyID BulletBody = (dBodyID) bodyID;
+    const btVector3& f = BulletBody->obj->getTotalForce();
     //return Vector3f(f[0], f[1], f[2]);
-    return Vector3f();
+    return Vector3f(f.getX(),f.getY(),f.getZ());
 }
 
 void RigidBodyImp::AddTorque(const Vector3f& torque, long bodyID)

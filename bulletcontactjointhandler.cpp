@@ -110,96 +110,96 @@ ContactJointHandlerImp::MixValues(const float v1, const float v2, const int n) c
     return 0.0f;
 }
 
-void
-ContactJointHandlerImp::CalcSurfaceParamInternal(dSurfaceParameters& surface,
-                                                 const dSurfaceParameters& collideeParam,
-                                                 const dSurfaceParameters* surfacePtr)
-{
-    //// init surface
-    //surface.mode = 0;
-
-    //// calculate average mu; mu can be dInfinity, so first multiply with
-    //// 0.5 and the sum up to avoid a range error
-    //surface.mu = surfacePtr->mu*0.5f + collideeParam.mu*0.5f;
-
-    //// soft cfm
-    //const int nCfm =
-    //    ((surfacePtr->mode & dContactSoftCFM) ? 1:0) +
-    //    ((collideeParam.mode & dContactSoftCFM) ? 2:0);
-
-    //if (nCfm>0)
-    //    {
-    //        surface.soft_cfm = MixValues
-    //            (surfacePtr->soft_cfm, collideeParam.soft_cfm, nCfm);
-    //        surface.mode |= dContactSoftCFM;
-    //    }
-
-    //// soft_erp
-    //const int nErp =
-    //    ((surfacePtr->mode & dContactSoftERP) ? 1:0) +
-    //    ((collideeParam.mode & dContactSoftERP) ? 2:0);
-
-    //if (nErp>0)
-    //    {
-    //        surface.soft_erp = MixValues
-    //            (surfacePtr->soft_erp, collideeParam.soft_erp, nErp);
-    //        surface.mode |= dContactSoftERP;
-    //    }
-
-    //// bounce
-    //const int nBounce =
-    //    ((surfacePtr->mode & dContactBounce) ? 1:0) +
-    //    ((collideeParam.mode & dContactBounce) ? 2:0);
-
-    //if (nBounce>0)
-    //    {
-    //        surface.bounce = MixValues
-    //            (surfacePtr->bounce, collideeParam.bounce, nBounce);
-
-    //        surface.bounce_vel = MixValues
-    //            (surfacePtr->bounce_vel, collideeParam.bounce_vel, nBounce);
-
-    //        surface.mode |= dContactBounce;
-    //    }
-
-    //// slip1
-    //const int nSlip1 = 
-    //    ((surfacePtr->mode & dContactSlip1) ? 1 : 0) +
-    //    ((collideeParam.mode & dContactSlip1) ? 2 : 0);
-
-    //if (nSlip1 > 0)
-    //    {
-    //        surface.slip1 = MixValues
-    //            (surfacePtr->slip1, collideeParam.slip1, nSlip1);
-
-    //        surface.mode |= dContactSlip1;
-    //    }
-
-    //// slip2
-    //const int nSlip2 = 
-    //    ((surfacePtr->mode & dContactSlip2) ? 1 : 0) +
-    //    ((collideeParam.mode & dContactSlip2) ? 2 : 0);
-
-    //if (nSlip2 > 0)
-    //    {
-    //        surface.slip2 = MixValues
-    //            (surfacePtr->slip2, collideeParam.slip2, nSlip2);
-
-    //        surface.mode |= dContactSlip2;
-    //    }
-}
-
-void
-ContactJointHandlerImp::SetContactMode(int mode, bool set, dSurfaceParameters* ODESurface)
-{
-    //if (set)
-    //    {
-    //        ODESurface->mode |= mode;
-    //    } else
-    //        {
-    //            ODESurface->mode &= ~mode;
-    //        }
-}
+//void
+//ContactJointHandlerImp::CalcSurfaceParamInternal(dSurfaceParameters& surface,
+//                                                 const dSurfaceParameters& collideeParam,
+//                                                 const dSurfaceParameters* surfacePtr)
+//{
+//    //// init surface
+//    //surface.mode = 0;
+//
+//    //// calculate average mu; mu can be dInfinity, so first multiply with
+//    //// 0.5 and the sum up to avoid a range error
+//    //surface.mu = surfacePtr->mu*0.5f + collideeParam.mu*0.5f;
+//
+//    //// soft cfm
+//    //const int nCfm =
+//    //    ((surfacePtr->mode & dContactSoftCFM) ? 1:0) +
+//    //    ((collideeParam.mode & dContactSoftCFM) ? 2:0);
+//
+//    //if (nCfm>0)
+//    //    {
+//    //        surface.soft_cfm = MixValues
+//    //            (surfacePtr->soft_cfm, collideeParam.soft_cfm, nCfm);
+//    //        surface.mode |= dContactSoftCFM;
+//    //    }
+//
+//    //// soft_erp
+//    //const int nErp =
+//    //    ((surfacePtr->mode & dContactSoftERP) ? 1:0) +
+//    //    ((collideeParam.mode & dContactSoftERP) ? 2:0);
+//
+//    //if (nErp>0)
+//    //    {
+//    //        surface.soft_erp = MixValues
+//    //            (surfacePtr->soft_erp, collideeParam.soft_erp, nErp);
+//    //        surface.mode |= dContactSoftERP;
+//    //    }
+//
+//    //// bounce
+//    //const int nBounce =
+//    //    ((surfacePtr->mode & dContactBounce) ? 1:0) +
+//    //    ((collideeParam.mode & dContactBounce) ? 2:0);
+//
+//    //if (nBounce>0)
+//    //    {
+//    //        surface.bounce = MixValues
+//    //            (surfacePtr->bounce, collideeParam.bounce, nBounce);
+//
+//    //        surface.bounce_vel = MixValues
+//    //            (surfacePtr->bounce_vel, collideeParam.bounce_vel, nBounce);
+//
+//    //        surface.mode |= dContactBounce;
+//    //    }
+//
+//    //// slip1
+//    //const int nSlip1 = 
+//    //    ((surfacePtr->mode & dContactSlip1) ? 1 : 0) +
+//    //    ((collideeParam.mode & dContactSlip1) ? 2 : 0);
+//
+//    //if (nSlip1 > 0)
+//    //    {
+//    //        surface.slip1 = MixValues
+//    //            (surfacePtr->slip1, collideeParam.slip1, nSlip1);
+//
+//    //        surface.mode |= dContactSlip1;
+//    //    }
+//
+//    //// slip2
+//    //const int nSlip2 = 
+//    //    ((surfacePtr->mode & dContactSlip2) ? 1 : 0) +
+//    //    ((collideeParam.mode & dContactSlip2) ? 2 : 0);
+//
+//    //if (nSlip2 > 0)
+//    //    {
+//    //        surface.slip2 = MixValues
+//    //            (surfacePtr->slip2, collideeParam.slip2, nSlip2);
+//
+//    //        surface.mode |= dContactSlip2;
+//    //    }
+//}
+//
+//void
+//ContactJointHandlerImp::SetContactMode(int mode, bool set, dSurfaceParameters* ODESurface)
+//{
+//    //if (set)
+//    //    {
+//    //        ODESurface->mode |= mode;
+//    //    } else
+//    //        {
+//    //            ODESurface->mode &= ~mode;
+//    //        }
+//}
 
 int
 ContactJointHandlerImp::GetContactMode(GenericSurfaceParameter* surface) const

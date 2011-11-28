@@ -36,311 +36,333 @@ Joint* JointImp::GetJoint(long jointID){
 }
 
 bool JointImp::AreConnected(long bodyID1, long bodyID2){
-    dBodyID ODEBody1 = (dBodyID) bodyID1;
-    dBodyID ODEBody2 = (dBodyID) bodyID2;
-    return dAreConnected(ODEBody1, ODEBody2) == 1;
+    //dBodyID ODEBody1 = (dBodyID) bodyID1;
+    //dBodyID ODEBody2 = (dBodyID) bodyID2;
+    //return dAreConnected(ODEBody1, ODEBody2) == 1;
+    return false;
 }
 
 bool JointImp::AreConnectedExcluding(long bodyID1, long bodyID2, int joint_type){
-    dBodyID ODEBody1 = (dBodyID) bodyID1;
-    dBodyID ODEBody2 = (dBodyID) bodyID2;
-    return dAreConnectedExcluding(ODEBody1, ODEBody2, joint_type) == 1;
+    //dBodyID ODEBody1 = (dBodyID) bodyID1;
+    //dBodyID ODEBody2 = (dBodyID) bodyID2;
+    //return dAreConnectedExcluding(ODEBody1, ODEBody2, joint_type) == 1;
+    return false;
 }
 
 void JointImp::OnLink(long jointID, Joint* joint)
 {
-    dJointID JointImp = (dJointID) jointID;
-    dJointSetData(JointImp, joint);
+    //dJointID JointImp = (dJointID) jointID;
+    //dJointSetData(JointImp, joint);
 }
 
 void JointImp::Attach(long bodyID1, long bodyID2, long jointID)
 {
-    dBodyID ODEBody1 = (dBodyID) bodyID1;
-    dBodyID ODEBody2 = (dBodyID) bodyID2;
-    dJointID JointImp = (dJointID) jointID;
-    dJointAttach(JointImp, ODEBody1, ODEBody2);
+    //dBodyID ODEBody1 = (dBodyID) bodyID1;
+    //dBodyID ODEBody2 = (dBodyID) bodyID2;
+    //dJointID JointImp = (dJointID) jointID;
+    //dJointAttach(JointImp, ODEBody1, ODEBody2);
 }
 
 int JointImp::GetType(long jointID) const
 {
-    dJointID JointImp = (dJointID) jointID;
-    return dJointGetType(JointImp);
+    //dJointID JointImp = (dJointID) jointID;
+    //return dJointGetType(JointImp);
+    return 0;
 }
 
 long JointImp::GetBodyID(int idx, long jointID)
 {
-    dJointID JointImp = (dJointID) jointID;
-    dBodyID ODEBodyID = dJointGetBody(JointImp, idx);
-    return (long) ODEBodyID;
+    //dJointID JointImp = (dJointID) jointID;
+    //dBodyID ODEBodyID = dJointGetBody(JointImp, idx);
+    //return (long) ODEBodyID;
+    return 0l;
 }
 
 void JointImp::EnableFeedback(bool enable, long jointID,
                               boost::shared_ptr<GenericJointFeedback> feedback)
 {
-    dJointID JointImp = (dJointID) jointID;
+    //dJointID JointImp = (dJointID) jointID;
 
-    if (enable)
-        {
-            if (feedback.get() == 0)
-                {
-                    feedback = boost::shared_ptr<GenericJointFeedback>(
-                        (GenericJointFeedback*) new dJointFeedback());
-                    memset(feedback.get(),0,sizeof(dJointFeedback));
-                }
-        } else
-            {
-                if (feedback.get() != 0)
-                    {
-                        feedback.reset();
-                    }
-            }
+    //if (enable)
+    //    {
+    //        if (feedback.get() == 0)
+    //            {
+    //                feedback = boost::shared_ptr<GenericJointFeedback>(
+    //                    (GenericJointFeedback*) new dJointFeedback());
+    //                memset(feedback.get(),0,sizeof(dJointFeedback));
+    //            }
+    //    } else
+    //        {
+    //            if (feedback.get() != 0)
+    //                {
+    //                    feedback.reset();
+    //                }
+    //        }
 
-    dJointFeedback* ODEFeedback = (dJointFeedback*) feedback.get();
+    //dJointFeedback* ODEFeedback = (dJointFeedback*) feedback.get();
 
-    dJointSetFeedback(JointImp,ODEFeedback);
+    //dJointSetFeedback(JointImp,ODEFeedback);
 }
 
 bool JointImp::FeedbackEnabled(long jointID) const
 {
-    dJointID JointImp = (dJointID) jointID;
-    return (dJointGetFeedback(JointImp) != 0);
+    //dJointID JointImp = (dJointID) jointID;
+    //return (dJointGetFeedback(JointImp) != 0);
+    return false;
 }
 
 Vector3f JointImp::GetFeedbackForce(int idx,
                                     boost::shared_ptr<GenericJointFeedback> feedback) const
 {
-    dJointFeedback* fb = (dJointFeedback*) feedback.get();
-    if (fb == 0)
-        {
-            return Vector3f(0,0,0);
-        }
+    //dJointFeedback* fb = (dJointFeedback*) feedback.get();
+    //if (fb == 0)
+    //    {
+    //        return Vector3f(0,0,0);
+    //    }
 
-    switch (idx)
-        {
-        case 0 :
-            return Vector3f(
-                            fb->f1[0],
-                            fb->f1[1],
-                            fb->f1[2]
-                            );
+    //switch (idx)
+    //    {
+    //    case 0 :
+    //        return Vector3f(
+    //                        fb->f1[0],
+    //                        fb->f1[1],
+    //                        fb->f1[2]
+    //                        );
 
-        case 1 :
-            return Vector3f(
-                            fb->f2[0],
-                            fb->f2[1],
-                            fb->f2[2]
-                            );
+    //    case 1 :
+    //        return Vector3f(
+    //                        fb->f2[0],
+    //                        fb->f2[1],
+    //                        fb->f2[2]
+    //                        );
 
-        default:
-            return Vector3f(0,0,0);
-        }
+    //    default:
+    //        return Vector3f(0,0,0);
+    //    }
+    return Vector3f();
 }
 
 Vector3f JointImp::GetFeedbackTorque(int idx,
                                      boost::shared_ptr<GenericJointFeedback> feedback) const
 {
-    dJointFeedback* fb = (dJointFeedback*) feedback.get();
-    if (fb == 0)
-        {
-            return Vector3f(0,0,0);
-        }
+    //dJointFeedback* fb = (dJointFeedback*) feedback.get();
+    //if (fb == 0)
+    //    {
+    //        return Vector3f(0,0,0);
+    //    }
 
-    switch (idx)
-        {
-        case 0 :
-            return Vector3f(
-                            fb->t1[0],
-                            fb->t1[1],
-                            fb->t1[2]
-                            );
+    //switch (idx)
+    //    {
+    //    case 0 :
+    //        return Vector3f(
+    //                        fb->t1[0],
+    //                        fb->t1[1],
+    //                        fb->t1[2]
+    //                        );
 
-        case 1 :
-            return Vector3f(
-                            fb->t2[0],
-                            fb->t2[1],
-                            fb->t2[2]
-                            );
+    //    case 1 :
+    //        return Vector3f(
+    //                        fb->t2[0],
+    //                        fb->t2[1],
+    //                        fb->t2[2]
+    //                        );
 
-        default:
-            return Vector3f(0,0,0);
-        }
+    //    default:
+    //        return Vector3f(0,0,0);
+    //    }
+    return Vector3f();
 }
 
 void JointImp::SetFudgeFactor(int idx, float fudge_factor, long jointID)
 {
-    SetParameter(dParamFudgeFactor + (idx * dParamGroup), fudge_factor, jointID);
+    //SetParameter(dParamFudgeFactor + (idx * dParamGroup), fudge_factor, jointID);
 }
 
 float JointImp::GetFudgeFactor(int idx, long jointID) const
 {
-    return GetParameter(dParamFudgeFactor + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamFudgeFactor + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetBounce(int idx, float bounce, long jointID)
 {
-    SetParameter(dParamBounce + (idx * dParamGroup),bounce, jointID);
+    //SetParameter(dParamBounce + (idx * dParamGroup),bounce, jointID);
 }
 
 float JointImp::GetBounce(int idx, long jointID) const
 {
-    return GetParameter(dParamBounce + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamBounce + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetLowStopPos(int idx, float pos, long jointID)
 {
-    SetParameter(dParamLoStop + (idx * dParamGroup), pos, jointID);
+    //SetParameter(dParamLoStop + (idx * dParamGroup), pos, jointID);
 }
 
 float JointImp::GetLowStopPos(int idx, long jointID) const
 {
-    return GetParameter(dParamLoStop + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamLoStop + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetHighStopPos(int idx, float pos, long jointID)
 {
-    SetParameter(dParamHiStop + (idx * dParamGroup), pos, jointID);
+    //SetParameter(dParamHiStop + (idx * dParamGroup), pos, jointID);
 }
 
 float JointImp::GetHighStopPos(int idx, long jointID) const
 {
-    return GetParameter(dParamHiStop + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamHiStop + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetLowStopDeg(int idx, float deg, long jointID)
 {
-    SetParameter(dParamLoStop + (idx * dParamGroup), gDegToRad(deg), jointID);
+    //SetParameter(dParamLoStop + (idx * dParamGroup), gDegToRad(deg), jointID);
 }
 
 float JointImp::GetLowStopDeg(int idx, long jointID) const
 {
-    return gRadToDeg(GetParameter(dParamLoStop + (idx * dParamGroup), jointID));
+    //return gRadToDeg(GetParameter(dParamLoStop + (idx * dParamGroup), jointID));
+    return 0.0f;
 }
 
 void JointImp::SetHighStopDeg(int idx, float deg, long jointID)
 {
-    SetParameter(dParamHiStop + (idx * dParamGroup), gDegToRad(deg), jointID);
+    //SetParameter(dParamHiStop + (idx * dParamGroup), gDegToRad(deg), jointID);
 }
 
 float JointImp::GetHighStopDeg(int idx, long jointID) const
 {
-    return gRadToDeg(GetParameter(dParamHiStop + (idx * dParamGroup), jointID));
+    //return gRadToDeg(GetParameter(dParamHiStop + (idx * dParamGroup), jointID));
+    return 0.0f;
 }
 
 void JointImp::SetCFM(int idx, float cfm, long jointID)
 {
-    SetParameter(dParamCFM + (idx * dParamGroup), cfm, jointID);
+    //SetParameter(dParamCFM + (idx * dParamGroup), cfm, jointID);
 }
 
 float JointImp::GetCFM(int idx, long jointID) const
 {
-    return GetParameter(dParamCFM + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamCFM + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetStopCFM(int idx, float cfm, long jointID)
 {
-    SetParameter(dParamStopCFM + (idx * dParamGroup), cfm, jointID);
+    //SetParameter(dParamStopCFM + (idx * dParamGroup), cfm, jointID);
 }
 
 float JointImp::GetStopCFM(int idx, long jointID) const
 {
-    return GetParameter(dParamStopCFM + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamStopCFM + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetStopERP(int idx, float erp, long jointID)
 {
-    SetParameter(dParamStopERP + (idx * dParamGroup), erp, jointID);
+    //SetParameter(dParamStopERP + (idx * dParamGroup), erp, jointID);
 }
 
 float JointImp::GetStopERP(int idx, long jointID) const
 {
-    return GetParameter(dParamStopERP + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamStopERP + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetSuspensionERP(int idx, float erp, long jointID)
 {
-    SetParameter(dParamSuspensionERP + (idx * dParamGroup), erp, jointID);
+    //SetParameter(dParamSuspensionERP + (idx * dParamGroup), erp, jointID);
 }
 
 float JointImp::GetSuspensionERP(int idx, long jointID) const
 {
-    return GetParameter(dParamSuspensionERP + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamSuspensionERP + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetSuspensionCFM(int idx, float cfm, long jointID)
 {
-    SetParameter(dParamSuspensionCFM + (idx * dParamGroup), cfm, jointID);
+    //SetParameter(dParamSuspensionCFM + (idx * dParamGroup), cfm, jointID);
 }
 
 float JointImp::GetSuspensionCFM(int idx, long jointID) const
 {
-    return GetParameter(dParamSuspensionCFM + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamSuspensionCFM + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetLinearMotorVelocity(int idx, float vel, long jointID)
 {
-    SetParameter(dParamVel + (idx * dParamGroup), vel, jointID);
+    //SetParameter(dParamVel + (idx * dParamGroup), vel, jointID);
 }
 
 float JointImp::GetLinearMotorVelocity(int idx, long jointID) const
 {
-    return GetParameter(dParamVel + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamVel + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::SetAngularMotorVelocity(int idx, float deg, long jointID)
 {
-    SetParameter(dParamVel + (idx * dParamGroup), gDegToRad(deg), jointID);
+    //SetParameter(dParamVel + (idx * dParamGroup), gDegToRad(deg), jointID);
 }
 
 float JointImp::GetAngularMotorVelocity(int idx, long jointID) const
 {
-    return gRadToDeg(GetParameter(dParamVel + (idx * dParamGroup), jointID));
+    //return gRadToDeg(GetParameter(dParamVel + (idx * dParamGroup), jointID));
+    return 0.0f;
 }
 
 void JointImp::SetMaxMotorForce(int idx, float f, long jointID)
 {
-    SetParameter(dParamFMax + (idx * dParamGroup), f, jointID);
+    //SetParameter(dParamFMax + (idx * dParamGroup), f, jointID);
 }
 
 float JointImp::GetMaxMotorForce(int idx, long jointID) const
 {
-    return GetParameter(dParamFMax + (idx * dParamGroup), jointID);
+    //return GetParameter(dParamFMax + (idx * dParamGroup), jointID);
+    return 0.0f;
 }
 
 void JointImp::DestroyJoint(long jointID,
                             boost::shared_ptr<GenericJointFeedback> feedback)
 {
-    dJointID JointImp = (dJointID) jointID;
-    EnableFeedback(false, jointID, feedback);
-    dJointDestroy(JointImp);
+    //dJointID JointImp = (dJointID) jointID;
+    //EnableFeedback(false, jointID, feedback);
+    //dJointDestroy(JointImp);
 }
 
 void JointImp::SetParameter(int parameter, float value, long jointID){
-    dJointID JointImp = (dJointID) jointID;
-    int jointType = dJointGetType(JointImp);
-    switch (jointType){
-        case dJointTypeHinge: dJointSetHingeParam(JointImp, parameter, value);
-                              break;
-        case dJointTypeHinge2: dJointSetHinge2Param(JointImp, parameter, value);
-                               break;
-        case dJointTypeSlider: dJointSetSliderParam(JointImp, parameter, value);
-                               break;
-        case dJointTypeUniversal: dJointSetUniversalParam(JointImp, parameter, value);
-                                  break;
-        case dJointTypeAMotor: dJointSetAMotorParam(JointImp, parameter, value);
-                               break;
-        default: return;
-    }
+    //dJointID JointImp = (dJointID) jointID;
+    //int jointType = dJointGetType(JointImp);
+    //switch (jointType){
+    //    case dJointTypeHinge: dJointSetHingeParam(JointImp, parameter, value);
+    //                          break;
+    //    case dJointTypeHinge2: dJointSetHinge2Param(JointImp, parameter, value);
+    //                           break;
+    //    case dJointTypeSlider: dJointSetSliderParam(JointImp, parameter, value);
+    //                           break;
+    //    case dJointTypeUniversal: dJointSetUniversalParam(JointImp, parameter, value);
+    //                              break;
+    //    case dJointTypeAMotor: dJointSetAMotorParam(JointImp, parameter, value);
+    //                           break;
+    //    default: return;
+    //}
 }
 
 float JointImp::GetParameter(int parameter, long jointID) const{
-    dJointID JointImp = (dJointID) jointID;
-    int jointType = dJointGetType(JointImp);
-    switch (jointType){
-        case dJointTypeHinge: return dJointGetHingeParam(JointImp, parameter);
-        case dJointTypeHinge2: return dJointGetHinge2Param(JointImp, parameter);
-        case dJointTypeSlider: return dJointGetSliderParam(JointImp, parameter);
-        case dJointTypeUniversal: return dJointGetUniversalParam(JointImp, parameter);
-        case dJointTypeAMotor: return dJointGetAMotorParam(JointImp, parameter);
-        default: return 0;
-    }
+    //dJointID JointImp = (dJointID) jointID;
+    //int jointType = dJointGetType(JointImp);
+    //switch (jointType){
+    //    case dJointTypeHinge: return dJointGetHingeParam(JointImp, parameter);
+    //    case dJointTypeHinge2: return dJointGetHinge2Param(JointImp, parameter);
+    //    case dJointTypeSlider: return dJointGetSliderParam(JointImp, parameter);
+    //    case dJointTypeUniversal: return dJointGetUniversalParam(JointImp, parameter);
+    //    case dJointTypeAMotor: return dJointGetAMotorParam(JointImp, parameter);
+    //    default: return 0;
+    //}
+    return 0.0f;
 }

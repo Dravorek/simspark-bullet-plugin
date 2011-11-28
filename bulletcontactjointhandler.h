@@ -63,7 +63,7 @@ public:
     float GetContactMu(oxygen::GenericSurfaceParameter* surface) const;
         
 protected:    
-    //f_inline float MixValues(const float v1, const float v2, const int n) const;
+    f_inline float MixValues(const float v1, const float v2, const int n) const;
     //void CalcSurfaceParamInternal(dSurfaceParameters& surface,
     //                              const dSurfaceParameters& collideeParam,
     //                              const dSurfaceParameters* ODESurface);
