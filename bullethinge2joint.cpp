@@ -26,6 +26,7 @@ using namespace salt;
 
 Hinge2JointImp::Hinge2JointImp() : Generic6DOFJointImp()
 {
+	std::cerr << "(Hinge2JointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long Hinge2JointImp::CreateHinge2Joint(long worldID)
@@ -33,6 +34,7 @@ long Hinge2JointImp::CreateHinge2Joint(long worldID)
     //dWorldID ODEWorld = (dWorldID) worldID;
     //dJointID ODEJoint = dJointCreateHinge2(ODEWorld, 0);
     //return (long) ODEJoint;
+	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: CreateHinge2Joint(" << std::endl;
     return 0l;
 }
 
@@ -45,6 +47,7 @@ void Hinge2JointImp::SetAnchor(const Vector3f& gAnchor,
     //dJointSetHinge2Anchor (ODEJoint, gAnchor[0], gAnchor[1], gAnchor[2]);
     //dJointSetHinge2Axis1(ODEJoint,up[0],up[1],up[2]);
     //dJointSetHinge2Axis2(ODEJoint,right[0],right[1],right[2]);
+	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
 }
 
 Vector3f Hinge2JointImp::GetAnchor1(long jointID)
@@ -54,6 +57,7 @@ Vector3f Hinge2JointImp::GetAnchor1(long jointID)
     //dJointGetHinge2Anchor (ODEJoint, anchor);
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //return pos;
+	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
     return Vector3f();
 }
 
@@ -64,6 +68,7 @@ Vector3f Hinge2JointImp::GetAnchor2(long jointID)
     //dJointGetHinge2Anchor2(ODEJoint, anchor);
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //return pos;
+	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
     return Vector3f();
 }
 
@@ -71,6 +76,7 @@ float Hinge2JointImp::GetAngle(long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetHinge2Angle1(ODEJoint));
+	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngle(" << std::endl;
     return 0.0f;
 }
 
@@ -78,6 +84,7 @@ float Hinge2JointImp::GetAngleRate1(long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetHinge2Angle1Rate(ODEJoint));
+	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngleRate1(" << std::endl;
     return 0.0f;
 }
 
@@ -85,5 +92,6 @@ float Hinge2JointImp::GetAngleRate2(long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetHinge2Angle2Rate(ODEJoint));
+	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngleRate2(" << std::endl;
     return 0.0f;
 }

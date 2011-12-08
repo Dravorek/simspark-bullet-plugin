@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 DynamicBodyImp::DynamicBodyImp() : BodyImp(){
-
+	std::cerr << "(DynamicBodyImp) ERROR called unimplemented constructor" << std::endl;
 }

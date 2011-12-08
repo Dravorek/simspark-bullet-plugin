@@ -23,7 +23,7 @@
 #include "bulletrigidbody.h"
 
 //TODO get default mass from world or sonething
-#define DEFAULT_MASS 1.0f
+#define DEFAULT_MASS 0.0f
 
 
 using namespace oxygen;
@@ -125,7 +125,7 @@ long RigidBodyImp::CreateBody(long worldID)
    //                                                     btScalar(0.0f)
    //                                                 ));
    btMotionState *MState = new btDefaultMotionState();
-   NewBdy->obj = new btRigidBody( btScalar(0.0f),
+   NewBdy->obj = new btRigidBody( btScalar(DEFAULT_MASS * 1.0f),
                                   MState,
                                   NewBdy->shp
                                   );
@@ -166,12 +166,15 @@ void RigidBodyImp::SetMass(float mass, long bodyID)
     dBodyID BulletBody = (dBodyID) bodyID;
     btVector3 inertia = BulletBody->obj->getInvInertiaDiagLocal();
     //HACK possibly reduces precision
-    inertia.setValue(inertia.x() != btScalar(0.0) ? btScalar(1.0) / inertia.x(): btScalar(0.0),
+    btVector3 inertia2;
+	inertia2.setValue(inertia.x() != btScalar(0.0) ? btScalar(1.0) / inertia.x(): btScalar(0.0),
                      inertia.y() != btScalar(0.0) ? btScalar(1.0) / inertia.y(): btScalar(0.0),
                      inertia.z() != btScalar(0.0) ? btScalar(1.0) / inertia.z(): btScalar(0.0));
-    BulletBody->obj->setMassProps( btScalar(mass),inertia);
+    //BulletBody->obj->setMassProps( btScalar(mass),inertia);
     BulletBody->wrld->removeRigidBody(BulletBody->obj);
-    BulletBody->wrld->addRigidBody(BulletBody->obj);
+    BulletBody->obj->setMassProps( btScalar(mass),inertia2);
+	BulletBody->obj->setInvInertiaDiagLocal(inertia);
+	BulletBody->wrld->addRigidBody(BulletBody->obj);
 }
 
 float RigidBodyImp::GetMass(long bodyID) const
@@ -185,8 +188,17 @@ float RigidBodyImp::GetMass(long bodyID) const
 
 Vector3f RigidBodyImp::AddMass(const btMass& Mass, const Matrix& matrix, Vector3f massTrans, const long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
-    //dMass transMass(ODEMass);
+	std::cerr << "(RigidBodyImp) ERROR called unimplemented method addMass" << std::endl;
+	std::cerr << "mat:"; matrix.Dump();
+	std::cerr << "vec"; massTrans.Dump();
+
+    dBodyID BulletBody = (dBodyID) bodyID;
+	btVector3 vec = BulletBody->obj->getInvInertiaDiagLocal();
+	vec.setValue(vec.x()!=0.0?1.0/vec.x():0.0f,
+				 vec.y()!=0.0?1.0/vec.y():0.0f,
+				 vec.z()!=0.0?1.0/vec.z():0.0f);
+	BulletBody->obj->setMassProps(1.0/BulletBody->obj->getInvMass(),vec);
+	//dMass transMass(ODEMass);
 
     //dMatrix3 ODEMatrix;
     //GenericPhysicsMatrix& matrixRef = (GenericPhysicsMatrix&) ODEMatrix;
@@ -295,7 +307,9 @@ bool RigidBodyImp::CheckShapeHasCollider(long BodyID)
     return BulletBody->shp->getUserPointer()!=BulletBody->shp;
 }
     
-void RigidBodyImp::SetMassParameters(const GenericMass& mass, long bodyID)
+void RigidBodyImp::SetMassParameters(const float mass,
+                                     const salt::Vector3f& center_of_mass,
+                                     long bodyID)
 {
     //TODO: apply btMass->transform to the rigid body
     dBodyID BulletBody = (dBodyID) bodyID;
@@ -318,7 +332,7 @@ void RigidBodyImp::SetSphere(float density, float radius, long bodyID)
     dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareSphere(BulletMass, density, radius);
-    SetMassParameters(*(reinterpret_cast<oxygen::GenericMass*>(&BulletMass)),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddSphere(float density, float radius, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
@@ -339,7 +353,7 @@ void RigidBodyImp::SetSphereTotal(float total_mass, float radius, long bodyID)
     dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareSphereTotal(BulletMass, total_mass, radius);
-    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddSphereTotal(float total_mass, float radius, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
@@ -360,7 +374,7 @@ void RigidBodyImp::SetBox(float density, const Vector3f& size, long bodyID)
     dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareBox(BulletMass, density, size);
-    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddBox(float density, const Vector3f& size, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
@@ -381,7 +395,7 @@ void RigidBodyImp::SetBoxTotal(float total_mass, const Vector3f& size, long body
     dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareBoxTotal(BulletMass, total_mass, size);
-    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddBoxTotal(float total_mass, const Vector3f& size, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
@@ -404,7 +418,7 @@ void RigidBodyImp::SetCylinder (float density, float radius, float length, long 
     dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareCylinder(BulletMass, density, radius, length);
-    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddCylinder(float density, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
@@ -427,7 +441,7 @@ void RigidBodyImp::SetCylinderTotal(float total_mass, float radius, float length
     dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareCylinderTotal(BulletMass, total_mass, radius, length);
-    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddCylinderTotal(float total_mass, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
@@ -450,7 +464,7 @@ void RigidBodyImp::SetCapsule (float density, float radius, float length, long b
     dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareCapsule(BulletMass, density, radius, length);
-    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
 }
 
 salt::Vector3f RigidBodyImp::AddCapsule (float density, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
@@ -473,7 +487,7 @@ void RigidBodyImp::SetCapsuleTotal(float total_mass, float radius, float length,
     //dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareCapsuleTotal(BulletMass, total_mass, radius, length);
-    SetMassParameters( *(reinterpret_cast<oxygen::GenericMass *>(&BulletMass)) ,bodyID );
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
     //dBodySetMass(BulletBody, &ODEMass);
 }
 
@@ -569,9 +583,9 @@ salt::Matrix RigidBodyImp::GetSynchronisationMatrix(long bodyID)
     mat.m[5] = (&*rot[1])[1];
     mat.m[6] = (&*rot[1])[2];
     mat.m[7] = 0;
-    mat.m[8] =  (&*rot[1])[0];
-    mat.m[9] =  (&*rot[1])[1];
-    mat.m[10] = (&*rot[1])[2];
+    mat.m[8] =  (&*rot[2])[0];
+    mat.m[9] =  (&*rot[2])[1];
+    mat.m[10] = (&*rot[2])[2];
     mat.m[11] = 0;
     mat.m[12] = (&*pos)[0];
     mat.m[13] = (&*pos)[1];
@@ -635,26 +649,38 @@ Vector3f RigidBodyImp::GetPosition(long bodyID) const
 
 void RigidBodyImp::TranslateMass(const Vector3f& v, long bodyID)
 {
-    //dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) bodyID;
+    //TODO: use native bullet calls instead of the abstract 
+    // physicsserver ones
+    float mass = GetMass(bodyID);
+    btMass BulletMass;
+    SetMassParameters(BulletMass.mass,Vector3f(
+		BulletMass.transform.getOrigin().m_floats),bodyID);
     //dMass m;
     //dBodyGetMass(BulletBody, &m);
     //dMassTranslate(&m,v[0],v[1],v[2]);
 }
 
-GenericMass& RigidBodyImp::CreateMass(float mass, salt::Vector3f cVector)
+btMass& RigidBodyImp::CreateMass(float mass, salt::Vector3f cVector)
 {
     btMass BulletMass;
     BulletMass.mass = btScalar(0.0f);
     BulletMass.transform = btTransform::getIdentity();
-    GenericMass& massRef = (GenericMass&) BulletMass;
-    return massRef;
+    return BulletMass;
 }
 
-void RigidBodyImp::SetInertiaTensorAt(int i, float value, GenericMass& mass)
+void RigidBodyImp::SetInertiaTensor(const salt::Matrix& tensor, long BodyID)
 {
+	//:TODO: there's no way to get write access to the inertia tensor
+	// it may be possible to calculate the local inertia and set that
+	// but the existance of this function is more than questionable
+	// as it is already
+
+	//dBodyID BulletBody = (dBodyID) BodyID;
+	//BulletBody->obj->getInvInertiaTensorWorld(
     //btMass& ODEMass = (btMass&) mass;
     //ODEMass.I[i] = value;
 }
 
-//TODO get default mass from world or something
+//:TODO: get default mass from world or something
 #undef DEFAULT_MASS

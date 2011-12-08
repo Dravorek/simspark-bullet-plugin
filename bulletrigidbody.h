@@ -52,7 +52,9 @@ public:
     void UseGravity(bool f, long bodyID);
     bool UsesGravity(long bodyID) const;
     void SetMass(float mass, long bodyID);
-    void SetMassParameters(const oxygen::GenericMass& mass, long bodyID);
+    void SetMassParameters(float mass,
+                           const salt::Vector3f& center_of_mass,
+                           long bodyID);
     float GetMass(long bodyID) const;
     void SetSphere(float density, float radius, long bodyID);
     salt::Vector3f AddSphere(float density, float radius, const salt::Matrix& matrix,
@@ -96,11 +98,11 @@ public:
     void BodySetData(oxygen::RigidBody* rb, long bodyID);
     oxygen::RigidBody* BodyGetData(long bodyID);    
     long CreateBody(long worldID);
-    oxygen::GenericMass& CreateMass(float mass, salt::Vector3f cVector);
-    void SetInertiaTensorAt(int i, float value, oxygen::GenericMass& mass);
+    void SetInertiaTensor(const salt::Matrix& tensor,long bodyID);
     
 protected:
     //These methods are only called internally and are not declared in the interface.
+    btMass& CreateMass(float mass, salt::Vector3f cVector);
     salt::Vector3f AddMass(const btMass& mass, const salt::Matrix& matrix, salt::Vector3f massTrans, const long ODEBody);
     
     bool CheckCompoundStatus(long BodyID, bool prepareAddition);

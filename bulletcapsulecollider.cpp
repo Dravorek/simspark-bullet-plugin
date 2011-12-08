@@ -30,52 +30,56 @@ CapsuleColliderImp::CapsuleColliderImp() : ConvexColliderImp()
 
 void CapsuleColliderImp::SetParams(float radius, float length, long geomID)
 {
-    //dGeomID ODEGeom = (dGeomID) geomID;
-    //dGeomCapsuleSetParams (ODEGeom, radius, length);
+    btCapsuleShape *shp = (btCapsuleShape *) geomID;
+	btCapsuleShape *new_shp = new btCapsuleShape(radius,length);
+	//:HACK:
+	//:TODO: clean this up, this is no way to deal with the immutable problem
+	memcpy(shp,new_shp,sizeof(new_shp));
+	delete new_shp;
 }
 
 void CapsuleColliderImp::SetRadius(float radius, long geomID)
 {
-    //SetParams(radius, GetLength(geomID), geomID);
+    btCapsuleShape *shp = (btCapsuleShape *) geomID;
+	btCapsuleShape *new_shp = new btCapsuleShape(radius,shp->getHalfHeight()*2.0);
+	//:HACK:
+	//:TODO: clean this up, this is no way to deal with the immutable problem
+	memcpy(shp,new_shp,sizeof(new_shp));
+	delete new_shp;
 }
 
 void CapsuleColliderImp::SetLength(float length, long geomID)
 {
-    //SetParams(GetRadius(geomID), length, geomID);
+    btCapsuleShape *shp = (btCapsuleShape *) geomID;
+	btCapsuleShape *new_shp = new btCapsuleShape(shp->getRadius(),length);
+	//:HACK:
+	//:TODO: clean this up, this is no way to deal with the immutable problem
+	memcpy(shp,new_shp,sizeof(new_shp));
+	delete new_shp;
 }
 
 void CapsuleColliderImp::GetParams(float& radius, float& length, long geomID)
 {
-    //dGeomID ODEGeom = (dGeomID) geomID;
-    //dReal r,l;
-    //dGeomCapsuleGetParams(ODEGeom,&r,&l);
-    //radius = r;
-    //length = l;
+    btCapsuleShape *shp = (btCapsuleShape *) geomID;
+	radius = shp->getRadius();
+	length = shp->getHalfHeight()*2.0;
 }
 
 float CapsuleColliderImp::GetRadius(long geomID)
 {
-    //float length;
-    //float radius;
-    //GetParams(radius, length, geomID);
-    //return radius;
-    return 0.0f;
+    btCapsuleShape *shp = (btCapsuleShape *) geomID;
+	return shp->getRadius();
 }
 
 float CapsuleColliderImp::GetLength(long geomID)
 {
-    //float radius;
-    //float length;
-    //GetParams(radius, length, geomID);
-    //return length;
-    return 0.0f;
+    btCapsuleShape *shp = (btCapsuleShape *) geomID;
+	return shp->getHalfHeight()*2.0f;
 }
 
 long CapsuleColliderImp::CreateCapsule()
 {
-    //dGeomID ODEGeom = dCreateCapsule(0, 1.0f, 1.0f);
-    //return (long) ODEGeom;
-    return 0l;
+	return (long)new btCapsuleShape(1.0f,1.0f);
 }
 
 float CapsuleColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
@@ -83,5 +87,10 @@ float CapsuleColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomCapsulePointDepth
     //    (ODEGeom,pos[0],pos[1],pos[2]);
-    return 0.0f;
+	std::cerr <<" (SphereColliderImp) ERROR called unimplemented method GetPointDepth()"
+		<< std::endl;
+
+	//:TODO: implement
+	//returning value that's considered to be on the outside, so as not to generate unnessesary collision events
+	return -0.1f;
 }

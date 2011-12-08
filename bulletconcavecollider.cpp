@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 ConcaveColliderImp::ConcaveColliderImp() : ColliderImp(){
-
+		std::cerr << "(ConcaveColliderImp) ERROR called unimplemented constructor" << std::endl;
 }

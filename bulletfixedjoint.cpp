@@ -25,6 +25,7 @@ using namespace boost;
 
 FixedJointImp::FixedJointImp() : Generic6DOFJointImp()
 {
+	std::cerr << "(FixedJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long FixedJointImp::CreateFixedJoint(long world)
@@ -32,6 +33,7 @@ long FixedJointImp::CreateFixedJoint(long world)
     //dWorldID ODEworld = (dWorldID) world;
     //dJointID ODEJoint = dJointCreateFixed(ODEworld, 0);
     //return (long) ODEJoint;
+	std::cerr << "(FixedJointImp) ERROR called unimplemented method: CreateFixedJoint(" << std::endl;
     return 0l;
 }
 
@@ -39,4 +41,5 @@ void FixedJointImp::SetFixed(long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetFixed(ODEJoint);
+	std::cerr << "(FixedJointImp) ERROR called unimplemented method: SetFixed(" << std::endl;
 }

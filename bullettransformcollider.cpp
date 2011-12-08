@@ -26,11 +26,13 @@ using namespace oxygen;
 
 TransformColliderImp::TransformColliderImp() : ColliderImp()
 {
+	std::cerr << "(TransformColliderImp) ERROR constructed un-implemented Transform Collider "<<std::endl;
 }
 
 long TransformColliderImp::CreateTransformCollider(){
     //dGeomID ODEGeom = dCreateGeomTransform(0);
     //return (long) ODEGeom;
+	std::cerr << "(TransformColliderImp) ERROR created un-implemented Transform Collider "<<std::endl;
     return 0l;
 }
 
@@ -38,4 +40,5 @@ void TransformColliderImp::SetColliderParameters(int cleanup, int info, long geo
     //dGeomID ODEGeom = (dGeomID) geomID;
     //dGeomTransformSetCleanup(ODEGeom, cleanup);
     //dGeomTransformSetInfo(ODEGeom, info);
+	std::cerr << "(TransformColliderImp) ERROR called unimplemented method SetCollideParameters(" << std::endl;
 }

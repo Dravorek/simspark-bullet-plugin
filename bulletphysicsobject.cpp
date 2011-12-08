@@ -29,6 +29,17 @@ using namespace std;
 PhysicsObjectImp::PhysicsObjectImp(){
 }
 
+void printBtMatrix(const btMatrix3x3& mat)
+{
+	for(int i=0; i<3; i++){
+	std::cout<<"[";
+		for(int j=0; j<3;j++)
+		{
+			std::cout<<" " << mat[i][j];	
+		}
+	std::cout<<" ]";
+	}
+}
 void PhysicsObjectImp::ConvertRotationMatrix(const salt::Matrix& rot, GenericPhysicsMatrix& matrix)
 {
     btMatrix3x3& btMatrix = (btMatrix3x3&) matrix;
@@ -43,6 +54,7 @@ void PhysicsObjectImp::ConvertRotationMatrix(const salt::Matrix& rot, GenericPhy
     btMatrix[1][2] = rot.m[9];
     btMatrix[2][2] = rot.m[10];
 }
+
 
 void PhysicsObjectImp::ConvertRotationMatrix(const GenericPhysicsMatrix* matrix, salt::Matrix& rot) const
 {

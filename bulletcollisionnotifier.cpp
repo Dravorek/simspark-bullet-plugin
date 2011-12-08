@@ -14,7 +14,11 @@ BulletCollisionNotifier::~BulletCollisionNotifier(void)
 
 void 	BulletCollisionNotifier::updateAction (btCollisionWorld *collisionWorld, btScalar deltaTimeStep){
     //collisions.clear();
-    int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
+
+
+	std::cerr << "(BulletCollisionNotifier) ERROR called un-finished updateAction()" << std::endl;
+
+	int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
     for (int i=0;i<numManifolds;i++)
     {
         btPersistentManifold* contactManifold =  collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);

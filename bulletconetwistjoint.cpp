@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 ConeTwistJointImp::ConeTwistJointImp() : Generic6DOFJointImp(){
-
+		std::cerr << "(ConeTwistJointImp) ERROR called unimplemented constructor" << std::endl;
 }

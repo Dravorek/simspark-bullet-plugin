@@ -19,17 +19,34 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include "btBulletCollisionCommon.h"
 #include "bulletplanecollider.h"
 
 using namespace oxygen;
 using namespace salt;
-
+#include <map>
+extern std::map<btCollisionShape *,btGeom *> collidermap;
 PlaneColliderImp::PlaneColliderImp() : ColliderImp()
 {
 }
 
 void PlaneColliderImp::SetPlaneParams(float a, float b, float c, float d, long geomID)
 {
+	btStaticPlaneShape *plane = (btStaticPlaneShape *)geomID;
+	btStaticPlaneShape *new_plane = new btStaticPlaneShape( btVector3(btScalar(a),btScalar(b),btScalar(c)), btScalar(d) );
+	
+	*plane = std::move(*new_plane);
+	auto it = collidermap.find(plane);
+	if(it!=collidermap.end()){
+		it->second->wrld->removeRigidBody(it->second->obj);
+		it->second->obj->setCollisionShape(plane);
+		it->second->wrld->addRigidBody(it->second->obj);
+	}
+	//memcpy(plane,new_plane,sizeof(new_plane));
+	//delete new_plane;
+	
+	//:TODO: DO NOT COMMIT WITH THIS BROKEN CODE
+	//:HACK: seriously? copying dynamically allocated objects?
     //dGeomID ODEGeom = (dGeomID) geomID;
     //dGeomPlaneSetParams(ODEGeom, a, b, c, d);
 }
@@ -37,17 +54,16 @@ void PlaneColliderImp::SetPlaneParams(float a, float b, float c, float d, long g
 long PlaneColliderImp::CreatePlane()
 {
    // // a plane with normal pointing up, going through the origin
-   //dGeomID ODEGeom = dCreatePlane(0, 0, 1, 0, 0);
-   //return (long) ODEGeom;
-    return 0l;
+   btStaticPlaneShape *new_plane = new btStaticPlaneShape( btVector3(btScalar(0.0f),btScalar(1.0f),btScalar(0.0f)), btScalar(0.0f) );
+	return (long)new_plane;
 }
 
 void PlaneColliderImp::SetParams(const salt::Vector3f& pos, salt::Vector3f normal, long geomID)
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
-    //normal.Normalize();
-    //float d = pos.Dot(normal);
-    //dGeomPlaneSetParams(ODEGeom, normal.x(), normal.y(), normal.z(), d);
+    normal.Normalize();
+    float d = pos.Dot(normal);
+    SetPlaneParams(normal.x(), normal.y(), normal.z(), d,geomID);
 }
 
 float PlaneColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
@@ -55,5 +71,10 @@ float PlaneColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomPlanePointDepth
     //    (ODEGeom,pos[0],pos[1],pos[2]);
-    return 0.0f;
+    //:TODO: check if bullet doesn't have a comaprable function
+
+	btStaticPlaneShape *plane = (btStaticPlaneShape *)geomID;
+	const btVector3& normal = plane->getPlaneNormal();
+	const btScalar& constant = plane->getPlaneConstant();
+	return constant - normal.getX()*pos.x() - normal.getY()*pos.y() - normal.getZ()*pos.z();
 }

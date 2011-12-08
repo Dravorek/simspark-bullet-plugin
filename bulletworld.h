@@ -54,6 +54,7 @@ public:
     float GetContactSurfaceLayer(long worldID) const;
     long CreateWorld();
     void DestroyWorld(long worldID);
+	boost::mutex *GetMutex();
 };
 
 DECLARE_CLASS(WorldImp);

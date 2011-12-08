@@ -22,14 +22,16 @@
 #include "bulletphysicsserver.h"
 
 PhysicsServerImp::PhysicsServerImp(){
-
+	std::cerr << "(PhysicsServerImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 PhysicsServerImp::~PhysicsServerImp(){
+	std::cerr << "(PhysicsServerImp) ERROR called unimplemented destructor" << std::endl;
     //dCloseODE();
 }
 
 void PhysicsServerImp::InitEngine()
 {
+	std::cerr << "(PhysicsServerImp) ERROR called unimplemented method InitEngine(" << std::endl;
     //dInitODE();    
 }

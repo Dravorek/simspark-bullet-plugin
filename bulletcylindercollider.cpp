@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 CylinderColliderImp::CylinderColliderImp() : ConvexColliderImp(){
-
+	std::cerr << "(CylinderColliderImp) ERROR called unimplemented constructor" << std::endl;
 }

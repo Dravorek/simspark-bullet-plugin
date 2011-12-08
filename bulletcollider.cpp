@@ -29,6 +29,9 @@ using namespace salt;
 using namespace boost;
 using namespace std;
 
+
+std::map<btCollisionShape *,btGeom *> collidermap;
+
 ColliderImp::ColliderImp() : PhysicsObjectImp()
 {
 }
@@ -38,53 +41,75 @@ ColliderImp::~ColliderImp()
 }
 
 Collider* ColliderImp::GetColliderPointer(long geomID){
-    btGeom *BulletGeom = (btGeom *) geomID;
+    btCollisionShape* BulletGeom = (btCollisionShape *) geomID;
     //TODO: not very safe, check if geomID reallly is the right type
-    return static_cast<Collider*>(BulletGeom->obj->getUserPointer());
+	if(BulletGeom)
+		return static_cast<Collider*>(BulletGeom->getUserPointer());
+	else 
+		return (Collider*)nullptr;
 }
 
 void ColliderImp::SetRotation(const Matrix& rot, long geomID)
 {
-    btGeom *BulletGeom = (btGeom *) geomID;
-    btMatrix3x3 BulletMatrix;
-    GenericPhysicsMatrix& matrixRef = (GenericPhysicsMatrix&) BulletMatrix; 
-    ConvertRotationMatrix(rot, matrixRef);
-    btTransform trans = BulletGeom->obj->getWorldTransform();
-    trans.setBasis(BulletMatrix);
-    BulletGeom->obj->setWorldTransform(trans);
+    //btGeom *BulletGeom = (btGeom *) geomID;
+    //btMatrix3x3 BulletMatrix;
+    //GenericPhysicsMatrix& matrixRef = (GenericPhysicsMatrix&) BulletMatrix; 
+    //ConvertRotationMatrix(rot, matrixRef);
+    //btTransform trans = BulletGeom->obj->getWorldTransform();
+    //trans.setBasis(BulletMatrix);
+    //BulletGeom->obj->setWorldTransform(trans);
+	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::SetRotation() called."
+		      << std::endl;
 }
 
 void ColliderImp::SetPosition(const Vector3f& globalPos, long geomID)
 {
-    btGeom *BulletGeom = (btGeom *) geomID;
-    btTransform trans = BulletGeom->obj->getWorldTransform();
-    trans.setOrigin(btVector3(
-            btScalar(globalPos[0]),
-            btScalar(globalPos[1]),
-            btScalar(globalPos[2])));    
-    BulletGeom->obj->setWorldTransform(trans);
+    //btGeom *BulletGeom = (btGeom *) geomID;
+    //btTransform trans = BulletGeom->obj->getWorldTransform();
+    //trans.setOrigin(btVector3(
+    //        btScalar(globalPos[0]),
+    //        btScalar(globalPos[1]),
+    //        btScalar(globalPos[2])));    
+    //BulletGeom->obj->setWorldTransform(trans);
+	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::SetPosition() called."
+		      << std::endl;
 }
 
 void ColliderImp::SetLocalPosition(const Vector3f& pos, long geomID)
 {
-    SetPosition(pos,geomID);
+    //SetPosition(pos,geomID);
+	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::SetLocalPosition() called."
+		      << std::endl;
 }
 
 Vector3f ColliderImp::GetPosition(long geomID) const
 {
-    btGeom *BulletGeom = (btGeom *) geomID;
-    btTransform trans = BulletGeom->obj->getWorldTransform();
-    return Vector3f(
-                (float)trans.getOrigin().x(),
-                (float)trans.getOrigin().y(),
-                (float)trans.getOrigin().z()
+    //btGeom *BulletGeom = (btGeom *) geomID;
+    //btTransform trans = BulletGeom->obj->getWorldTransform();
+    //return Vector3f(
+    //            (float)trans.getOrigin().x(),
+    //            (float)trans.getOrigin().y(),
+    //            (float)trans.getOrigin().z()
+    //        );
+	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::GetPosition() called."
+		      << std::endl;
+	return Vector3f(
+                (float)0.0f,
+                (float)0.0f,
+                (float)0.0f
             );
 }
 
 long ColliderImp::GetParentSpaceID(long geomID)
 {
     //TODO: check how safe returning 0 is
-    return 0l;
+	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::GetSpaceID() called."
+		      << std::endl;
+	for(auto it = spaces.begin();it!=spaces.end();it++){
+		if((long)it->second == geomID)
+			return it->first;
+	}
+	return 1l;
 }
 
 bool ColliderImp::Intersect(boost::shared_ptr<Collider> collider, long geomID)
@@ -103,13 +128,17 @@ bool ColliderImp::Intersect(boost::shared_ptr<Collider> collider, long geomID)
          sizeof(contact)
          ) > 0;
          */
-    return false;
+	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::Intersect() called."
+		      << std::endl;
+	return false;
 }
 
 void ColliderImp::DestroyGeom(long geomID)
 {
-    btGeom *BulletGeom = (btGeom *) geomID;
-    //TODO: check if deleting the internal pointer is necessary
+    btCollisionShape *BulletGeom = (btCollisionShape *) geomID;
+	std::cerr << "(bulletimps) WARNING notFinished ColliderImp::DestroyGeom() called."
+			  << std::endl;
+	//TODO: check if deleting the internal pointer is necessary
     //delete (Collider *)BulletGeom->getUserPointer() or
     //even removing the collisionobject from the world
     
@@ -136,40 +165,63 @@ void ColliderImp::DestroyGeom(long geomID)
     }
     */
     //TODO: elegant deleting in tune with what bulletrigidbody.cpp
-    if(BulletGeom->obj!=0)
-    {
-        //TODO: REMOVE FROM WORLD and every constraint
-        delete BulletGeom->obj;
-    }
-    delete BulletGeom->shp;
+//    if(BulletGeom->obj!=0)
+//    {
+//        //TODO: REMOVE FROM WORLD and every constraint
+//        delete BulletGeom->obj;
+//    }
+    if(BulletGeom)
+		delete BulletGeom;
 }
 
 
 void ColliderImp::TransformSetGeom(long parentGeomID, long geomID){
-    /// TODO : figure out how to handle parenting in bullet
+    //:TODO: figure out how to handle parenting in bullet
     /*dGeomID parentODEGeom = (dGeomID) parentGeomID;
     dGeomID ODEGeom = (dGeomID) geomID;
     dGeomTransformSetGeom(parentODEGeom, ODEGeom);*/
+	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::TransformSetGeom() called."
+		      << std::endl;
 }
 
 void ColliderImp::SetSpace(long spaceID, long geomID, Collider* collider){
     //dSpaceID ODESpace = (dSpaceID) spaceID;
-    // TODO add space handling if necessary
+    //:TODO: add space handling if necessary
     
-    btGeom *BulletGeom = (btGeom *) geomID;
-    
-    if(BulletGeom->obj->getUserPointer() ==0){
-        BulletGeom->obj->setUserPointer(collider);
-    }
-
-
+ //   btGeom *BulletGeom = (btGeom *) geomID;
+ //   
+ //   if(BulletGeom->shp && 
+	//	BulletGeom->shp->getUserPointer() ==0)
+	//{
+ //       BulletGeom->shp->setUserPointer(collider);
+ //   }
+	btCollisionShape *shp = (btCollisionShape *)geomID;
+	shp->setUserPointer(collider);
+	std::cerr << "(bulletimps) DEBUG called ColliderImp::SetSpace(spaceID="<<spaceID<<",geom"<<geomID<<") called."
+		      << std::endl;
+	for(auto it = spaces.begin();it!=spaces.end();it++){
+		if((long)it->second == geomID){
+			spaces.erase(it);
+			break;
+		}
+	}
+	spaces.insert(std::pair<int,void*>(spaceID,(void*)geomID));
 }
 
 void ColliderImp::SetBody(long bodyID, long geomID){
     /// TODO : figure out how to handle parenting in bullet
-    /*dBodyID ODEBody = (dBodyID) bodyID;
+    
+	/*dBodyID ODEBody = (dBodyID) bodyID;
     dGeomID ODEGeom = (dGeomID) geomID;
     dGeomSetBody(ODEGeom, ODEBody);*/
+	std::cerr << "(bulletimps) DEBUG called ColliderImp::SetBody(body="<<bodyID<<",geom="<<geomID<<") called."
+		      << std::endl;
+	btGeom *bulletBody = (btGeom *)bodyID;
+	bulletBody->wrld->removeRigidBody(bulletBody->obj);
+	bulletBody->obj->setCollisionShape( (btCollisionShape *)geomID);
+	bulletBody->shp=(btCollisionShape *)geomID;
+	bulletBody->wrld->addRigidBody(bulletBody->obj);
+	collidermap.insert(std::pair<btCollisionShape *,btGeom *>(bulletBody->shp,bulletBody));
 }
 
 void ColliderImp::RemoveFromSpace(long geomID, long spaceID){
@@ -177,4 +229,14 @@ void ColliderImp::RemoveFromSpace(long geomID, long spaceID){
     /*dGeomID ODEGeom = (dGeomID) geomID;
     dSpaceID ODESpace = (dSpaceID) spaceID;
     dSpaceRemove(ODESpace, ODEGeom);*/
+	std::cerr << "(bulletimps) DEBUG calle ColliderImp::RemoveFromSpace(geom="<<geomID<<",space="<<spaceID<<") called."
+		      << std::endl;
+
+	auto range = spaces.equal_range(spaceID);
+	for(auto it = range.first;it!=range.second;it++){
+		if((long)it->second == geomID){
+			spaces.erase(it);
+			break;
+		}
+	}
 }

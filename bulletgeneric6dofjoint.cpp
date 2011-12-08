@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 Generic6DOFJointImp::Generic6DOFJointImp() : JointImp(){
-
+	std::cerr << "(Generic6DOFJointImp) ERROR called unimplemented constructor" << std::endl;
 }

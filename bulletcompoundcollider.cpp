@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 CompoundColliderImp::CompoundColliderImp() : ColliderImp(){
-
+		std::cerr << "(CompoundColliderImp) ERROR called unimplemented constructor" << std::endl;
 }

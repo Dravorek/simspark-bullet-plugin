@@ -25,6 +25,7 @@ using namespace salt;
 
 UniversalJointImp::UniversalJointImp() : Generic6DOFJointImp()
 {
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long UniversalJointImp::CreateUniversalJoint(long world)
@@ -32,6 +33,7 @@ long UniversalJointImp::CreateUniversalJoint(long world)
     //dWorldID ODEWorld = (dWorldID) world;
     //dJointID ODEJoint = dJointCreateUniversal(ODEWorld, 0);
     //return (long) ODEJoint;
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: CreateUniversalJoint(" << std::endl;
     return 0l;
 }
 
@@ -39,6 +41,7 @@ void UniversalJointImp::SetAnchor(const Vector3f& anchor, long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAnchor (ODEJoint, anchor[0], anchor[1], anchor[2]);
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
 }
 
 Vector3f UniversalJointImp::GetAnchor1(long jointID)
@@ -48,6 +51,7 @@ Vector3f UniversalJointImp::GetAnchor1(long jointID)
     //dJointGetUniversalAnchor(ODEJoint, anchor);
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //return pos;
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
     return Vector3f();
 }
 
@@ -58,6 +62,7 @@ Vector3f UniversalJointImp::GetAnchor2(long jointID)
     //dJointGetUniversalAnchor2(ODEJoint, anchor);
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //return pos;
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
     return Vector3f();
 }
 
@@ -65,12 +70,14 @@ void UniversalJointImp::SetAxis1(const Vector3f & axis, long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAxis1(ODEJoint,axis[0],axis[1],axis[2]);
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAxis1(" << std::endl;
 }
 
 void UniversalJointImp::SetAxis2(const Vector3f & axis, long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAxis2(ODEJoint,axis[0],axis[1],axis[2]);
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAxis2(" << std::endl;
 }
 
 Vector3f UniversalJointImp::GetAxis1(long jointID) const
@@ -80,6 +87,7 @@ Vector3f UniversalJointImp::GetAxis1(long jointID) const
     //dJointGetUniversalAxis1(ODEJoint, axis);
     //Vector3f vec = Vector3f(axis[0],axis[1],axis[2]);
     //return vec;
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAxis1(" << std::endl;
     return Vector3f();
 }
 
@@ -90,6 +98,7 @@ Vector3f UniversalJointImp::GetAxis2(long jointID) const
     //dJointGetUniversalAxis2(ODEJoint, axis);
     //Vector3f vec = Vector3f(axis[0],axis[1],axis[2]);
     //return vec;
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAxis2(" << std::endl;
     return Vector3f();
 }
 
@@ -97,6 +106,7 @@ float UniversalJointImp::GetAngle1(long jointID) const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle1(ODEJoint));
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngle1(" << std::endl;
     return 0.0f;
 }
 
@@ -104,6 +114,7 @@ float UniversalJointImp::GetAngle2(long jointID) const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle2(ODEJoint));
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngle2(" << std::endl;
     return 0.0f;
 }
 
@@ -111,6 +122,7 @@ float UniversalJointImp::GetAngleRate1(long jointID) const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle1Rate(ODEJoint));
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngleRate1(" << std::endl;
     return 0.0f;
 }
 
@@ -118,5 +130,6 @@ float UniversalJointImp::GetAngleRate2(long jointID) const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle2Rate(ODEJoint));
+	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngleRate2(" << std::endl;
     return 0.0f;
 }

@@ -22,8 +22,11 @@
 #include "bulletspace.h"
 #include <oxygen/physicsserver/collider.h>
 #include <oxygen/physicsserver/space.h>
+#include <map>
 
 using namespace oxygen;
+
+std::multimap<int,void*> spaces;
 
 void SpaceImp::collisionNearCallback(void* data, long obj1, long obj2)
 {
@@ -32,10 +35,12 @@ void SpaceImp::collisionNearCallback(void* data, long obj1, long obj2)
     
     //Space* space = (Space*) data;
     //space->HandleCollide((long) obj1, (long) obj2);
+	std::cerr << "(SpaceImp) ERROR called unimplemented method CreateSliderJoint(" << std::endl;
 }
 
 SpaceImp::SpaceImp() : PhysicsObjectImp()
 {
+	std::cerr << "(SpaceImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 void SpaceImp::Collide(long space, Space* callee)
@@ -45,6 +50,7 @@ void SpaceImp::Collide(long space, Space* callee)
 
     //dSpaceID SpaceImp = (dSpaceID) space;
     //dSpaceCollide(SpaceImp, callee, collisionNearCallback);
+	std::cerr << "(SpaceImp) ERROR called unimplemented method Collide(" << std::endl;
 }
 
 void SpaceImp::Collide2(long obj1, long obj2, Space* callee)
@@ -55,16 +61,27 @@ void SpaceImp::Collide2(long obj1, long obj2, Space* callee)
     //dGeomID ODEObj1 = (dGeomID) obj1;
     //dGeomID ODEObj2 = (dGeomID) obj2;
     //dSpaceCollide2(ODEObj1, ODEObj2, callee, &collisionNearCallback);
+	std::cerr << "(SpaceImp) ERROR called unimplemented method Collide2(" << std::endl;
 }
 
 long SpaceImp::GetParentSpaceID(long spaceID)
 {
     //not used by the Bullet implementation
-
     //dGeomID SpaceImp = (dGeomID) spaceID;
     //dSpaceID parentSpace = dGeomGetSpace(SpaceImp);
     //return (long) parentSpace;
-    return 0l;
+    
+	std::cerr << "(SpaceImp) DEBUG getParentSpace() "<< spaceID << std::endl; 
+    
+	if(spaceID==1)
+		return 0l;
+
+	for(auto it=spaces.begin(); it !=spaces.end();it++){
+		if((long)((*it).second)== spaceID)
+			return it->first;
+	}
+	std::cerr << "(SpaceImp) DEBUG top level space found"<< spaceID << std::endl; 
+	return 1l;
 }
 
 long SpaceImp::CreateContactGroup()
@@ -75,7 +92,8 @@ long SpaceImp::CreateContactGroup()
     //dJointGroupID ODEContactGroup = dJointGroupCreate(0);
 
     //return (long) ODEContactGroup;
-    return 0l;
+	std::cerr << "(SpaceImp) ERROR called unimplemented function CreateContactGroup()" << std::endl; 
+    return 1l;
 }
 
 void SpaceImp::PostPhysicsUpdateInternal(long contactGroup)
@@ -90,35 +108,72 @@ void SpaceImp::PostPhysicsUpdateInternal(long contactGroup)
 long SpaceImp::CreateSpace(long spaceID){
     //not supported by the bullet implementation
     
-    //dSpaceID SpaceImp = (dSpaceID) spaceID;
+	static int counter = 2;
+	int newSpace = counter++;
+	spaces.insert( std::pair<int,void*>(spaceID?spaceID:1,(void*)newSpace));
+
+	//dSpaceID SpaceImp = (dSpaceID) spaceID;
     //dSpaceID CreatedSpace = dHashSpaceCreate(SpaceImp);
     //return (long) CreatedSpace;
+	std::cerr << "(SpaceImp) DEBUG created space:" << newSpace << std::endl; 
 
-    return 0l;
+    return newSpace;
 }
 
 void SpaceImp::DestroySpace(long contactGroup, long spaceID)
 {
     //not supported by bullet
+	long parent = GetParentSpaceID(spaceID);
+	if(parent==0) return;
+
+	auto it = spaces.begin();
+	
+	//delete the parent entry
+	while(it!=spaces.end())
+	{
+		if((int)it->second == spaceID)
+		{
+			spaces.erase(it);
+			break;
+		}
+	}
+	//find all the children and save them
+	auto range = spaces.equal_range(spaceID);
+	std::vector<void *>vec;
+	for(auto iter= range.first;iter!=range.second;iter++)
+	{
+		vec.push_back(it->second);
+	}
+	//delete the children entries
+	spaces.erase(range.first,range.second);
+	std::cerr << "(SpaceImp) DEBUG deleted space:" << spaceID
+		      << "  contact group:" << contactGroup << std::endl; 
+
 }
 
 bool SpaceImp::ObjectIsSpace(long objectID){
     //not supported by bullet
-    return false;
+	bool isSpace = spaces.find(objectID)!=spaces.end();
+	std::cerr << "(SpaceImp) DEBUG isSpace(" << objectID << ")="
+		      << isSpace << std::endl;
+	return isSpace;
 }
 
 long SpaceImp::FetchBody(long geomID){
     //not necessary, as only used by the unsupported Space::Collide()
+    std::cerr << "(SpaceImp) ERROR called unimplemented function FetchBody()" << std::endl; 
     return 0l;
 }
 
 long SpaceImp::FetchSpace(long geomID){
     //not necessary, as only used by the unsupported Space::Collide()
+    std::cerr << "(SpaceImp) ERROR called unimplemented function FetchSpace()" << std::endl; 
     return 0l;
 }
 
 bool SpaceImp::AreConnectedWithJoint(long bodyID1, long bodyID2){
     //only used by Space::Collide(); so not used in bullet implementation
+    std::cerr << "(SpaceImp) ERROR called unimplemented function AreConnectedWithJoint()" << std::endl; 
     return true;
 }
 

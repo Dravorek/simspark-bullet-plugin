@@ -27,8 +27,132 @@
 using namespace oxygen;
 using namespace salt;
 
+#include "GlutStuff.h"
+#include "btBulletDynamicsCommon.h"
+
+#include "GLDebugDrawer.h"
+
+#include "boost\thread.hpp"
+
+/*#ifdef _WINDOWS
+#include "Win32DemoApplication.h"
+#define PlatformDemoApplication Win32DemoApplication
+#else
+*/#include "GlutDemoApplication.h"
+#define PlatformDemoApplication GlutDemoApplication
+//#endif
+
+GLDebugDrawer gDrawer;
+
+boost::mutex *worldMutex=nullptr;
+
+class BulletTest :
+    public PlatformDemoApplication
+{
+    btBroadphaseInterface *mBf;
+    btDefaultCollisionConfiguration *mConfig;
+    btCollisionDispatcher *mDispatcher;
+    btSequentialImpulseConstraintSolver *mSolver;
+    btAlignedObjectArray<btCollisionShape *> mCollisionShapes;
+
+public:
+	boost::thread *thrd;
+    BulletTest(btDynamicsWorld *wrld);
+    virtual ~BulletTest()
+	{
+		if(thrd)
+			delete thrd;
+	}
+
+	void	initPhysics(){}
+
+	void	exitPhysics(){}
+
+	virtual void clientMoveAndDisplay(){
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+
+		//simple dynamics world doesn't handle fixed-time-stepping
+		float ms = getDeltaTimeMicroseconds();
+
+		gDrawer.setDebugMode(btIDebugDraw::DBG_DrawWireframe+btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
+
+		///step the simulation
+		
+		//////////////////////////////////////////////////////////////////////////
+		//worldMutex not yet created, wait until it exists
+		while(!worldMutex)
+			boost::this_thread::sleep(boost::posix_time::milliseconds(20));
+		//////////////////////////////////////////////////////////////////////////
+		worldMutex->lock();
+		if (m_dynamicsWorld)
+		{
+			//m_dynamicsWorld->stepSimulation(ms / 1000000.f);
+			//optional but useful: debug drawing
+			m_dynamicsWorld->debugDrawWorld();
+		}
+
+		renderme(); 
+		worldMutex->unlock();
+
+		glFlush();
+
+		swapBuffers();
+
+	}
+
+	virtual void displayCallback(){
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+
+		//////////////////////////////////////////////////////////////////////////
+		//worldMutex not yet created, wait until it exists
+		while(!worldMutex){
+			std::cerr << "mutex not created yet, waiting for it for 20ms"<< std::endl; 
+			boost::this_thread::sleep(boost::posix_time::milliseconds(20));
+		}
+		//////////////////////////////////////////////////////////////////////////
+		worldMutex->lock();
+		std::cerr << "aquired WORLDLOCK for BulletDraw" << std::endl;
+
+		renderme();
+
+		//optional but useful: debug drawing to detect problems
+		if (m_dynamicsWorld)
+			m_dynamicsWorld->debugDrawWorld();
+		std::cerr << "unlocking WORLDLOCK for BulletDraw" << std::endl;
+		worldMutex->unlock();
+		
+		glFlush();
+		swapBuffers();
+	}
+	virtual void	clientResetScene(){
+		exitPhysics();
+		initPhysics();
+		//this->getDynamicsWorld()->setDebugDrawer(&gDrawer);
+	}
+
+	static DemoApplication* Create()
+	{
+		BulletTest* demo = new BulletTest(nullptr);
+		demo->myinit();
+		demo->initPhysics();
+		return demo;
+	}
+
+	void operator()(){
+		
+        std::string *argv = new std::string("test");
+		char *argp= (char*)argv->c_str();
+		glutmain(1,(char **)&argp,800,600,"Bullet Test",this);
+	}
+};
+BulletTest::BulletTest(btDynamicsWorld *wrld){
+		m_dynamicsWorld=(wrld);
+		this->setCameraDistance(btScalar(50.0f));
+		thrd = new boost::thread(boost::ref<BulletTest>(*this));
+}
 
 WorldImp::WorldImp() : PhysicsObjectImp(){
+	gDrawer.setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
 }
 
 void WorldImp::SetGravity(const Vector3f& gravity, long worldID)
@@ -129,7 +253,9 @@ long WorldImp::CreateWorld()
     mSolver = new btSequentialImpulseConstraintSolver();
     WorldImp = new btDiscreteDynamicsWorld(mDispatcher,mBf,(btConstraintSolver *)mSolver,mConfig);
     WorldImp->setGravity(btVector3(0.0f,-9.81f,0.0f));
+	worldMutex = new boost::mutex();
     
+	BulletTest *test = new BulletTest(WorldImp);
     return (long) WorldImp;
 }
 
@@ -163,4 +289,8 @@ void WorldImp::DestroyWorld(long worldID)
     delete slv;
     delete disp;
     delete cfg;
+}
+
+boost::mutex *WorldImp::GetMutex(){
+	return worldMutex;
 }

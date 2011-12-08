@@ -26,6 +26,7 @@ using namespace salt;
 
 HingeJointImp::HingeJointImp() : Generic6DOFJointImp()
 {
+	std::cerr << "(HingeJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long HingeJointImp::CreateHingeJoint(long worldID)
@@ -34,6 +35,7 @@ long HingeJointImp::CreateHingeJoint(long worldID)
     //dJointID ODEJoint = dJointCreateHinge(ODEWorld, 0);
     //dJointSetFeedback( ODEJoint, &mFeedback );
     //return (long) ODEJoint;
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: CreateHingeJoint(" << std::endl;
     return 0l;
 }
 
@@ -41,6 +43,7 @@ void HingeJointImp::SetAnchor(const Vector3f& anchor, long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetHingeAnchor (ODEJoint, anchor[0], anchor[1], anchor[2]);
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
 }
 
 Vector3f HingeJointImp::GetAnchor1(long jointID)
@@ -51,6 +54,7 @@ Vector3f HingeJointImp::GetAnchor1(long jointID)
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //
     //return pos;
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
     return Vector3f();
 }
 
@@ -62,6 +66,7 @@ Vector3f HingeJointImp::GetAnchor2(long jointID)
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //
     //return pos;
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
     return Vector3f();
 }
 
@@ -69,6 +74,7 @@ void HingeJointImp::SetAxis(const Vector3f& axis, long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetHingeAxis(ODEJoint, axis[0], axis[1], axis[2]);
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: SetAxis(" << std::endl;
 }
 
 Vector3f HingeJointImp::GetAxis(long jointID)
@@ -77,6 +83,7 @@ Vector3f HingeJointImp::GetAxis(long jointID)
     //dReal axis[3];
     //dJointGetHingeAxis(ODEJoint, axis);
     //return Vector3f (axis[0], axis[1], axis[2]);
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAxis(" << std::endl;
     return Vector3f();
 }
 
@@ -84,6 +91,7 @@ float HingeJointImp::GetAngle(long jointID) const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetHingeAngle(ODEJoint));
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAngle(" << std::endl;
     return 0.0f;
 }
 
@@ -91,6 +99,7 @@ float HingeJointImp::GetAngleRate(long jointID) const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetHingeAngleRate(ODEJoint));
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAngleRate(" << std::endl;
     return 0.0f;
 }
 
@@ -99,5 +108,6 @@ float HingeJointImp::GetTorque(long jointID) const
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointFeedback* fb = dJointGetFeedback(ODEJoint);
     //return dLENGTH(fb->t1) + dLENGTH(fb->t2);
+	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetTorque(" << std::endl;
     return 0.0f;
 }

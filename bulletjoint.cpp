@@ -32,13 +32,15 @@ JointImp::JointImp() : PhysicsObjectImp()
 Joint* JointImp::GetJoint(long jointID){
     //dJointID JointImp = (dJointID) jointID;
     //return static_cast<Joint*>(dJointGetData(JointImp));
-    return 0;
+	std::cerr << "(JointImp) ERROR called unimplemented method GetJoint(" << std::endl;
+	return 0;
 }
 
 bool JointImp::AreConnected(long bodyID1, long bodyID2){
     //dBodyID ODEBody1 = (dBodyID) bodyID1;
     //dBodyID ODEBody2 = (dBodyID) bodyID2;
     //return dAreConnected(ODEBody1, ODEBody2) == 1;
+	std::cerr << "(JointImp) ERROR called unimplemented method AreConnected(" << std::endl;
     return false;
 }
 
@@ -46,6 +48,7 @@ bool JointImp::AreConnectedExcluding(long bodyID1, long bodyID2, int joint_type)
     //dBodyID ODEBody1 = (dBodyID) bodyID1;
     //dBodyID ODEBody2 = (dBodyID) bodyID2;
     //return dAreConnectedExcluding(ODEBody1, ODEBody2, joint_type) == 1;
+	std::cerr << "(JointImp) ERROR called unimplemented method AreConnectedExcluding(" << std::endl;
     return false;
 }
 
@@ -53,6 +56,7 @@ void JointImp::OnLink(long jointID, Joint* joint)
 {
     //dJointID JointImp = (dJointID) jointID;
     //dJointSetData(JointImp, joint);
+	std::cerr << "(JointImp) ERROR called unimplemented method OnLink(" << std::endl;
 }
 
 void JointImp::Attach(long bodyID1, long bodyID2, long jointID)
@@ -61,12 +65,14 @@ void JointImp::Attach(long bodyID1, long bodyID2, long jointID)
     //dBodyID ODEBody2 = (dBodyID) bodyID2;
     //dJointID JointImp = (dJointID) jointID;
     //dJointAttach(JointImp, ODEBody1, ODEBody2);
+	std::cerr << "(JointImp) ERROR called unimplemented method Attach(" << std::endl;
 }
 
 int JointImp::GetType(long jointID) const
 {
     //dJointID JointImp = (dJointID) jointID;
     //return dJointGetType(JointImp);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetType(" << std::endl;
     return 0;
 }
 
@@ -75,6 +81,7 @@ long JointImp::GetBodyID(int idx, long jointID)
     //dJointID JointImp = (dJointID) jointID;
     //dBodyID ODEBodyID = dJointGetBody(JointImp, idx);
     //return (long) ODEBodyID;
+	std::cerr << "(JointImp) ERROR called unimplemented method GetBodyID(" << std::endl;
     return 0l;
 }
 
@@ -102,12 +109,14 @@ void JointImp::EnableFeedback(bool enable, long jointID,
     //dJointFeedback* ODEFeedback = (dJointFeedback*) feedback.get();
 
     //dJointSetFeedback(JointImp,ODEFeedback);
+	std::cerr << "(JointImp) ERROR called unimplemented method EnableFeedback(" << std::endl;
 }
 
 bool JointImp::FeedbackEnabled(long jointID) const
 {
     //dJointID JointImp = (dJointID) jointID;
     //return (dJointGetFeedback(JointImp) != 0);
+	std::cerr << "(JointImp) ERROR called unimplemented method FeedbackEnabled(" << std::endl;
     return false;
 }
 
@@ -139,6 +148,7 @@ Vector3f JointImp::GetFeedbackForce(int idx,
     //    default:
     //        return Vector3f(0,0,0);
     //    }
+	std::cerr << "(JointImp) ERROR called unimplemented method GetFeedbackForce(" << std::endl;
     return Vector3f();
 }
 
@@ -170,160 +180,189 @@ Vector3f JointImp::GetFeedbackTorque(int idx,
     //    default:
     //        return Vector3f(0,0,0);
     //    }
+	std::cerr << "(JointImp) ERROR called unimplemented method GetFeedbackTorque(" << std::endl;
     return Vector3f();
 }
 
 void JointImp::SetFudgeFactor(int idx, float fudge_factor, long jointID)
 {
     //SetParameter(dParamFudgeFactor + (idx * dParamGroup), fudge_factor, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetFudgeFactor(" << std::endl;
 }
 
 float JointImp::GetFudgeFactor(int idx, long jointID) const
 {
     //return GetParameter(dParamFudgeFactor + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetFudgeFactor(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetBounce(int idx, float bounce, long jointID)
 {
     //SetParameter(dParamBounce + (idx * dParamGroup),bounce, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetBounce(" << std::endl;
 }
 
 float JointImp::GetBounce(int idx, long jointID) const
 {
     //return GetParameter(dParamBounce + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetBounce(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetLowStopPos(int idx, float pos, long jointID)
 {
     //SetParameter(dParamLoStop + (idx * dParamGroup), pos, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetLowStopPos(" << std::endl;
 }
 
 float JointImp::GetLowStopPos(int idx, long jointID) const
 {
     //return GetParameter(dParamLoStop + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetLowStopPos(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetHighStopPos(int idx, float pos, long jointID)
 {
     //SetParameter(dParamHiStop + (idx * dParamGroup), pos, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetHighStopPos(" << std::endl;
 }
 
 float JointImp::GetHighStopPos(int idx, long jointID) const
 {
     //return GetParameter(dParamHiStop + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetHighStopPos(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetLowStopDeg(int idx, float deg, long jointID)
 {
     //SetParameter(dParamLoStop + (idx * dParamGroup), gDegToRad(deg), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetLowStopDeg(" << std::endl;
 }
 
 float JointImp::GetLowStopDeg(int idx, long jointID) const
 {
     //return gRadToDeg(GetParameter(dParamLoStop + (idx * dParamGroup), jointID));
+	std::cerr << "(JointImp) ERROR called unimplemented method GetLowStopDeg(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetHighStopDeg(int idx, float deg, long jointID)
 {
     //SetParameter(dParamHiStop + (idx * dParamGroup), gDegToRad(deg), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetHighStopDeg(" << std::endl;
 }
 
 float JointImp::GetHighStopDeg(int idx, long jointID) const
 {
     //return gRadToDeg(GetParameter(dParamHiStop + (idx * dParamGroup), jointID));
+	std::cerr << "(JointImp) ERROR called unimplemented method GetHighStopDeg(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetCFM(int idx, float cfm, long jointID)
 {
     //SetParameter(dParamCFM + (idx * dParamGroup), cfm, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetCFM(" << std::endl;
 }
 
 float JointImp::GetCFM(int idx, long jointID) const
 {
     //return GetParameter(dParamCFM + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetCFM(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetStopCFM(int idx, float cfm, long jointID)
 {
     //SetParameter(dParamStopCFM + (idx * dParamGroup), cfm, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetStopCFM(" << std::endl;
 }
 
 float JointImp::GetStopCFM(int idx, long jointID) const
 {
     //return GetParameter(dParamStopCFM + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetStopCFM(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetStopERP(int idx, float erp, long jointID)
 {
     //SetParameter(dParamStopERP + (idx * dParamGroup), erp, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetStopERP(" << std::endl;
 }
 
 float JointImp::GetStopERP(int idx, long jointID) const
 {
     //return GetParameter(dParamStopERP + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetStopERP(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetSuspensionERP(int idx, float erp, long jointID)
 {
     //SetParameter(dParamSuspensionERP + (idx * dParamGroup), erp, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetSuspensionERP(" << std::endl;
 }
 
 float JointImp::GetSuspensionERP(int idx, long jointID) const
 {
     //return GetParameter(dParamSuspensionERP + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetSuspensionERP(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetSuspensionCFM(int idx, float cfm, long jointID)
 {
     //SetParameter(dParamSuspensionCFM + (idx * dParamGroup), cfm, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetSuspensionCFM(" << std::endl;
 }
 
 float JointImp::GetSuspensionCFM(int idx, long jointID) const
 {
     //return GetParameter(dParamSuspensionCFM + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetSuspensionCFM(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetLinearMotorVelocity(int idx, float vel, long jointID)
 {
     //SetParameter(dParamVel + (idx * dParamGroup), vel, jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetLinearMotorVelocity(" << std::endl;
 }
 
 float JointImp::GetLinearMotorVelocity(int idx, long jointID) const
 {
     //return GetParameter(dParamVel + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetLinearMotorVelocity(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetAngularMotorVelocity(int idx, float deg, long jointID)
 {
     //SetParameter(dParamVel + (idx * dParamGroup), gDegToRad(deg), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method SetAngularMotorVelocity(" << std::endl;
 }
 
 float JointImp::GetAngularMotorVelocity(int idx, long jointID) const
 {
     //return gRadToDeg(GetParameter(dParamVel + (idx * dParamGroup), jointID));
+	std::cerr << "(JointImp) ERROR called unimplemented method GetAngularMotorVelocity(" << std::endl;
     return 0.0f;
 }
 
 void JointImp::SetMaxMotorForce(int idx, float f, long jointID)
 {
+	std::cerr << "(JointImp) ERROR called unimplemented method SetMaxMotorForce(" << std::endl;
     //SetParameter(dParamFMax + (idx * dParamGroup), f, jointID);
 }
 
 float JointImp::GetMaxMotorForce(int idx, long jointID) const
 {
     //return GetParameter(dParamFMax + (idx * dParamGroup), jointID);
+	std::cerr << "(JointImp) ERROR called unimplemented method GetMaxMotorForce(" << std::endl;
     return 0.0f;
 }
 
@@ -333,6 +372,7 @@ void JointImp::DestroyJoint(long jointID,
     //dJointID JointImp = (dJointID) jointID;
     //EnableFeedback(false, jointID, feedback);
     //dJointDestroy(JointImp);
+	std::cerr << "(JointImp) ERROR called unimplemented method DestroyJoint(" << std::endl;
 }
 
 void JointImp::SetParameter(int parameter, float value, long jointID){
@@ -351,6 +391,7 @@ void JointImp::SetParameter(int parameter, float value, long jointID){
     //                           break;
     //    default: return;
     //}
+	std::cerr << "(JointImp) ERROR called unimplemented method SetParameter(" << std::endl;
 }
 
 float JointImp::GetParameter(int parameter, long jointID) const{
@@ -364,5 +405,6 @@ float JointImp::GetParameter(int parameter, long jointID) const{
     //    case dJointTypeAMotor: return dJointGetAMotorParam(JointImp, parameter);
     //    default: return 0;
     //}
+	std::cerr << "(JointImp) ERROR called unimplemented method GetParameter(" << std::endl;
     return 0.0f;
 }

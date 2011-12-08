@@ -26,9 +26,12 @@
 #include "bulletphysicsobject.h"
 #include <oxygen/physicsserver/int/colliderint.h>
 
+#include <map>
+extern std::map<btCollisionShape *,btGeom *> collidermap;
+extern std::multimap<int, void*> spaces;
+
 class ColliderImp : public oxygen::ColliderInt, public PhysicsObjectImp
 {
-
 public:    
     ColliderImp();
     virtual ~ColliderImp();

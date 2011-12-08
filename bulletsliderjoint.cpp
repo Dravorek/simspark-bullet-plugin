@@ -26,6 +26,7 @@ using namespace salt;
 
 SliderJointImp::SliderJointImp() : Generic6DOFJointImp()
 {
+	std::cerr << "(SliderJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long SliderJointImp::CreateSliderJoint(long world)
@@ -33,6 +34,7 @@ long SliderJointImp::CreateSliderJoint(long world)
     //dWorldID ODEWorld = (dWorldID) world;
     //dJointID ODEJoint = dJointCreateSlider(ODEWorld, 0);
     //return (long) ODEJoint;
+	std::cerr << "(SliderJointImp) ERROR called unimplemented method CreateSliderJoint(" << std::endl;
     return 0l;
 }
 
@@ -40,12 +42,14 @@ void SliderJointImp::SetSliderAxis(Vector3f& up, long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetSliderAxis(ODEJoint,up[0],up[1],up[2]);
+	std::cerr << "(SliderJointImp) ERROR called unimplemented method SetSliderAxis(" << std::endl;
 }
 
 float SliderJointImp::GetPosition(long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return dJointGetSliderPosition(ODEJoint);
+	std::cerr << "(SliderJointImp) ERROR called unimplemented method GetPosition(" << std::endl;
     return 0.0f;
 }
 
@@ -53,5 +57,6 @@ float SliderJointImp::GetPositionRate(long jointID)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return dJointGetSliderPositionRate(ODEJoint);
+	std::cerr << "(SliderJointImp) ERROR called unimplemented method GetPositionRate(" << std::endl;
     return 0.0f;
 }

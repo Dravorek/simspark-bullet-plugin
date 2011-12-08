@@ -30,7 +30,9 @@ SphereColliderImp::SphereColliderImp() : ConvexColliderImp()
 
 void SphereColliderImp::SetRadius(float r, long geomID)
 {
-    //dGeomID ODEGeom = (dGeomID) geomID;
+    btSphereShape *shp = (btSphereShape *)geomID;
+	shp->setUnscaledRadius(r);
+	//dGeomID ODEGeom = (dGeomID) geomID;
     //dGeomSphereSetRadius(ODEGeom, r);
 }
 
@@ -38,14 +40,15 @@ float SphereColliderImp::GetRadius(long geomID) const
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomSphereGetRadius(ODEGeom);
-    return 0.0f;
+    btSphereShape *shp = (btSphereShape *)geomID;
+	return shp->getRadius();
 }
 
 long SphereColliderImp::CreateSphere()
 {
     //dGeomID ODEGeom = dCreateSphere(0, 1.0f);
     //return (long) ODEGeom;
-    return 0l;
+    return (long)new btSphereShape(1.0f);
 }
 
 float SphereColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
@@ -53,5 +56,10 @@ float SphereColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomSpherePointDepth
     //    (ODEGeom,pos[0],pos[1],pos[2]);
-    return 0.0f;
+    
+	std::cerr <<" (SphereColliderImp) ERROR called unimplemented method GetPointDepth()"
+			  << std::endl;
+	//TODO: implement, ATTENTION Bullet doesn't keep position information in the Shape Classes
+	//return something that is outside as not to generate unnesessary collisions
+	return -0.1f;
 }

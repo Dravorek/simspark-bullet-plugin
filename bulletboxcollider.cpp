@@ -37,13 +37,15 @@ void BoxColliderImp::SetBoxLengths(const Vector3f& extents, long geomID)
     //                   extents[1],
     //                   extents[2]
     //                   );
+	btBoxShape *shp = (btBoxShape *)geomID;
+	shp->setLocalScaling(btVector3(btScalar(extents.x()),btScalar(extents.y()),btScalar(extents.z())));
 }
 
 long BoxColliderImp::CreateBox()
 {
     //dGeomID ODEGeom = dCreateBox (0, 1.0f, 1.0f, 1.0f);
     //return (long) ODEGeom;
-    return 0;
+    return (long)new btBoxShape(btVector3(btScalar(0.5f),btScalar(0.5f),btScalar(0.5f)));
 }
 
 void BoxColliderImp::GetBoxLengths(Vector3f& extents, long geomID)
@@ -54,6 +56,12 @@ void BoxColliderImp::GetBoxLengths(Vector3f& extents, long geomID)
     //extents[0] = lengths[0];
     //extents[1] = lengths[1];
     //extents[2] = lengths[2];
+	btBoxShape *shp = (btBoxShape *)geomID;
+	
+	const btVector3& scale = shp->getLocalScaling();
+	extents.x()=scale.getX();
+	extents.y()=scale.getY();
+	extents.z()=scale.getZ();
 }
 
 float BoxColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
@@ -61,5 +69,9 @@ float BoxColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomBoxPointDepth
     //    (ODEGeom,pos[0],pos[1],pos[2]);
-    return 0.0f;
+    
+	//TODO: implement
+	std::cerr << "(BoxColliderImp) ERROR called non-implemented function GetPointDepth()" << std::endl;
+	//return a value that is considered outside of the Cube
+	return -0.1f;
 }

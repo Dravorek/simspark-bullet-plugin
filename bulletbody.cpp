@@ -24,5 +24,5 @@
 
 
 BodyImp::BodyImp() : PhysicsObjectImp(){
-
+		std::cerr << "(BodyImp) ERROR called unimplemented constructor" << std::endl;
 }
