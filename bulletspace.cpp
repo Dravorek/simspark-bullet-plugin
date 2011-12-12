@@ -50,7 +50,7 @@ void SpaceImp::Collide(long space, Space* callee)
 
     //dSpaceID SpaceImp = (dSpaceID) space;
     //dSpaceCollide(SpaceImp, callee, collisionNearCallback);
-	std::cerr << "(SpaceImp) ERROR called unimplemented method Collide(" << std::endl;
+	//std::cerr << "(SpaceImp) ERROR called unimplemented method Collide(" << std::endl;
 }
 
 void SpaceImp::Collide2(long obj1, long obj2, Space* callee)

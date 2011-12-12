@@ -24,6 +24,7 @@
 
 #include "bulletphysicsobject.h"
 #include <oxygen/physicsserver/int/worldint.h>
+#include "zeitgeist\zeitgeist.h"
 
 
 class WorldImp : public oxygen::WorldInt, public PhysicsObjectImp
@@ -54,7 +55,7 @@ public:
     float GetContactSurfaceLayer(long worldID) const;
     long CreateWorld();
     void DestroyWorld(long worldID);
-	boost::mutex *GetMutex();
+	boost::mutex *GetMutex(zeitgeist::Core *ptr);
 };
 
 DECLARE_CLASS(WorldImp);

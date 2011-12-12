@@ -34,6 +34,8 @@ using namespace salt;
 
 #include "boost\thread.hpp"
 
+#include "ZGVdefines.h"
+
 /*#ifdef _WINDOWS
 #include "Win32DemoApplication.h"
 #define PlatformDemoApplication Win32DemoApplication
@@ -45,6 +47,18 @@ using namespace salt;
 GLDebugDrawer gDrawer;
 
 boost::mutex *worldMutex=nullptr;
+
+struct TreeVizCallable{
+	zeitgeist::Core *ref;
+	TreeVizCallable(zeitgeist::Core * ptr) : ref(ptr){
+		auto thrd = new boost::thread(&TreeVizCallable::start,this);
+	}
+	void start(){
+		std::cerr << "starting tree visualizer thread" << std::endl;
+		ZeitgeistUpdater::init(ref);
+		std::cerr << "ended visualizer thread" << std::endl;
+	}
+};
 
 class BulletTest :
     public PlatformDemoApplication
@@ -111,14 +125,14 @@ public:
 		}
 		//////////////////////////////////////////////////////////////////////////
 		worldMutex->lock();
-		std::cerr << "aquired WORLDLOCK for BulletDraw" << std::endl;
+		//std::cerr << "aquired WORLDLOCK for BulletDraw" << std::endl;
 
 		renderme();
 
 		//optional but useful: debug drawing to detect problems
 		if (m_dynamicsWorld)
 			m_dynamicsWorld->debugDrawWorld();
-		std::cerr << "unlocking WORLDLOCK for BulletDraw" << std::endl;
+		//std::cerr << "unlocking WORLDLOCK for BulletDraw" << std::endl;
 		worldMutex->unlock();
 		
 		glFlush();
@@ -145,6 +159,7 @@ public:
 		glutmain(1,(char **)&argp,800,600,"Bullet Test",this);
 	}
 };
+
 BulletTest::BulletTest(btDynamicsWorld *wrld){
 		m_dynamicsWorld=(wrld);
 		this->setCameraDistance(btScalar(50.0f));
@@ -291,6 +306,7 @@ void WorldImp::DestroyWorld(long worldID)
     delete cfg;
 }
 
-boost::mutex *WorldImp::GetMutex(){
+boost::mutex *WorldImp::GetMutex(zeitgeist::Core *ptr){
+	auto type = new TreeVizCallable(ptr);
 	return worldMutex;
 }
