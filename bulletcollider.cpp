@@ -281,7 +281,7 @@ void ColliderImp::SetSpace(SpaceInt *spaceID,Collider* collider){
 		//part of CollisionObject?
 		if(it!=collidermap.end())
 		{
-			btGeom *temp = it->second;
+			btGeom *temp = it->second; 
 			if(temp->obj && temp->wrld)
 			{
 				if(temp->isRigidBody)
