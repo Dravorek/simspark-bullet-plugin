@@ -30,15 +30,44 @@ class HingeJointImp : public oxygen::HingeJointInt, public Generic6DOFJointImp
     
 public:
     HingeJointImp();
-    long CreateHingeJoint(long worldID);
-    void SetAnchor(const salt::Vector3f& anchor, long jointID);
-    salt::Vector3f GetAnchor1(long jointID);
-    salt::Vector3f GetAnchor2(long jointID);
-    void SetAxis(const salt::Vector3f& axis, long jointID);
-    salt::Vector3f GetAxis(long jointID);
-    float GetAngle(long jointID) const;
-    float GetAngleRate(long jointID) const;
-    float GetTorque(long jointID) const;
+    long CreateHingeJoint(oxygen::WorldInt *worldID);
+    void SetAnchor(const salt::Vector3f& anchor);
+    salt::Vector3f GetAnchor1();
+    salt::Vector3f GetAnchor2();
+    void SetAxis(const salt::Vector3f& axis);
+    salt::Vector3f GetAxis();
+    float GetAngle() const;
+    float GetAngleRate() const;
+    float GetTorque() const;
+	virtual void Attach(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
+
+	void SetAngularMotorVelocity(int idx, float deg);
+    float GetAngularMotorVelocity(int idx) const;
+    void SetMaxMotorForce(int idx, float f);
+    float GetMaxMotorForce(int idx) const;
+
+	void SetLowStopDeg(int idx, float deg);
+
+	float GetLowStopDeg(int idx) const;
+
+	void SetHighStopDeg(int idx, float deg);
+
+	float GetHighStopDeg(int idx) const;
+
+	
+    void SetBounce(int idx, float bounce);
+    float GetBounce(int idx) const;
+
+	void SetParameter(int parameter, float value);
+    float GetParameter(int parameter) const;
+
+	void SetCFM(int idx, float cfm);
+    float GetCFM(int idx) const;
+    void SetStopCFM(int idx, float cfm);
+    float GetStopCFM(int idx) const;
+    void SetStopERP(int idx, float erp);
+    float GetStopERP(int idx) const;
+    
 private:
     //dJointFeedback mFeedback;
 

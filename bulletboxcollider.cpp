@@ -24,11 +24,12 @@
 using namespace oxygen;
 using namespace salt;
 
+
 BoxColliderImp::BoxColliderImp() : ConvexColliderImp()
 {
 }
 
-void BoxColliderImp::SetBoxLengths(const Vector3f& extents, long geomID)
+void BoxColliderImp::SetBoxLengths(const Vector3f& extents)
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     //dGeomBoxSetLengths(
@@ -37,6 +38,7 @@ void BoxColliderImp::SetBoxLengths(const Vector3f& extents, long geomID)
     //                   extents[1],
     //                   extents[2]
     //                   );
+	std::cout << "RESCALED CUBE"<< std::endl;
 	btBoxShape *shp = (btBoxShape *)geomID;
 	shp->setLocalScaling(btVector3(btScalar(extents.x()),btScalar(extents.y()),btScalar(extents.z())));
 }
@@ -45,10 +47,27 @@ long BoxColliderImp::CreateBox()
 {
     //dGeomID ODEGeom = dCreateBox (0, 1.0f, 1.0f, 1.0f);
     //return (long) ODEGeom;
-    return (long)new btBoxShape(btVector3(btScalar(0.5f),btScalar(0.5f),btScalar(0.5f)));
+	btBoxShape * new_shp = new btBoxShape(btVector3(btScalar(0.5f),btScalar(0.5f),btScalar(0.5f)));
+	btCollisionShape* BulletGeom = (btCollisionShape *) new_shp;
+    btCollisionObject *obj = new btCollisionObject();
+	obj->setUserPointer((void *)11);
+	btDiscreteDynamicsWorld *wrld=lastWorld; 
+	obj->setCollisionShape(BulletGeom);
+	wrld->addCollisionObject(obj);
+
+    btGeom *geom = new btGeom();
+	geom->isRigidBody=false;
+	geom->obj=obj;
+	geom->shp=new_shp;
+	geom->wrld = wrld;
+
+   collidermap.insert(std::pair<btCollisionShape *, btGeom *>(new_shp,geom));
+	
+   geomID = new_shp;
+	return (long)new_shp;
 }
 
-void BoxColliderImp::GetBoxLengths(Vector3f& extents, long geomID)
+void BoxColliderImp::GetBoxLengths(Vector3f& extents)
 {
     //dGeomID ODEGeom = (dGeomID) geomID; 
     //dVector3 lengths;
@@ -64,7 +83,7 @@ void BoxColliderImp::GetBoxLengths(Vector3f& extents, long geomID)
 	extents.z()=scale.getZ();
 }
 
-float BoxColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
+float BoxColliderImp::GetPointDepth(const Vector3f& pos)
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomBoxPointDepth

@@ -44,6 +44,7 @@
 #include "bulletjoint.h"
 #include "bulletphysicsobject.h"
 #include "bulletphysicsserver.h"
+#include "bulletphysicsstaticfuncs.h"
 #include "bulletplanecollider.h"
 #include "bulletraycollider.h"
 #include "bulletrigidbody.h"
@@ -55,6 +56,26 @@
 #include "bullettransformcollider.h"
 #include "bulletuniversaljoint.h"
 #include "bulletworld.h"
+
+
+#include <map>
+std::map<btCollisionShape *,btGeom *> collidermap;
+btDiscreteDynamicsWorld *lastWorld=nullptr;
+std::multimap<long,void*> spaces;
+
+
+/*
+struct btGeom{
+	btGeom(): isRigidBody(true){}
+    btCollisionObject *obj; //btRigidBody
+    btCollisionShape *shp;
+    btDynamicsWorld *wrld;
+	bool isRigidBody;
+};
+
+typedef btGeom* btGeomID;
+*/
+
 
 ZEITGEIST_EXPORT_BEGIN()
     ZEITGEIST_EXPORT(AngularMotorImp);
@@ -79,6 +100,7 @@ ZEITGEIST_EXPORT_BEGIN()
     ZEITGEIST_EXPORT(JointImp);
     ZEITGEIST_EXPORT(PhysicsObjectImp);
     ZEITGEIST_EXPORT(PhysicsServerImp);
+    ZEITGEIST_EXPORT(PhysicsStaticFuncsImp);
     ZEITGEIST_EXPORT(PlaneColliderImp);
     ZEITGEIST_EXPORT(RayColliderImp);
     ZEITGEIST_EXPORT(RigidBodyImp);

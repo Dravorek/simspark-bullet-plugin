@@ -21,6 +21,7 @@
 */
 
 #include "bulletrigidbody.h"
+#include "bulletworld.h"
 
 //TODO get default mass from world or sonething
 #define DEFAULT_MASS 0.0f
@@ -37,46 +38,67 @@ RigidBodyImp::RigidBodyImp() : BodyImp(){
 
 }
 
-RigidBody* RigidBodyImp::GetBodyPointer(long bodyID)
+RigidBody* RigidBodyImp::GetBodyPointer()
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    return static_cast<RigidBody*>(BulletBody->obj->getUserPointer());
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//return 0;
+	}
+	//return static_cast<RigidBody*>(((btRigidBody *)BulletBody->obj)->getUserPointer());
+	return reinterpret_cast<RigidBody *>(userPointer);
 }
 
-void RigidBodyImp::Enable(long bodyID)
+void RigidBodyImp::Enable()
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    btRigidBody *bdy = BulletBody->obj;
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+	btRigidBody *bdy = ((btRigidBody *)BulletBody->obj);
     bdy->activate(true);
 }
 
-void RigidBodyImp::Disable(long bodyID)
+void RigidBodyImp::Disable()
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    btRigidBody *bdy = BulletBody->obj;
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+	btRigidBody *bdy = ((btRigidBody *)BulletBody->obj);
     //TODO: maybe WANTS_DEACTIVATION ismoreappropriate
     bdy->setActivationState(DISABLE_SIMULATION);
 }
 
-bool RigidBodyImp::IsEnabled(long bodyID) const
+bool RigidBodyImp::IsEnabled() const
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    return (BulletBody->obj->isActive());
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return true;
+	}
+	return (((btRigidBody *)BulletBody->obj)->isActive());
 }
 
-void RigidBodyImp::UseGravity(bool f, long bodyID)
+void RigidBodyImp::UseGravity(bool f)
 {
     //TODO decide if STATIC or Kinematic is appropriate
     //Also if the gravity from the world should be read
-    dBodyID BulletBody = (dBodyID) bodyID;
-    if (f == true)
+    dBodyID BulletBody = (dBodyID) btID;
+	if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+	if (f == true)
         {
             //erase the CF_KINEMATIC_OBJECT and CF_STATIC_FLAGS
-            BulletBody->obj->setFlags(BulletBody->obj->getFlags() 
-                & ~(BulletBody->obj->CF_KINEMATIC_OBJECT 
-                  | BulletBody->obj->CF_STATIC_OBJECT));
+            ((btRigidBody *)BulletBody->obj)->setFlags(((btRigidBody *)BulletBody->obj)->getFlags() 
+                & ~(((btRigidBody *)BulletBody->obj)->CF_KINEMATIC_OBJECT 
+                  | ((btRigidBody *)BulletBody->obj)->CF_STATIC_OBJECT));
             //// body is affected by gravity
-            //BulletBody->obj->setGravity(btVector3( 
+            //((btRigidBody *)BulletBody->obj)->setGravity(btVector3( 
             //            btScalar(0.0f),
             //            btScalar(-9.81f),
             //            btScalar(0.0f)
@@ -86,9 +108,9 @@ void RigidBodyImp::UseGravity(bool f, long bodyID)
         {
             // body is not affected by gravity
             // set the CF_KINEMATIC_OBJECT flag
-            BulletBody->obj->setFlags(BulletBody->obj->getFlags() |
-                                      BulletBody->obj->CF_KINEMATIC_OBJECT);
-            //BulletBody->obj->setGravity(btVector3( 
+            ((btRigidBody *)BulletBody->obj)->setFlags(((btRigidBody *)BulletBody->obj)->getFlags() |
+                                      ((btRigidBody *)BulletBody->obj)->CF_KINEMATIC_OBJECT);
+            //((btRigidBody *)BulletBody->obj)->setGravity(btVector3( 
             //            btScalar(0.0f),
             //            btScalar(0.0f),
             //            btScalar(0.0f)
@@ -96,21 +118,25 @@ void RigidBodyImp::UseGravity(bool f, long bodyID)
         }
 }
 
-bool RigidBodyImp::UsesGravity(long bodyID) const
+bool RigidBodyImp::UsesGravity() const
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    //if the rigid body has the STATIC or KINEMATIC flag
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return false;
+	}
+	//if the rigid body has the STATIC or KINEMATIC flag
     //it's not affected by gravity
     return ((
-              BulletBody->obj->CF_STATIC_OBJECT 
-              | BulletBody->obj->CF_KINEMATIC_OBJECT
+              ((btRigidBody *)BulletBody->obj)->CF_STATIC_OBJECT 
+              | ((btRigidBody *)BulletBody->obj)->CF_KINEMATIC_OBJECT
             )
-            & BulletBody->obj->getFlags()
+            & ((btRigidBody *)BulletBody->obj)->getFlags()
            );
-    //return !(BulletBody->obj->getGravity().isZero());
+    //return !(((btRigidBody *)BulletBody->obj)->getGravity().isZero());
 }
 
-long RigidBodyImp::CreateBody(long worldID)
+long RigidBodyImp::CreateBody(WorldInt *worldID)
 {
     // create the managed body
    dBodyID NewBdy = new btGeom();
@@ -129,75 +155,113 @@ long RigidBodyImp::CreateBody(long worldID)
                                   MState,
                                   NewBdy->shp
                                   );
-   btDynamicsWorld *Wrld = (btDynamicsWorld *)worldID;
-   Wrld->addRigidBody(NewBdy->obj);
+   	NewBdy->obj->setUserPointer(static_cast<BodyInt * >(this));
+   btDiscreteDynamicsWorld *Wrld = static_cast<WorldImp *>(worldID)->worldID;
+   //NewBdy->obj->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT | NewBdy->obj->getCollisionFlags());
+   Wrld->addRigidBody(((btRigidBody *)NewBdy->obj));
+   NewBdy->obj->setFriction(100.0);
+   static_cast<btRigidBody *>(NewBdy->obj)->activate(true);
+   static_cast<btRigidBody *>(NewBdy->obj)->setActivationState(DISABLE_DEACTIVATION);
    NewBdy->wrld = Wrld;
+   btID=NewBdy;
    return (long) NewBdy; 
 }
 
-void RigidBodyImp::DestroyRigidBody(long bodyID)
+void RigidBodyImp::DestroyRigidBody()
 {
     //TODO check where the shape gets deleted and delete btGeom there
-    dBodyID BulletBody = (dBodyID) bodyID;
-    btMotionState *MState = BulletBody->obj->getMotionState();
-    delete BulletBody->obj;
-    BulletBody->obj = 0;
-    delete MState;
-
-    //No shape has been set, delete placeholder
-    //if(BulletBody->shp->getShapeType()== EMPTY_SHAPE_PROXYTYPE )
-    if( !CheckShapeHasCollider( (long) BulletBody ) )
-    {
-        delete BulletBody->shp;
-        delete BulletBody;
-    }
+    dBodyID BulletBody = (dBodyID) btID;
+	if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to delete a CollisionObject as RigidBody" <<std::endl;
+		return;
+	}
+	if(((btRigidBody *)BulletBody->obj)->getNumConstraintRefs()){
+		//:TODO: RigidBody is connected to a joint, can't remove
+		// unless joint is destroyed but reference to jointwrapper can't
+		// be obtained here, either another map is needed or changing the API
+	}
+	else
+	{
+		btMotionState *MState = ((btRigidBody *)BulletBody->obj)->getMotionState();
+		delete ((btRigidBody *)BulletBody->obj);
+		BulletBody->obj = 0;
+		delete MState;
+		//No shape has been set, delete placeholder
+		//if(BulletBody->shp->getShapeType()== EMPTY_SHAPE_PROXYTYPE )
+		if( !CheckShapeHasCollider() )
+		{
+			delete BulletBody->shp;
+			delete BulletBody;
+		}
+	}
     
 }
 
-void RigidBodyImp::BodySetData(RigidBody* rb, long bodyID)
+void RigidBodyImp::BodySetData(RigidBody* rb)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    BulletBody->obj->setUserPointer(rb);
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to set RigidBody userdata on a CollisionObject" <<std::endl;
+		return;
+	}
+	userPointer = rb;
+	((btRigidBody *)BulletBody->obj)->setUserPointer(static_cast<BodyInt *>(this));
 }
 
-void RigidBodyImp::SetMass(float mass, long bodyID)
+void RigidBodyImp::SetMass(float mass)
 {
     //TODO remove rigid body from world and read it after adjusting mass
-    dBodyID BulletBody = (dBodyID) bodyID;
-    btVector3 inertia = BulletBody->obj->getInvInertiaDiagLocal();
+    std::cout << "setting body mass"<< std::endl;
+	dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to set mass on a CollisionObject" <<std::endl;
+		return;
+	}
+	btVector3 inertia = ((btRigidBody *)BulletBody->obj)->getInvInertiaDiagLocal();
     //HACK possibly reduces precision
-    btVector3 inertia2;
-	inertia2.setValue(inertia.x() != btScalar(0.0) ? btScalar(1.0) / inertia.x(): btScalar(0.0),
-                     inertia.y() != btScalar(0.0) ? btScalar(1.0) / inertia.y(): btScalar(0.0),
-                     inertia.z() != btScalar(0.0) ? btScalar(1.0) / inertia.z(): btScalar(0.0));
-    //BulletBody->obj->setMassProps( btScalar(mass),inertia);
-    BulletBody->wrld->removeRigidBody(BulletBody->obj);
-    BulletBody->obj->setMassProps( btScalar(mass),inertia2);
-	BulletBody->obj->setInvInertiaDiagLocal(inertia);
-	BulletBody->wrld->addRigidBody(BulletBody->obj);
+    //btVector3 inertia2;
+	//inertia2.setValue(inertia.x() != btScalar(0.0) ? btScalar(1.0) / inertia.x(): btScalar(0.0),
+    //                 inertia.y() != btScalar(0.0) ? btScalar(1.0) / inertia.y(): btScalar(0.0),
+    //                 inertia.z() != btScalar(0.0) ? btScalar(1.0) / inertia.z(): btScalar(0.0));
+    //((btRigidBody *)BulletBody->obj)->setMassProps( btScalar(mass),inertia);
+    BulletBody->wrld->removeRigidBody(((btRigidBody *)BulletBody->obj));
+    if(BulletBody->shp->getShapeType()!=EMPTY_SHAPE_PROXYTYPE )
+	BulletBody->shp->calculateLocalInertia(btScalar(mass),inertia);
+	((btRigidBody *)BulletBody->obj)->setMassProps( btScalar(mass),inertia);
+	((btRigidBody *)BulletBody->obj)->updateInertiaTensor();
+
+	//((btRigidBody *)BulletBody->obj)->setInvInertiaDiagLocal(inertia);
+
+	BulletBody->wrld->addRigidBody(((btRigidBody *)BulletBody->obj));
+	static_cast<btRigidBody *>(BulletBody->obj)->activate(true);
+	((btRigidBody *)BulletBody->obj)->setActivationState(DISABLE_DEACTIVATION);
 }
 
-float RigidBodyImp::GetMass(long bodyID) const
+float RigidBodyImp::GetMass() const
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    
-    return BulletBody->obj->getInvMass()==0
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to get mass from a CollisionObject" <<std::endl;
+		return 0.0f;
+	}
+    return ((btRigidBody *)BulletBody->obj)->getInvMass()==0
                             ?0.0f
-                            :1.0f/BulletBody->obj->getInvMass();
+                            :1.0f/((btRigidBody *)BulletBody->obj)->getInvMass();
 }
 
-Vector3f RigidBodyImp::AddMass(const btMass& Mass, const Matrix& matrix, Vector3f massTrans, const long bodyID)
+Vector3f RigidBodyImp::AddMass(const btMass& Mass, const Matrix& matrix, Vector3f massTrans)
 {
 	std::cerr << "(RigidBodyImp) ERROR called unimplemented method addMass" << std::endl;
 	std::cerr << "mat:"; matrix.Dump();
 	std::cerr << "vec"; massTrans.Dump();
 
-    dBodyID BulletBody = (dBodyID) bodyID;
-	btVector3 vec = BulletBody->obj->getInvInertiaDiagLocal();
+
+    dBodyID BulletBody = (dBodyID) btID;
+	btVector3 vec = ((btRigidBody *)BulletBody->obj)->getInvInertiaDiagLocal();
 	vec.setValue(vec.x()!=0.0?1.0/vec.x():0.0f,
 				 vec.y()!=0.0?1.0/vec.y():0.0f,
 				 vec.z()!=0.0?1.0/vec.z():0.0f);
-	BulletBody->obj->setMassProps(1.0/BulletBody->obj->getInvMass(),vec);
+	((btRigidBody *)BulletBody->obj)->setMassProps(1.0/((btRigidBody *)BulletBody->obj)->getInvMass(),vec);
 	//dMass transMass(ODEMass);
 
     //dMatrix3 ODEMatrix;
@@ -232,9 +296,9 @@ Vector3f RigidBodyImp::AddMass(const btMass& Mass, const Matrix& matrix, Vector3
     return Vector3f();
 }
 
-bool RigidBodyImp::CheckCompoundStatus(long BodyID, bool prepareAddition)
+bool RigidBodyImp::CheckCompoundStatus(bool prepareAddition)
 {
-    dBodyID BulletBody = (dBodyID) BodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     bool isCompound = (BulletBody->shp->getShapeType() == COMPOUND_SHAPE_PROXYTYPE);
     //TODO: evaluate if this is faster:
     /*
@@ -269,7 +333,7 @@ bool RigidBodyImp::CheckCompoundStatus(long BodyID, bool prepareAddition)
                     shp_new->setUserPointer(shp_new);
                 }
                 //TODO: remove and re-add rigidbody to World
-                BulletBody->obj->setCollisionShape(shp_new);
+                ((btRigidBody *)BulletBody->obj)->setCollisionShape(shp_new);
                 delete shp;
                 BulletBody->shp = shp_new;
                 return false;
@@ -281,7 +345,7 @@ bool RigidBodyImp::CheckCompoundStatus(long BodyID, bool prepareAddition)
         if(prepareAddition){
             btCompoundShape *shp_new = new btCompoundShape();
             shp_new->setUserPointer(shp_new);
-            if(CheckShapeHasCollider(BodyID))
+            if(CheckShapeHasCollider())
             {
                 shp_new->addChildShape(btTransform::getIdentity(),BulletBody->shp);
             }
@@ -300,22 +364,22 @@ bool RigidBodyImp::CheckCompoundStatus(long BodyID, bool prepareAddition)
     }
 }
     
-bool RigidBodyImp::CheckShapeHasCollider(long BodyID)
+bool RigidBodyImp::CheckShapeHasCollider()
 {
     //HACK: as described in createRigidBody()
-    dBodyID BulletBody = (dBodyID) BodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     return BulletBody->shp->getUserPointer()!=BulletBody->shp;
 }
     
 void RigidBodyImp::SetMassParameters(const float mass,
-                                     const salt::Vector3f& center_of_mass,
-                                     long bodyID)
+                                     const salt::Vector3f& center_of_mass
+                                     )
 {
     //TODO: apply btMass->transform to the rigid body
-    dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     btMass& BulletMass = (btMass&) mass;
 
-    this->SetMass(BulletMass.mass,bodyID);
+    this->SetMass(BulletMass.mass);
     //dBodySetMass(BulletBody, &ODEMass);
 }
 
@@ -327,19 +391,19 @@ void RigidBodyImp::PrepareSphere(btMass& mass, float density, float radius) cons
     mass.mass = btScalar( density * (radius * radius * radius * M_PI * 4.0/3.0) );
 }
 
-void RigidBodyImp::SetSphere(float density, float radius, long bodyID)
+void RigidBodyImp::SetSphere(float density, float radius)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     btMass BulletMass;
     PrepareSphere(BulletMass, density, radius);
-    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats));
 }
 
-salt::Vector3f RigidBodyImp::AddSphere(float density, float radius, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
+salt::Vector3f RigidBodyImp::AddSphere(float density, float radius, const Matrix& matrix, salt::Vector3f massTrans)
 {
     btMass BulletMass;
     PrepareSphere(BulletMass, density, radius);
-    return AddMass(BulletMass, matrix, massTrans, bodyID);
+    return AddMass(BulletMass, matrix, massTrans);
 }
 
 void RigidBodyImp::PrepareSphereTotal(btMass& mass, float total_mass, float radius) const
@@ -348,19 +412,19 @@ void RigidBodyImp::PrepareSphereTotal(btMass& mass, float total_mass, float radi
     mass.transform = btTransform::getIdentity();
 }
 
-void RigidBodyImp::SetSphereTotal(float total_mass, float radius, long bodyID)
+void RigidBodyImp::SetSphereTotal(float total_mass, float radius)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     btMass BulletMass;
     PrepareSphereTotal(BulletMass, total_mass, radius);
-    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats));
 }
 
-salt::Vector3f RigidBodyImp::AddSphereTotal(float total_mass, float radius, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
+salt::Vector3f RigidBodyImp::AddSphereTotal(float total_mass, float radius, const Matrix& matrix, salt::Vector3f massTrans)
 {
     btMass BulletMass;
     PrepareSphereTotal(BulletMass, total_mass, radius);
-    return AddMass(BulletMass, matrix, massTrans, bodyID);
+    return AddMass(BulletMass, matrix, massTrans);
 }
 
 void RigidBodyImp::PrepareBox(btMass& mass, float density, const Vector3f& size) const
@@ -369,19 +433,19 @@ void RigidBodyImp::PrepareBox(btMass& mass, float density, const Vector3f& size)
     mass.mass = btScalar( size[0] * size[1] * size[2] * density );
 }
 
-void RigidBodyImp::SetBox(float density, const Vector3f& size, long bodyID)
+void RigidBodyImp::SetBox(float density, const Vector3f& size)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     btMass BulletMass;
     PrepareBox(BulletMass, density, size);
-    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats));
 }
 
-salt::Vector3f RigidBodyImp::AddBox(float density, const Vector3f& size, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
+salt::Vector3f RigidBodyImp::AddBox(float density, const Vector3f& size, const Matrix& matrix, salt::Vector3f massTrans)
 {
     btMass BulletMass;
     PrepareBox(BulletMass, density, size);
-    return AddMass(BulletMass, matrix, massTrans, bodyID);
+    return AddMass(BulletMass, matrix, massTrans);
 }
 
 void RigidBodyImp::PrepareBoxTotal(btMass& mass, float total_mass, const Vector3f& size) const
@@ -390,19 +454,19 @@ void RigidBodyImp::PrepareBoxTotal(btMass& mass, float total_mass, const Vector3
     mass.transform = btTransform::getIdentity();
 }
 
-void RigidBodyImp::SetBoxTotal(float total_mass, const Vector3f& size, long bodyID)
+void RigidBodyImp::SetBoxTotal(float total_mass, const Vector3f& size)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     btMass BulletMass;
     PrepareBoxTotal(BulletMass, total_mass, size);
-    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats));
 }
 
-salt::Vector3f RigidBodyImp::AddBoxTotal(float total_mass, const Vector3f& size, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
+salt::Vector3f RigidBodyImp::AddBoxTotal(float total_mass, const Vector3f& size, const Matrix& matrix, salt::Vector3f massTrans)
 {
     btMass BulletMass;
     PrepareBoxTotal(BulletMass, total_mass, size);
-    return AddMass(BulletMass, matrix, massTrans, bodyID);
+    return AddMass(BulletMass, matrix, massTrans);
 }
 
 void RigidBodyImp::PrepareCylinder (btMass& mass, float density, float radius, float length) const
@@ -413,19 +477,19 @@ void RigidBodyImp::PrepareCylinder (btMass& mass, float density, float radius, f
     mass.transform = btTransform::getIdentity();
 }
 
-void RigidBodyImp::SetCylinder (float density, float radius, float length, long bodyID)
+void RigidBodyImp::SetCylinder (float density, float radius, float length)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     btMass BulletMass;
     PrepareCylinder(BulletMass, density, radius, length);
-    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats));
 }
 
-salt::Vector3f RigidBodyImp::AddCylinder(float density, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
+salt::Vector3f RigidBodyImp::AddCylinder(float density, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans)
 {
     btMass BulletMass;
     PrepareCylinder(BulletMass, density, radius, length);
-    return AddMass(BulletMass, matrix, massTrans, bodyID);
+    return AddMass(BulletMass, matrix, massTrans);
 }
 
 void RigidBodyImp::PrepareCylinderTotal(btMass& mass, float total_mass, float radius, float length) const
@@ -436,19 +500,19 @@ void RigidBodyImp::PrepareCylinderTotal(btMass& mass, float total_mass, float ra
     mass.transform = btTransform::getIdentity();
 }
 
-void RigidBodyImp::SetCylinderTotal(float total_mass, float radius, float length, long bodyID)
+void RigidBodyImp::SetCylinderTotal(float total_mass, float radius, float length)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     btMass BulletMass;
     PrepareCylinderTotal(BulletMass, total_mass, radius, length);
-    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats));
 }
 
-salt::Vector3f RigidBodyImp::AddCylinderTotal(float total_mass, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
+salt::Vector3f RigidBodyImp::AddCylinderTotal(float total_mass, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans)
 {
     btMass BulletMass;
     PrepareCylinderTotal(BulletMass, total_mass, radius, length);
-    return AddMass(BulletMass, matrix, massTrans, bodyID);
+    return AddMass(BulletMass, matrix, massTrans);
 }
 
 void RigidBodyImp::PrepareCapsule (btMass& mass, float density, float radius, float length) const
@@ -459,19 +523,19 @@ void RigidBodyImp::PrepareCapsule (btMass& mass, float density, float radius, fl
     mass.transform = btTransform::getIdentity();
 }
 
-void RigidBodyImp::SetCapsule (float density, float radius, float length, long bodyID)
+void RigidBodyImp::SetCapsule (float density, float radius, float length)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
+    dBodyID BulletBody = (dBodyID) btID;
     btMass BulletMass;
     PrepareCapsule(BulletMass, density, radius, length);
-    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats));
 }
 
-salt::Vector3f RigidBodyImp::AddCapsule (float density, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans, long bodyID)
+salt::Vector3f RigidBodyImp::AddCapsule (float density, float radius, float length, const Matrix& matrix, salt::Vector3f massTrans)
 {
     btMass BulletMass;
     PrepareCapsule(BulletMass, density, radius, length);
-    return AddMass(BulletMass, matrix, massTrans, bodyID);
+    return AddMass(BulletMass, matrix, massTrans);
 }
 
 void RigidBodyImp::PrepareCapsuleTotal(btMass& mass, float total_mass, float radius, float length) const
@@ -482,80 +546,108 @@ void RigidBodyImp::PrepareCapsuleTotal(btMass& mass, float total_mass, float rad
     mass.transform = btTransform::getIdentity();
 }
 
-void RigidBodyImp::SetCapsuleTotal(float total_mass, float radius, float length, long bodyID)
+void RigidBodyImp::SetCapsuleTotal(float total_mass, float radius, float length)
 {
     //dBodyID BulletBody = (dBodyID) bodyID;
     btMass BulletMass;
     PrepareCapsuleTotal(BulletMass, total_mass, radius, length);
-    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats),bodyID);
+    SetMassParameters(BulletMass.mass,Vector3f(BulletMass.transform.getOrigin().m_floats));
     //dBodySetMass(BulletBody, &ODEMass);
 }
 
-salt::Vector3f RigidBodyImp::AddCapsuleTotal(float total_mass, float radius, float length, const salt::Matrix& matrix, salt::Vector3f massTrans, long bodyID)
+salt::Vector3f RigidBodyImp::AddCapsuleTotal(float total_mass, float radius, float length, const salt::Matrix& matrix, salt::Vector3f massTrans)
 {
     btMass BulletMass;
     PrepareCapsuleTotal(BulletMass, total_mass, radius, length);
-    return AddMass(BulletMass, matrix, massTrans, bodyID);
+    return AddMass(BulletMass, matrix, massTrans);
 }
 
-Vector3f RigidBodyImp::GetVelocity(long bodyID) const
+Vector3f RigidBodyImp::GetVelocity() const
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    const btVector3 &vel = BulletBody->obj->getLinearVelocity();
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to get velocity from a CollisionObject" <<std::endl;
+		return Vector3f(0.0f,0.0f,0.0f);
+	}
+	const btVector3 &vel = ((btRigidBody *)BulletBody->obj)->getLinearVelocity();
     return Vector3f(vel.getX(), vel.getY(), vel.getZ());
 }
 
-void RigidBodyImp::SetVelocity(const Vector3f& vel, long bodyID)
+void RigidBodyImp::SetVelocity(const Vector3f& vel)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    BulletBody->obj->setLinearVelocity( btVector3( btScalar(vel[0]), btScalar(vel[1]), btScalar(vel[2]) ) );
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to set velocity on a CollisionObject" <<std::endl;
+		return;
+	}
+	((btRigidBody *)BulletBody->obj)->setLinearVelocity( btVector3( btScalar(vel[0]), btScalar(vel[1]), btScalar(vel[2]) ) );
 }
 
-void RigidBodyImp::SetRotation(const Matrix& rot, long bodyID)
+void RigidBodyImp::SetRotation(const Matrix& rot)
 {
     //TODO: check whether to use MotionStates here instead of getWorldTransform()
-    dBodyID BulletBody = (dBodyID) bodyID;
-    btTransform BulletMatrix = BulletBody->obj->getWorldTransform();
+    dBodyID BulletBody = (dBodyID) btID;
+	if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+    btTransform BulletMatrix = ((btRigidBody *)BulletBody->obj)->getWorldTransform();
     GenericPhysicsMatrix& matrixRef = (GenericPhysicsMatrix&) BulletMatrix.getBasis();
     ConvertRotationMatrix(rot, matrixRef);
     BulletMatrix.setBasis((btMatrix3x3 &)matrixRef);
-    BulletBody->obj->setWorldTransform(BulletMatrix);
+    ((btRigidBody *)BulletBody->obj)->setWorldTransform(BulletMatrix);
 }
 
-salt::Matrix RigidBodyImp::GetRotation(long bodyID) const
+salt::Matrix RigidBodyImp::GetRotation() const
 {
     //TODO: check whether to use MotionStates here instead of getWorldTransform()
-    dBodyID BulletBody = (dBodyID) bodyID;
-    btMatrix3x3 BulletMatrix = BulletBody->obj->getWorldTransform().getBasis();
+    dBodyID BulletBody = (dBodyID) btID;
+	if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return salt::Matrix();
+	}
+    btMatrix3x3 BulletMatrix = ((btRigidBody *)BulletBody->obj)->getWorldTransform().getBasis();
     GenericPhysicsMatrix* matrixPtr = (GenericPhysicsMatrix*) &BulletMatrix;
     salt::Matrix rot;
     ConvertRotationMatrix(matrixPtr,rot);
     return rot;
 }
 
-Vector3f RigidBodyImp::GetLocalAngularVelocity(long bodyID) const
+Vector3f RigidBodyImp::GetLocalAngularVelocity() const
 {
     //TODO: check whether motion states are better
-    dBodyID BulletBody = (dBodyID) bodyID;
-    const btVector3& vel = BulletBody->obj->getAngularVelocity();
+    dBodyID BulletBody = (dBodyID) btID;
+	if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return Vector3f();
+	}
+    const btVector3& vel = ((btRigidBody *)BulletBody->obj)->getAngularVelocity();
     //Tranlate vector into local coordinates by mutliplying with rotation 
     //matrix translation is ignored because a vector is a direction and is
     //unaffected by movement
-    btVector3 relvel = BulletBody->obj->getWorldTransform().getBasis()*vel;
+    btVector3 relvel = ((btRigidBody *)BulletBody->obj)->getWorldTransform().getBasis()*vel;
     return Vector3f(relvel.getX(), relvel.getY(), relvel.getZ());
 }
 
-Vector3f RigidBodyImp::GetAngularVelocity(long bodyID) const
+Vector3f RigidBodyImp::GetAngularVelocity() const
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    const btVector3& vel = BulletBody->obj->getAngularVelocity();
+    dBodyID BulletBody = (dBodyID) btID;
+	if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return Vector3f(0.0f,0.0f,0.0f);
+	}
+    const btVector3& vel = ((btRigidBody *)BulletBody->obj)->getAngularVelocity();
     return Vector3f(vel.getX(), vel.getY(), vel.getZ());
 }
 
-void RigidBodyImp::SetAngularVelocity(const Vector3f& vel, long bodyID)
+void RigidBodyImp::SetAngularVelocity(const Vector3f& vel)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    BulletBody->obj->setAngularVelocity(btVector3( 
+    dBodyID BulletBody = (dBodyID) btID;
+	if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+    ((btRigidBody *)BulletBody->obj)->setAngularVelocity(btVector3( 
                                                    btScalar(vel[0]),
                                                    btScalar(vel[1]),
                                                    btScalar(vel[2])
@@ -563,11 +655,15 @@ void RigidBodyImp::SetAngularVelocity(const Vector3f& vel, long bodyID)
                                        );
 }
 
-salt::Matrix RigidBodyImp::GetSynchronisationMatrix(long bodyID)
+salt::Matrix RigidBodyImp::GetSynchronisationMatrix()
 {
     //TODO: check whether getWorldTransform or MotionState is better
-    dBodyID BulletBody = (dBodyID) bodyID;
-    const btTransform& trans = BulletBody->obj->getWorldTransform();
+    dBodyID BulletBody = (dBodyID) btID;
+	if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return salt::Matrix();
+	}
+    const btTransform& trans = ((btRigidBody *)BulletBody->obj)->getWorldTransform();
     const btVector3& pos = trans.getOrigin();
     const btMatrix3x3& rot = trans.getBasis();
     
@@ -576,15 +672,15 @@ salt::Matrix RigidBodyImp::GetSynchronisationMatrix(long bodyID)
     //in that row, & turns that into a pointer to cycle through
     //all 3 elements of the vector (x,y,z) with [].
     mat.m[0] = (&*rot[0])[0];
-    mat.m[1] = (&*rot[0])[1];
-    mat.m[2] = (&*rot[0])[2];
+    mat.m[1] = (&*rot[1])[0];
+    mat.m[2] = (&*rot[2])[0];
     mat.m[3] = 0;
-    mat.m[4] = (&*rot[1])[0];
+    mat.m[4] = (&*rot[0])[1];
     mat.m[5] = (&*rot[1])[1];
-    mat.m[6] = (&*rot[1])[2];
+    mat.m[6] = (&*rot[2])[1];
     mat.m[7] = 0;
-    mat.m[8] =  (&*rot[2])[0];
-    mat.m[9] =  (&*rot[2])[1];
+    mat.m[8] =  (&*rot[0])[2];
+    mat.m[9] =  (&*rot[1])[2];
     mat.m[10] = (&*rot[2])[2];
     mat.m[11] = 0;
     mat.m[12] = (&*pos)[0];
@@ -594,68 +690,109 @@ salt::Matrix RigidBodyImp::GetSynchronisationMatrix(long bodyID)
     return mat;
 }
 
-RigidBody* RigidBodyImp::BodyGetData(long bodyID)
+RigidBody* RigidBodyImp::BodyGetData()
 {
-    return (RigidBody*) ((dBodyID)bodyID)->obj->getUserPointer();
+	if(!((dBodyID)btID)->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return 0;
+	}
+	return (RigidBody*) userPointer;
+    //return (RigidBody*) ((dBodyID)btID)->obj->getUserPointer();
 }
 
-void RigidBodyImp::AddForce(const Vector3f& force, long bodyID)
+void RigidBodyImp::AddForce(const Vector3f& force)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    BulletBody->obj->applyCentralForce(btVector3( 
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+	((btRigidBody *)BulletBody->obj)->applyCentralForce(btVector3( 
                                                 btScalar(force[0]),
                                                 btScalar(force[1]),
                                                 btScalar(force[2])
                                                 ));
 }
 
-Vector3f RigidBodyImp::GetForce(long bodyID) const
+Vector3f RigidBodyImp::GetForce() const
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    const btVector3& f = BulletBody->obj->getTotalForce();
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return Vector3f();
+	}
+	const btVector3& f = ((btRigidBody *)BulletBody->obj)->getTotalForce();
     return Vector3f(f.getX(),f.getY(),f.getZ());
 }
 
-void RigidBodyImp::AddTorque(const Vector3f& torque, long bodyID)
+void RigidBodyImp::AddTorque(const Vector3f& torque)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    BulletBody->obj->applyTorque(btVector3( 
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+	((btRigidBody *)BulletBody->obj)->applyTorque(btVector3( 
                                           btScalar(torque[0]),
                                           btScalar(torque[1]),
                                           btScalar(torque[2])
                                           ));
 }
 
-void RigidBodyImp::SetPosition(const Vector3f& pos, long bodyID)
+void RigidBodyImp::SetPosition(const Vector3f& pos)
 {
     //TODO: use MotionStates?
-    dBodyID BulletBody = (dBodyID) bodyID;
-    btTransform & trans = BulletBody->obj->getWorldTransform();
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+	btTransform & trans = ((btRigidBody *)BulletBody->obj)->getWorldTransform();
     trans.setOrigin(btVector3( 
                              btScalar(pos[0]),
                              btScalar(pos[1]),
                              btScalar(pos[2])
                              ));
-    BulletBody->obj->setWorldTransform(trans);
-    //// the parent node will be updated in the next physics cycle
+    ((btRigidBody *)BulletBody->obj)->setWorldTransform(trans);
+    if(BulletBody->wrld)
+	{
+		//:TODO: handle collision bitmask
+		BulletBody->wrld->removeRigidBody((btRigidBody *)BulletBody->obj);
+		BulletBody->wrld->addRigidBody((btRigidBody *)BulletBody->obj);
+		((btRigidBody *)BulletBody->obj)->activate(true);
+		((btRigidBody *)BulletBody->obj)->setActivationState(DISABLE_DEACTIVATION);
+	}
+	
+	//// the parent node will be updated in the next physics cycle
+
+	//std::cout << "translated rigidbody"<<std::endl;
 }
 
-Vector3f RigidBodyImp::GetPosition(long bodyID) const
+Vector3f RigidBodyImp::GetPosition() const
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    const btVector3& pos = BulletBody->obj->getWorldTransform().getOrigin();
-    return Vector3f(pos.getX(), pos.getY(), pos.getZ());
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return Vector3f();
+	}
+	const btVector3& pos = ((btRigidBody *)BulletBody->obj)->getWorldTransform().getOrigin();
+    std::cout << "X:" << pos.getX() << "Y: " << pos.getY() << "Z:" << pos.getZ() << std::endl;
+	return Vector3f(pos.getX(), pos.getY(), pos.getZ());
 }
 
-void RigidBodyImp::TranslateMass(const Vector3f& v, long bodyID)
+void RigidBodyImp::TranslateMass(const Vector3f& v)
 {
-    dBodyID BulletBody = (dBodyID) bodyID;
-    //TODO: use native bullet calls instead of the abstract 
+    dBodyID BulletBody = (dBodyID) btID;
+    if(!BulletBody->isRigidBody){
+		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		return;
+	}
+	//TODO: use native bullet calls instead of the abstract 
     // physicsserver ones
-    float mass = GetMass(bodyID);
+    float mass = GetMass();
     btMass BulletMass;
     SetMassParameters(BulletMass.mass,Vector3f(
-		BulletMass.transform.getOrigin().m_floats),bodyID);
+		BulletMass.transform.getOrigin().m_floats));
     //dMass m;
     //dBodyGetMass(BulletBody, &m);
     //dMassTranslate(&m,v[0],v[1],v[2]);
@@ -669,7 +806,7 @@ btMass& RigidBodyImp::CreateMass(float mass, salt::Vector3f cVector)
     return BulletMass;
 }
 
-void RigidBodyImp::SetInertiaTensor(const salt::Matrix& tensor, long BodyID)
+void RigidBodyImp::SetInertiaTensor(const salt::Matrix& tensor)
 {
 	//:TODO: there's no way to get write access to the inertia tensor
 	// it may be possible to calculate the local inertia and set that
@@ -677,7 +814,7 @@ void RigidBodyImp::SetInertiaTensor(const salt::Matrix& tensor, long BodyID)
 	// as it is already
 
 	//dBodyID BulletBody = (dBodyID) BodyID;
-	//BulletBody->obj->getInvInertiaTensorWorld(
+	//((btRigidBody *)BulletBody->obj)->getInvInertiaTensorWorld(
     //btMass& ODEMass = (btMass&) mass;
     //ODEMass.I[i] = value;
 }

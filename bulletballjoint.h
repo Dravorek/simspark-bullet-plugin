@@ -32,10 +32,10 @@ class BallJointImp : public oxygen::BallJointInt, public Generic6DOFJointImp
 
 public:    
     BallJointImp();
-    void SetAnchor(const salt::Vector3f& anchor, long jointID);
-    salt::Vector3f GetAnchor1(long jointID);
-    salt::Vector3f GetAnchor2(long jointID);
-    long CreateBallJoint(long worldID);
+    void SetAnchor(const salt::Vector3f& anchor);
+    salt::Vector3f GetAnchor1();
+    salt::Vector3f GetAnchor2();
+    long CreateBallJoint(oxygen::WorldInt *worldID);
 };
 
 DECLARE_CLASS(BallJointImp);

@@ -31,57 +31,61 @@ class JointImp : public oxygen::JointInt, public PhysicsObjectImp
     /** See physicsserver/int/jointint.h for documentation */
 
 public:
-    //TODO: REMOVE THIS STATIC OBJECT
-    //it is only a dummy object
-    //static Joint dummy;
     JointImp();
 
-    oxygen::Joint* GetJoint(long jointID);
-    bool AreConnected(long bodyID1, long bodyID2);
-    bool AreConnectedExcluding(long bodyID1, long bodyID2, int joint_type);
-    virtual void DestroyJoint(long jointID,
+    oxygen::Joint* GetJoint();
+    bool AreConnected(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
+    bool AreConnectedExcluding(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2, int joint_type);
+    virtual void DestroyJoint(
                               boost::shared_ptr<oxygen::GenericJointFeedback> feedback);
-    virtual void Attach(long bodyID1, long bodyID2, long jointID);
-    int GetType(long jointID) const;
-    long GetBodyID(int idx, long jointID);
-    void EnableFeedback(bool enable, long jointID, 
-                        boost::shared_ptr<oxygen::GenericJointFeedback> feedback);
-    bool FeedbackEnabled(long jointID) const;
+    virtual void Attach(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
+    int GetType() const;
+    oxygen::BodyInt *GetBodyID(int idx);
+    void EnableFeedback(bool enable ,
+                        boost::shared_ptr<oxygen::GenericJointFeedback>& feedback);
+    bool FeedbackEnabled() const;
     salt::Vector3f GetFeedbackForce(int idx,
                                     boost::shared_ptr<oxygen::GenericJointFeedback> feedback) const;
     salt::Vector3f GetFeedbackTorque(int idx,
                                      boost::shared_ptr<oxygen::GenericJointFeedback> feedback) const;
-    void SetFudgeFactor(int idx, float fudge_factor, long jointID);
-    float GetFudgeFactor(int idx, long jointID) const;
-    void SetBounce(int idx, float bounce, long jointID);
-    float GetBounce(int idx, long jointID) const;
-    void SetLowStopDeg(int idx, float deg, long jointID);
-    float GetLowStopDeg(int idx, long jointID) const;
-    void SetHighStopDeg(int idx, float deg, long jointID);
-    float GetHighStopDeg(int idx, long jointID) const;
-    void SetLowStopPos(int idx, float deg, long jointID);
-    float GetLowStopPos(int idx, long jointID) const;
-    void SetHighStopPos(int idx, float deg, long jointID);
-    float GetHighStopPos(int idx, long jointID) const;
-    void SetCFM(int idx, float cfm, long jointID);
-    float GetCFM(int idx, long jointID) const;
-    void SetStopCFM(int idx, float cfm, long jointID);
-    float GetStopCFM(int idx, long jointID) const;
-    void SetStopERP(int idx, float erp, long jointID);
-    float GetStopERP(int idx, long jointID) const;
-    void SetSuspensionERP(int idx, float erp, long jointID);
-    float GetSuspensionERP(int idx, long jointID) const;
-    void SetSuspensionCFM(int idx, float cfm, long jointID);
-    float GetSuspensionCFM(int idx, long jointID) const;
-    void SetLinearMotorVelocity(int idx, float vel, long jointID);
-    float GetLinearMotorVelocity(int idx, long jointID) const;
-    void SetAngularMotorVelocity(int idx, float deg, long jointID);
-    float GetAngularMotorVelocity(int idx, long jointID) const;
-    void SetMaxMotorForce(int idx, float f, long jointID);
-    float GetMaxMotorForce(int idx, long jointID) const;
-    void SetParameter(int parameter, float value, long jointID);
-    float GetParameter(int parameter, long jointID) const;
-    void OnLink(long jointID, oxygen::Joint* joint);
+    void SetFudgeFactor(int idx, float fudge_factor);
+    float GetFudgeFactor(int idx) const;
+    void SetBounce(int idx, float bounce);
+    float GetBounce(int idx) const;
+    void SetLowStopDeg(int idx, float deg);
+    float GetLowStopDeg(int idx) const;
+    void SetHighStopDeg(int idx, float deg);
+    float GetHighStopDeg(int idx) const;
+    void SetLowStopPos(int idx, float deg);
+    float GetLowStopPos(int idx) const;
+    void SetHighStopPos(int idx, float deg);
+    float GetHighStopPos(int idx) const;
+    void SetCFM(int idx, float cfm);
+    float GetCFM(int idx) const;
+    void SetStopCFM(int idx, float cfm);
+    float GetStopCFM(int idx) const;
+    void SetStopERP(int idx, float erp);
+    float GetStopERP(int idx) const;
+    void SetSuspensionERP(int idx, float erp);
+    float GetSuspensionERP(int idx) const;
+    void SetSuspensionCFM(int idx, float cfm);
+    float GetSuspensionCFM(int idx) const;
+    void SetLinearMotorVelocity(int idx, float vel);
+    float GetLinearMotorVelocity(int idx) const;
+    void SetAngularMotorVelocity(int idx, float deg);
+    float GetAngularMotorVelocity(int idx) const;
+    void SetMaxMotorForce(int idx, float f);
+    float GetMaxMotorForce(int idx) const;
+    void SetParameter(int parameter, float value);
+    float GetParameter(int parameter) const;
+    void OnLink( oxygen::Joint* joint);
+
+	float rad2deg(float rad) const;
+	float deg2rad(float deg) const;
+
+	void *userPointer;
+	btJointWrapper *jointID;
+protected:
 };
 
 DECLARE_CLASS(JointImp);

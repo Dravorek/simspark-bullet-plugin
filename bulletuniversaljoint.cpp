@@ -19,6 +19,8 @@
 */
 
 #include "bulletuniversaljoint.h"
+#include "bulletworld.h"
+#include "bulletrigidbody.h"
 
 using namespace oxygen;
 using namespace salt;
@@ -28,23 +30,36 @@ UniversalJointImp::UniversalJointImp() : Generic6DOFJointImp()
 	std::cerr << "(UniversalJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
-long UniversalJointImp::CreateUniversalJoint(long world)
+long UniversalJointImp::CreateUniversalJoint(WorldInt *worldID)
 {
-    //dWorldID ODEWorld = (dWorldID) world;
-    //dJointID ODEJoint = dJointCreateUniversal(ODEWorld, 0);
-    //return (long) ODEJoint;
+   btJointWrapper *wrp = new btJointWrapper();
+	btRigidBody *rbA = new btRigidBody(0.0,0,0);
+	rbA->activate(true);
+	rbA->setActivationState(DISABLE_DEACTIVATION);
+	rbA->setUserPointer((void *)99);
+	btRigidBody *rbB = new btRigidBody(0.0,0,0);
+	rbB->activate(true);
+	rbB->setActivationState(DISABLE_DEACTIVATION);
+	rbB->setUserPointer((void *)99);
+	wrp->joint = new btUniversalConstraint(*rbA,*rbB,btVector3(0,0,0),btVector3(1,0,0),btVector3(1,0,0));
+	wrp->type = JT_UNIVERSAL;
+	wrp->world = static_cast<WorldImp *>(worldID)->worldID;
+
+	jointID = wrp;
+	return reinterpret_cast<long>(wrp);
+	
 	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: CreateUniversalJoint(" << std::endl;
-    return 0l;
+    return (long)wrp;
 }
 
-void UniversalJointImp::SetAnchor(const Vector3f& anchor, long jointID)
+void UniversalJointImp::SetAnchor(const Vector3f& anchor)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAnchor (ODEJoint, anchor[0], anchor[1], anchor[2]);
 	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
 }
 
-Vector3f UniversalJointImp::GetAnchor1(long jointID)
+Vector3f UniversalJointImp::GetAnchor1()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dReal anchor[3];
@@ -55,7 +70,7 @@ Vector3f UniversalJointImp::GetAnchor1(long jointID)
     return Vector3f();
 }
 
-Vector3f UniversalJointImp::GetAnchor2(long jointID)
+Vector3f UniversalJointImp::GetAnchor2()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dReal anchor[3];
@@ -66,21 +81,21 @@ Vector3f UniversalJointImp::GetAnchor2(long jointID)
     return Vector3f();
 }
 
-void UniversalJointImp::SetAxis1(const Vector3f & axis, long jointID)
+void UniversalJointImp::SetAxis1(const Vector3f & axis)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAxis1(ODEJoint,axis[0],axis[1],axis[2]);
 	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAxis1(" << std::endl;
 }
 
-void UniversalJointImp::SetAxis2(const Vector3f & axis, long jointID)
+void UniversalJointImp::SetAxis2(const Vector3f & axis)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAxis2(ODEJoint,axis[0],axis[1],axis[2]);
 	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAxis2(" << std::endl;
 }
 
-Vector3f UniversalJointImp::GetAxis1(long jointID) const
+Vector3f UniversalJointImp::GetAxis1() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dReal axis[3];
@@ -91,7 +106,7 @@ Vector3f UniversalJointImp::GetAxis1(long jointID) const
     return Vector3f();
 }
 
-Vector3f UniversalJointImp::GetAxis2(long jointID) const
+Vector3f UniversalJointImp::GetAxis2() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dReal axis[3];
@@ -102,7 +117,7 @@ Vector3f UniversalJointImp::GetAxis2(long jointID) const
     return Vector3f();
 }
 
-float UniversalJointImp::GetAngle1(long jointID) const
+float UniversalJointImp::GetAngle1() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle1(ODEJoint));
@@ -110,7 +125,7 @@ float UniversalJointImp::GetAngle1(long jointID) const
     return 0.0f;
 }
 
-float UniversalJointImp::GetAngle2(long jointID) const
+float UniversalJointImp::GetAngle2() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle2(ODEJoint));
@@ -118,7 +133,7 @@ float UniversalJointImp::GetAngle2(long jointID) const
     return 0.0f;
 }
 
-float UniversalJointImp::GetAngleRate1(long jointID) const
+float UniversalJointImp::GetAngleRate1() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle1Rate(ODEJoint));
@@ -126,10 +141,114 @@ float UniversalJointImp::GetAngleRate1(long jointID) const
     return 0.0f;
 }
 
-float UniversalJointImp::GetAngleRate2(long jointID) const
+float UniversalJointImp::GetAngleRate2() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle2Rate(ODEJoint));
 	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngleRate2(" << std::endl;
     return 0.0f;
+}
+
+void UniversalJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
+	std::cout << "hinge2joint attach called" <<std::endl;
+	btJointWrapper *wrap = (btJointWrapper *)jointID;
+	btTypedConstraint *joint = wrap->joint;
+	btHinge2Constraint *hinge = 0;
+	//TODO: connect NULL with another body
+	if(!bodyID1 || !bodyID2){
+		std::cerr << "(BulletJointImp) ERROR can't attach a body to NULL yet" << std::endl;
+		//return;
+	}
+	btGeom *rbA = bodyID1?static_cast<BodyImp *>(bodyID1)->btID:0;
+	btGeom *rbB = bodyID2?static_cast<BodyImp *>(bodyID2)->btID:0;
+
+	btVector3 anchor(0.0,0.0,0.0);
+	btVector3 anchor2(0.0,0.0,-4.0);
+	btVector3 axis1(0.0,0.0,1.0);
+	btVector3 axis2(0.0,1.0,0.0);
+	static bool toogle = true;
+	toogle = !toogle;
+	if(wrap->added && wrap->world) 
+			wrap->world->removeConstraint(wrap->joint);
+		if(wrap->joint){
+			if(!wrap->added){
+				btRigidBody * rigidA = &wrap->joint->getRigidBodyA();
+				btRigidBody * rigidB = &wrap->joint->getRigidBodyB();
+				delete wrap->joint;
+				if(rigidA)
+				{
+					delete rigidA;
+				}
+
+				if(rigidB)
+				{
+					delete rigidB;
+				}
+						
+			}
+			else
+				delete wrap->joint;
+		}
+	if(wrap->joint){
+		//lastWorld->removeConstraint(wrap->joint);
+		//delete wrap->joint;
+	}
+		if(rbB)
+		{
+			btTransform trans5 = rbB->obj->getWorldTransform();
+			btTransform trans6 = rbA->obj->getWorldTransform();
+			trans5.setOrigin(trans5.getOrigin()-trans6.getOrigin());
+			trans6.setOrigin(btVector3(0.0,0.0,0.0));
+			trans6.setBasis(trans6.getBasis().transpose());
+			trans5 = trans6 * trans5;
+			
+			//std::cout << "x:" << trans5.getOrigin().x() << std::endl
+			//	      << " y:" << trans5.getOrigin().y()<< std::endl
+			//	      << " z:" << trans5.getOrigin().z()<< std::endl
+			//	      << " w:" << trans5.getOrigin().w() << std::endl;
+
+			
+			btScalar yaw, pitch, roll;
+			trans5.getBasis().getEulerYPR(yaw,pitch,roll);
+			//std::cout << "yaw : " << yaw*180.0/M_PI << std::endl
+			//		  << "pitch: " << pitch*180.0/M_PI << std::endl
+			//		  << "roll: " << roll*180.0/M_PI << std::endl;
+			
+			trans5.setOrigin((trans5.getOrigin()*0.5));
+			trans5.getBasis().setEulerYPR(yaw*0.5,pitch*0.5,roll*0.5);
+			trans6.getBasis().setEulerYPR(yaw*-0.5,pitch*-0.5,roll*-0.5);
+			trans6.setOrigin(trans5.getOrigin()*-1.0);
+			//((btRigidBody *)rbA->obj)->updateInertiaTensor();
+			//((btRigidBody *)rbB->obj)->updateInertiaTensor();
+			hinge = new btHinge2Constraint (*((btRigidBody *)rbA->obj),*((btRigidBody *)rbB->obj),rbA->obj->getWorldTransform().getOrigin()+btVector3(0.01,0,0),btVector3(0,0,1),btVector3(1,0,0));//anchor,anchor2,axis1,-1.0*axis1);
+			hinge->setLowerLimit(0);
+			hinge->setUpperLimit(0);
+			hinge->enableSpring(0,false);
+			hinge->enableSpring(1,false);
+			hinge->enableSpring(2,false);
+			hinge->setLinearLowerLimit(btVector3(0,0,0));
+			hinge->setLinearUpperLimit(btVector3(0,0,0));
+			lastWorld->addConstraint(hinge,true);
+			
+		}
+		else
+		{
+
+			btRigidBody *rbC = new btRigidBody(0.0,new btDefaultMotionState(rbA->obj->getWorldTransform()),0);
+			rbC->activate(true);
+			rbC->setActivationState(DISABLE_DEACTIVATION);
+			//hinge = new btHinge2Constraint (*((btRigidBody *)rbA->obj),*rbC,btTransform::getIdentity(),btTransform::getIdentity(),true);
+			//lastWorld->removeRigidBody((btRigidBody *)rbA->obj);
+			//lastWorld->addRigidBody((btRigidBody *)rbA->obj);
+			//lastWorld->addRigidBody(rbC);
+			//joint = new btHingeConstraint (*((btRigidBody *)rbA->obj),anchor,axis2);	
+		}
+		wrap->joint = hinge;
+		if(wrap->world)
+		{
+			lastWorld->addConstraint(hinge,true);
+			wrap->added=true;
+		}
+
+		
 }

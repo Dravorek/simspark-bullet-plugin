@@ -29,7 +29,7 @@ RayColliderImp::RayColliderImp() : ColliderImp()
 }
 
 void RayColliderImp::SetParams(salt::Vector3f pos,
-                            salt::Vector3f dir, float length, long geomID)
+                            salt::Vector3f dir, float length)
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     //dGeomRaySet(ODEGeom, pos[0], pos[1], pos[2], dir[0], dir[1], dir[2]);

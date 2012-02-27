@@ -36,22 +36,28 @@ class SpaceImp : public oxygen::SpaceInt, public PhysicsObjectImp
 */
 
 public:
-    SpaceImp();
-    long CreateSpace(long spaceID);
-    void DestroySpace(long contactGroup, long spaceID);
-    long GetParentSpaceID(long spaceID);
-    long CreateContactGroup();
-    void PostPhysicsUpdateInternal(long contactGroup);
-    void Collide(long spaceID, oxygen::Space* callee);
-    void Collide2(long obj1, long obj2, oxygen::Space* callee);
-    bool ObjectIsSpace(long objectID);
-    long FetchBody(long geomID);
-    long FetchSpace(long geomID);
-    bool AreConnectedWithJoint(long bodyID1, long bodyID2);
+   SpaceImp();
+	long CreateSpace(oxygen::SpaceInt *spaceID);
+    void DestroySpace(oxygen::PhysicsObjectInt *contactGroup);
+    oxygen::SpaceInt *GetParentSpaceID();
+    oxygen::PhysicsObjectInt *CreateContactGroup();
+    void PostPhysicsUpdateInternal(oxygen::PhysicsObjectInt *contactGroup);
+    void Collide(oxygen::SpaceInt *spaceID, oxygen::Space* callee);
+    void Collide2(oxygen::PhysicsObjectInt *obj1,oxygen::PhysicsObjectInt *obj2, oxygen::Space* callee);
+    bool ObjectIsSpace(oxygen::PhysicsObjectInt *objectID);
+	oxygen::BodyInt *FetchBody(oxygen::ColliderInt *geomID);
+	oxygen::SpaceInt *FetchSpace(oxygen::PhysicsObjectInt *geomID);
+	bool AreConnectedWithJoint(const oxygen::BodyInt *bodyID1, const oxygen::BodyInt *bodyID2);
     void CollideInternal(boost::shared_ptr<oxygen::Collider> collider, 
                         boost::shared_ptr<oxygen::Collider> collidee,
-                        long geomID1, long geomID2);
-    
+                        oxygen::ColliderInt *geomID1, oxygen::ColliderInt *geomID2);
+	
+	void DisableInnerCollision(bool diable);
+	bool hasInnerCollision();
+
+	
+	long spaceID;
+    bool innercollision;
 private:
     static void collisionNearCallback(void* data, long obj1, long obj2);
 };

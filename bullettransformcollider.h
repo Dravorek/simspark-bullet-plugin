@@ -48,7 +48,7 @@ class TransformColliderImp : public oxygen::TransformColliderInt, public Collide
 
 public:    
     TransformColliderImp();
-    void SetColliderParameters(int cleanup, int info, long geomID);
+    void SetColliderParameters(int cleanup, int info);
     long CreateTransformCollider();
 };
 

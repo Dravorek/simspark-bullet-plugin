@@ -32,18 +32,19 @@ class UniversalJointImp : public oxygen::UniversalJointInt, public Generic6DOFJo
     
 public:
     UniversalJointImp();
-    long CreateUniversalJoint(long world);
-    void SetAnchor(const salt::Vector3f& anchor, long jointID);
-    salt::Vector3f GetAnchor1(long jointID);
-    salt::Vector3f GetAnchor2(long jointID);
-    void SetAxis1(const salt::Vector3f& axis, long jointID);
-    void SetAxis2(const salt::Vector3f& axis, long jointID);
-    salt::Vector3f GetAxis1(long jointID) const;
-    salt::Vector3f GetAxis2(long jointID) const;
-    float GetAngle1(long jointID) const;
-    float GetAngle2(long jointID) const;
-    float GetAngleRate1(long jointID) const;
-    float GetAngleRate2(long jointID) const;
+    long CreateUniversalJoint(oxygen::WorldInt *world);
+    void SetAnchor(const salt::Vector3f& anchor);
+    salt::Vector3f GetAnchor1();
+    salt::Vector3f GetAnchor2();
+    void SetAxis1(const salt::Vector3f& axis);
+    void SetAxis2(const salt::Vector3f& axis);
+    salt::Vector3f GetAxis1() const;
+    salt::Vector3f GetAxis2() const;
+    float GetAngle1() const;
+    float GetAngle2() const;
+    float GetAngleRate1() const;
+    float GetAngleRate2() const;
+	void Attach(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
 };
 
 DECLARE_CLASS(UniversalJointImp);

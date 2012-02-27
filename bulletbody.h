@@ -29,6 +29,7 @@ class BodyImp : public oxygen::BodyInt, public PhysicsObjectImp
 {
 public:
     BodyImp();
+	btGeom *btID;
 };
 
 DECLARE_CLASS(BodyImp);

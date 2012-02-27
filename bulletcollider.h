@@ -26,9 +26,6 @@
 #include "bulletphysicsobject.h"
 #include <oxygen/physicsserver/int/colliderint.h>
 
-#include <map>
-extern std::map<btCollisionShape *,btGeom *> collidermap;
-extern std::multimap<int, void*> spaces;
 
 class ColliderImp : public oxygen::ColliderInt, public PhysicsObjectImp
 {
@@ -49,18 +46,21 @@ public:
         See physicsserver/int/colliderint.h for documentation.
     */
     
-    oxygen::Collider* GetColliderPointer(long geomID);
-    void SetPosition(const salt::Vector3f& globalPos, long geomID);
-    void SetLocalPosition(const salt::Vector3f& pos, long GeomID);
-    salt::Vector3f GetPosition(long geomID) const;
-    void SetRotation(const salt::Matrix& rot, long geomID);
-    bool Intersect(boost::shared_ptr<oxygen::Collider> collider, long geomID);
-    long GetParentSpaceID(long geomID);
-    void DestroyGeom(long geomID);
-    void TransformSetGeom(long parentGeomID, long geomID);
-    void SetSpace(long spaceID, long geomID, oxygen::Collider* collider);
-    void SetBody(long bodyID, long geomID);
-    void RemoveFromSpace(long geomID, long spaceID);
+    oxygen::Collider* GetColliderPointer();
+    void SetPosition(const salt::Vector3f& globalPos);
+    void SetLocalPosition(const salt::Vector3f& pos);
+    salt::Vector3f GetPosition() const;
+    void SetRotation(const salt::Matrix& rot);
+    bool Intersect(boost::shared_ptr<oxygen::Collider> collider);
+    oxygen::SpaceInt *GetParentSpaceID();
+    void DestroyGeom();
+    void TransformSetGeom(oxygen::ColliderInt *parentGeomID);
+    void SetSpace(oxygen::SpaceInt *spaceID, oxygen::Collider* collider);
+    void SetBody(oxygen::BodyInt *bodyID);
+    void RemoveFromSpace(oxygen::SpaceInt *spaceID);
+
+	btCollisionShape * geomID;
+	void *userPointer;
 };
 
 DECLARE_CLASS(ColliderImp);

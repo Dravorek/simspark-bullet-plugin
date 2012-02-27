@@ -24,54 +24,104 @@
 using namespace oxygen;
 using namespace salt;
 
+
 CapsuleColliderImp::CapsuleColliderImp() : ConvexColliderImp()
 {
 }
 
-void CapsuleColliderImp::SetParams(float radius, float length, long geomID)
+void CapsuleColliderImp::SetParams(float radius, float length)
 {
     btCapsuleShape *shp = (btCapsuleShape *) geomID;
-	btCapsuleShape *new_shp = new btCapsuleShape(radius,length);
+	btCapsuleShape *new_shp = new btCapsuleShapeZ(radius,length);
 	//:HACK:
 	//:TODO: clean this up, this is no way to deal with the immutable problem
-	memcpy(shp,new_shp,sizeof(new_shp));
+	*shp = std::move(*new_shp);
+	auto it = collidermap.find(shp);
+	if(it!=collidermap.end()){
+		if(it->second->isRigidBody)
+			it->second->wrld->removeRigidBody(((btRigidBody *)it->second->obj));
+		else
+			it->second->wrld->removeCollisionObject(it->second->obj);
+		it->second->obj->setCollisionShape(shp);
+		if(it->second->isRigidBody)
+		{
+			it->second->wrld->addRigidBody(((btRigidBody *)it->second->obj));
+			static_cast<btRigidBody *>(it->second->obj)->activate(true);
+			((btRigidBody *)it->second->obj)->setActivationState(DISABLE_DEACTIVATION);
+		}
+		else
+			it->second->wrld->addCollisionObject(it->second->obj);		
+	}
 	delete new_shp;
 }
 
-void CapsuleColliderImp::SetRadius(float radius, long geomID)
+void CapsuleColliderImp::SetRadius(float radius)
 {
     btCapsuleShape *shp = (btCapsuleShape *) geomID;
-	btCapsuleShape *new_shp = new btCapsuleShape(radius,shp->getHalfHeight()*2.0);
+	btCapsuleShape *new_shp = new btCapsuleShapeZ(radius,shp->getHalfHeight()*2.0);
 	//:HACK:
 	//:TODO: clean this up, this is no way to deal with the immutable problem
-	memcpy(shp,new_shp,sizeof(new_shp));
+	*shp = std::move(*new_shp);
+	auto it = collidermap.find(shp);
+	if(it!=collidermap.end()){
+		if(it->second->isRigidBody)
+			it->second->wrld->removeRigidBody(((btRigidBody *)it->second->obj));
+		else
+			it->second->wrld->removeCollisionObject(it->second->obj);
+		it->second->obj->setCollisionShape(shp);
+		if(it->second->isRigidBody)
+		{	
+			it->second->wrld->addRigidBody(((btRigidBody *)it->second->obj));
+			static_cast<btRigidBody *>(it->second->obj)->activate(true);
+			((btRigidBody *)it->second->obj)->setActivationState(DISABLE_DEACTIVATION);
+		}
+		else
+			it->second->wrld->addCollisionObject(it->second->obj);		
+
+	}
 	delete new_shp;
 }
 
-void CapsuleColliderImp::SetLength(float length, long geomID)
+void CapsuleColliderImp::SetLength(float length)
 {
     btCapsuleShape *shp = (btCapsuleShape *) geomID;
-	btCapsuleShape *new_shp = new btCapsuleShape(shp->getRadius(),length);
+	btCapsuleShape *new_shp = new btCapsuleShapeZ(shp->getRadius(),length);
 	//:HACK:
 	//:TODO: clean this up, this is no way to deal with the immutable problem
-	memcpy(shp,new_shp,sizeof(new_shp));
+	*shp = std::move(*new_shp);
+	auto it = collidermap.find(shp);
+	if(it!=collidermap.end()){
+		if(it->second->isRigidBody)
+			it->second->wrld->removeRigidBody(((btRigidBody *)it->second->obj));
+		else
+			it->second->wrld->removeCollisionObject(it->second->obj);
+		it->second->obj->setCollisionShape(shp);
+		if(it->second->isRigidBody)
+		{
+			it->second->wrld->addRigidBody(((btRigidBody *)it->second->obj));
+			static_cast<btRigidBody *>(it->second->obj)->activate(true);
+			((btRigidBody *)it->second->obj)->setActivationState(DISABLE_DEACTIVATION);
+		}
+		else
+			it->second->wrld->addCollisionObject(it->second->obj);		
+	}
 	delete new_shp;
 }
 
-void CapsuleColliderImp::GetParams(float& radius, float& length, long geomID)
+void CapsuleColliderImp::GetParams(float& radius, float& length)
 {
     btCapsuleShape *shp = (btCapsuleShape *) geomID;
 	radius = shp->getRadius();
 	length = shp->getHalfHeight()*2.0;
 }
 
-float CapsuleColliderImp::GetRadius(long geomID)
+float CapsuleColliderImp::GetRadius()
 {
     btCapsuleShape *shp = (btCapsuleShape *) geomID;
 	return shp->getRadius();
 }
 
-float CapsuleColliderImp::GetLength(long geomID)
+float CapsuleColliderImp::GetLength()
 {
     btCapsuleShape *shp = (btCapsuleShape *) geomID;
 	return shp->getHalfHeight()*2.0f;
@@ -79,10 +129,26 @@ float CapsuleColliderImp::GetLength(long geomID)
 
 long CapsuleColliderImp::CreateCapsule()
 {
-	return (long)new btCapsuleShape(1.0f,1.0f);
+	btCapsuleShapeZ * new_shp = new btCapsuleShapeZ(1.0f,1.0f);
+	btCollisionShape* BulletGeom = (btCollisionShape *) new_shp;
+    btCollisionObject *obj = new btCollisionObject();
+	obj->setUserPointer((void *)14);
+	btDiscreteDynamicsWorld *wrld=lastWorld; 
+	obj->setCollisionShape(BulletGeom);
+	wrld->addCollisionObject(obj);
+
+    btGeom *geom = new btGeom();
+	geom->isRigidBody=false;
+	geom->obj=obj;
+	geom->shp=new_shp;
+	geom->wrld = wrld;
+
+   collidermap.insert(std::pair<btCollisionShape *, btGeom *>(new_shp,geom));
+   geomID = new_shp;
+	return (long)new_shp;
 }
 
-float CapsuleColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
+float CapsuleColliderImp::GetPointDepth(const Vector3f& pos)
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomCapsulePointDepth

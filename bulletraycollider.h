@@ -40,7 +40,7 @@ class RayColliderImp : public oxygen::RayColliderInt, public ColliderImp
 {
 public:
     RayColliderImp();
-    void SetParams(salt::Vector3f pos, salt::Vector3f dir, float length, long geomID);
+    void SetParams(salt::Vector3f pos, salt::Vector3f dir, float length);
     long CreateRay();
 };
 

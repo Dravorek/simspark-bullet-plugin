@@ -26,45 +26,33 @@
 
 using namespace oxygen;
 
-std::multimap<int,void*> spaces;
+
 
 void SpaceImp::collisionNearCallback(void* data, long obj1, long obj2)
 {
     //handled by the narrowphase collision handler which gets called in
     //stepWorld();
-    
-    //Space* space = (Space*) data;
-    //space->HandleCollide((long) obj1, (long) obj2);
 	std::cerr << "(SpaceImp) ERROR called unimplemented method CreateSliderJoint(" << std::endl;
 }
 
-SpaceImp::SpaceImp() : PhysicsObjectImp()
+SpaceImp::SpaceImp() : PhysicsObjectImp(), innercollision(true), spaceID(0)
 {
-	std::cerr << "(SpaceImp) ERROR called unimplemented constructor" << std::endl;
 }
 
-void SpaceImp::Collide(long space, Space* callee)
+void SpaceImp::Collide(SpaceInt *space, Space* callee)
 {
     //gets handled by the broadphase collision handler when
     //stepWorld() gets called
-
-    //dSpaceID SpaceImp = (dSpaceID) space;
-    //dSpaceCollide(SpaceImp, callee, collisionNearCallback);
-	//std::cerr << "(SpaceImp) ERROR called unimplemented method Collide(" << std::endl;
 }
 
-void SpaceImp::Collide2(long obj1, long obj2, Space* callee)
+void SpaceImp::Collide2(PhysicsObjectInt *obj1, PhysicsObjectInt *obj2, Space* callee)
 {
     //gets handled by the broadphase collision handler when
     //stepWorld() gets called
-
-    //dGeomID ODEObj1 = (dGeomID) obj1;
-    //dGeomID ODEObj2 = (dGeomID) obj2;
-    //dSpaceCollide2(ODEObj1, ODEObj2, callee, &collisionNearCallback);
 	std::cerr << "(SpaceImp) ERROR called unimplemented method Collide2(" << std::endl;
 }
 
-long SpaceImp::GetParentSpaceID(long spaceID)
+SpaceInt *SpaceImp::GetParentSpaceID()
 {
     //not used by the Bullet implementation
     //dGeomID SpaceImp = (dGeomID) spaceID;
@@ -78,13 +66,13 @@ long SpaceImp::GetParentSpaceID(long spaceID)
 
 	for(auto it=spaces.begin(); it !=spaces.end();it++){
 		if((long)((*it).second)== spaceID)
-			return it->first;
+			return (SpaceInt *)it->first;
 	}
 	std::cerr << "(SpaceImp) DEBUG top level space found"<< spaceID << std::endl; 
-	return 1l;
+	return (SpaceInt *)1l;
 }
 
-long SpaceImp::CreateContactGroup()
+PhysicsObjectInt *SpaceImp::CreateContactGroup()
 {
     //not used by the bullet implementation
 
@@ -93,10 +81,10 @@ long SpaceImp::CreateContactGroup()
 
     //return (long) ODEContactGroup;
 	std::cerr << "(SpaceImp) ERROR called unimplemented function CreateContactGroup()" << std::endl; 
-    return 1l;
+    return reinterpret_cast<PhysicsObjectInt *>(1l);
 }
 
-void SpaceImp::PostPhysicsUpdateInternal(long contactGroup)
+void SpaceImp::PostPhysicsUpdateInternal(PhysicsObjectInt *contactGroup)
 {
     //not used by the bullet implementation
 
@@ -105,25 +93,25 @@ void SpaceImp::PostPhysicsUpdateInternal(long contactGroup)
     //dJointGroupEmpty(ODEContactGroup);
 }
 
-long SpaceImp::CreateSpace(long spaceID){
+long SpaceImp::CreateSpace(SpaceInt *spaceID2){
     //not supported by the bullet implementation
     
 	static int counter = 2;
 	int newSpace = counter++;
-	spaces.insert( std::pair<int,void*>(spaceID?spaceID:1,(void*)newSpace));
+	spaces.insert( std::pair<long,void*>(spaceID2?(int)spaceID2:1,(void*)this));
 
 	//dSpaceID SpaceImp = (dSpaceID) spaceID;
     //dSpaceID CreatedSpace = dHashSpaceCreate(SpaceImp);
     //return (long) CreatedSpace;
 	std::cerr << "(SpaceImp) DEBUG created space:" << newSpace << std::endl; 
-
-    return newSpace;
+	spaceID = (long)this;//newSpace;
+    return (long)this;
 }
 
-void SpaceImp::DestroySpace(long contactGroup, long spaceID)
+void SpaceImp::DestroySpace(PhysicsObjectInt *contactGroup)
 {
     //not supported by bullet
-	long parent = GetParentSpaceID(spaceID);
+	long parent = (long)GetParentSpaceID();
 	if(parent==0) return;
 
 	auto it = spaces.begin();
@@ -151,27 +139,27 @@ void SpaceImp::DestroySpace(long contactGroup, long spaceID)
 
 }
 
-bool SpaceImp::ObjectIsSpace(long objectID){
+bool SpaceImp::ObjectIsSpace(PhysicsObjectInt *objectID){
     //not supported by bullet
-	bool isSpace = spaces.find(objectID)!=spaces.end();
+	bool isSpace = spaces.find((int)objectID)!=spaces.end();
 	std::cerr << "(SpaceImp) DEBUG isSpace(" << objectID << ")="
 		      << isSpace << std::endl;
 	return isSpace;
 }
 
-long SpaceImp::FetchBody(long geomID){
+BodyInt *SpaceImp::FetchBody(ColliderInt *geomID){
     //not necessary, as only used by the unsupported Space::Collide()
     std::cerr << "(SpaceImp) ERROR called unimplemented function FetchBody()" << std::endl; 
-    return 0l;
+    return NULL;
 }
 
-long SpaceImp::FetchSpace(long geomID){
+SpaceInt *SpaceImp::FetchSpace(PhysicsObjectInt *geomID){
     //not necessary, as only used by the unsupported Space::Collide()
     std::cerr << "(SpaceImp) ERROR called unimplemented function FetchSpace()" << std::endl; 
-    return 0l;
+    return NULL;
 }
 
-bool SpaceImp::AreConnectedWithJoint(long bodyID1, long bodyID2){
+bool SpaceImp::AreConnectedWithJoint(const BodyInt *bodyID1,const  BodyInt *bodyID2){
     //only used by Space::Collide(); so not used in bullet implementation
     std::cerr << "(SpaceImp) ERROR called unimplemented function AreConnectedWithJoint()" << std::endl; 
     return true;
@@ -179,7 +167,45 @@ bool SpaceImp::AreConnectedWithJoint(long bodyID1, long bodyID2){
 
 void SpaceImp::CollideInternal(boost::shared_ptr<Collider> collider, 
                               boost::shared_ptr<Collider> collidee,
-                              long geomID1, long geomID2)
+                              ColliderInt *geomID1, ColliderInt *geomID2)
 {
     //not used by the bullet immplementation the world object handles all collisions
+}
+
+void SpaceImp::DisableInnerCollision(bool disable){
+	this->innercollision = !disable;
+	//:TODO: search through all rigidbodys in this space and re-set their collisionflags
+	auto range = spaces.equal_range(spaceID);
+	std::vector<void *>vec;
+	for(auto iter= range.first;iter!=range.second;iter++)
+	{
+		void *object = iter->second;
+
+		auto it = collidermap.find((btCollisionShape *) object);
+		//part of CollisionObject?
+		if(it!=collidermap.end())
+		{
+			btGeom *temp = it->second;
+			if(temp->obj && temp->wrld)
+			{
+				if(temp->isRigidBody)
+				{
+					temp->wrld->removeRigidBody(static_cast<btRigidBody*>(temp->obj));
+					temp->wrld->addRigidBody(static_cast<btRigidBody*>(temp->obj),4,~4);
+					((btRigidBody *)temp->obj)->activate(true);
+					((btRigidBody *)temp->obj)->setActivationState(DISABLE_DEACTIVATION);
+
+				}
+				else
+				{
+					temp->wrld->removeCollisionObject(temp->obj);
+					temp->wrld->addCollisionObject(temp->obj,4,~4);
+				}
+			}
+		}
+	}
+}
+
+bool SpaceImp::hasInnerCollision(){
+	return !this->innercollision;
 }

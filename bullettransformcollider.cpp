@@ -36,7 +36,7 @@ long TransformColliderImp::CreateTransformCollider(){
     return 0l;
 }
 
-void TransformColliderImp::SetColliderParameters(int cleanup, int info, long geomID){
+void TransformColliderImp::SetColliderParameters(int cleanup, int info){
     //dGeomID ODEGeom = (dGeomID) geomID;
     //dGeomTransformSetCleanup(ODEGeom, cleanup);
     //dGeomTransformSetInfo(ODEGeom, info);

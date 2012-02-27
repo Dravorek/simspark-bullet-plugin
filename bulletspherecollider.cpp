@@ -28,7 +28,7 @@ SphereColliderImp::SphereColliderImp() : ConvexColliderImp()
 {
 }
 
-void SphereColliderImp::SetRadius(float r, long geomID)
+void SphereColliderImp::SetRadius(float r)
 {
     btSphereShape *shp = (btSphereShape *)geomID;
 	shp->setUnscaledRadius(r);
@@ -36,7 +36,7 @@ void SphereColliderImp::SetRadius(float r, long geomID)
     //dGeomSphereSetRadius(ODEGeom, r);
 }
 
-float SphereColliderImp::GetRadius(long geomID) const
+float SphereColliderImp::GetRadius() const
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomSphereGetRadius(ODEGeom);
@@ -46,12 +46,28 @@ float SphereColliderImp::GetRadius(long geomID) const
 
 long SphereColliderImp::CreateSphere()
 {
-    //dGeomID ODEGeom = dCreateSphere(0, 1.0f);
-    //return (long) ODEGeom;
-    return (long)new btSphereShape(1.0f);
+	btSphereShape * new_shp = new btSphereShape(1.0f);
+	btCollisionShape* BulletGeom = (btCollisionShape *) new_shp;
+    btCollisionObject *obj = new btCollisionObject();
+	obj->setUserPointer((void *)13);
+	btDiscreteDynamicsWorld *wrld=lastWorld; 
+	obj->setCollisionShape(BulletGeom);
+	wrld->addCollisionObject(obj);
+
+    btGeom *geom = new btGeom();
+	geom->isRigidBody=false;
+	geom->obj=obj;
+	geom->shp=new_shp;
+	geom->wrld = wrld;
+
+
+   collidermap.insert(std::pair<btCollisionShape *, btGeom *>(new_shp,geom));
+   geomID=new_shp;
+
+	return (long)new_shp;
 }
 
-float SphereColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
+float SphereColliderImp::GetPointDepth(const Vector3f& pos)
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomSpherePointDepth

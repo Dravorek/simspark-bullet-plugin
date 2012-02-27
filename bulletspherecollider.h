@@ -33,9 +33,9 @@ class SphereColliderImp : public oxygen::SphereColliderInt, public ConvexCollide
  */
 public:
     SphereColliderImp();
-    void SetRadius(float r, long geomID);
-    float GetRadius(long geomID) const;
-    float GetPointDepth(const salt::Vector3f& pos, long geomID);
+    void SetRadius(float r);
+    float GetRadius() const;
+    float GetPointDepth(const salt::Vector3f& pos);
     long CreateSphere();
 };
 

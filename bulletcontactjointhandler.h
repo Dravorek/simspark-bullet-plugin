@@ -37,9 +37,9 @@ class ContactJointHandlerImp : public oxygen::ContactJointHandlerInt, public Col
 public:
     ContactJointHandlerImp();
     oxygen::GenericSurfaceParameter* Initialize();
-    long RetrieveBody(long geomID);
-    long CreateContactJoint(long worldID, long jointGroupID, oxygen::GenericContact& contact);
-    void AttachContactJoint(long jointID, long bodyID1, long bodyID2);
+    oxygen::BodyInt *RetrieveBody(oxygen::ColliderInt *geomID);
+	PhysicsObjectInt *CreateContactJoint(oxygen::WorldInt *worldID, oxygen::PhysicsObjectInt *jointGroupID, oxygen::GenericContact& contact);
+    void AttachContactJoint(PhysicsObjectInt *jointID, oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
     void CalcSurfaceParam(oxygen::GenericContact& surface, 
                           oxygen::GenericSurfaceParameter& collideeParam,
                           oxygen::GenericSurfaceParameter* surfacePtr);

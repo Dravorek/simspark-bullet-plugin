@@ -42,20 +42,21 @@ class WorldImp : public oxygen::WorldInt, public PhysicsObjectImp
 public:
     WorldImp();
 
-    void SetGravity(const salt::Vector3f& gravity, long worldID);
-    salt::Vector3f GetGravity(long worldID) const;
-    void SetERP(float erp, long worldID);
-    float GetERP(long worldID) const;
-    void SetCFM(float cfm, long worldID);
-    float GetCFM(long worldID) const;
-    void Step(float deltaTime, long worldID);
-    bool GetAutoDisableFlag(long worldID) const;
-    void SetAutoDisableFlag(bool flag, long worldID);
-    void SetContactSurfaceLayer(float depth, long worldID);
-    float GetContactSurfaceLayer(long worldID) const;
+    void SetGravity(const salt::Vector3f& gravity);
+    salt::Vector3f GetGravity() const;
+    void SetERP(float erp);
+    float GetERP() const;
+    void SetCFM(float cfm);
+    float GetCFM() const;
+    void Step(float deltaTime);
+    bool GetAutoDisableFlag() const;
+    void SetAutoDisableFlag(bool flag);
+    void SetContactSurfaceLayer(float depth);
+    float GetContactSurfaceLayer() const;
     long CreateWorld();
-    void DestroyWorld(long worldID);
-	boost::mutex *GetMutex(zeitgeist::Core *ptr);
+    void DestroyWorld();
+	
+	btDiscreteDynamicsWorld *worldID;
 };
 
 DECLARE_CLASS(WorldImp);

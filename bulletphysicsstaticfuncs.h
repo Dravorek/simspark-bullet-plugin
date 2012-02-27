@@ -2,7 +2,7 @@
 
    this file is part of rcssserver3D
    Fri May 9 2003
-   Copyright (C) 2011 Koblenz University
+   Copyright (C) 2002,2003 Koblenz University
    Copyright (C) 2003 RoboCup Soccer Server 3D Maintenance Group
    $Id$
    $Id$
@@ -20,54 +20,37 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-#ifndef BULLETPHYSICSOBJECT_H
-#define BULLETPHYSICSOBJECT_H
+#ifndef BULLETSTATICFUNCS_H
+#define BULLETSTATICFUNCS_H
 
-#include "btBulletDynamicsCommon.h"
-
-#include <oxygen/physicsserver/int/physicsobjectint.h>
+#include <oxygen/physicsserver/int/physicsstaticfuncsint.h>
 #include <oxygen/physicsserver/genericphysicsobjects.h>
 #include <oxygen/sceneserver/basenode.h>
 
-struct btGeom{
-	btGeom(): isRigidBody(true){}
-    btCollisionObject *obj; //btRigidBody
-    btCollisionShape *shp;
-    btDiscreteDynamicsWorld *wrld;
-	bool isRigidBody;
-};
+namespace oxygen {
+class Joint;
+class Collider;
+class RigidBody;
+}
 
-enum jointtype{
-	JT_FIXED,JT_HINGE,JT_HINGE2,JT_SLIDER,JT_UNIVERSAL,JT_OTHER
-};
-struct btJointWrapper{
-	btJointWrapper(): joint(NULL), type(JT_OTHER), world(NULL), added(false){}
-	btTypedConstraint *joint;
-	jointtype type; 
-	btDiscreteDynamicsWorld *world;
-	bool added;
-};
-
-typedef btGeom* btGeomID;
-
-#include <map>
-extern std::map<btCollisionShape *,btGeom *> collidermap;
-extern btDiscreteDynamicsWorld *lastWorld;
-extern std::multimap<long,void*> spaces;
-
-class PhysicsObjectImp :  public oxygen::PhysicsObjectInt, public oxygen::BaseNode 
+class PhysicsStaticFuncsImp : public oxygen::PhysicsStaticFuncsInt, public oxygen::BaseNode
 {
     /** See physicsserver/int/physicsobjectint.h for documentation */
 
 public:
-    PhysicsObjectImp();
+    PhysicsStaticFuncsImp();
     void ConvertRotationMatrix(const salt::Matrix& rot, oxygen::GenericPhysicsMatrix& matrix);
     void ConvertRotationMatrix(const oxygen::GenericPhysicsMatrix* matrix, salt::Matrix& rot) const;
+	oxygen::Joint* GetJoint(oxygen::JointInt *jointID);
+	bool AreConnected(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
+    bool AreConnectedExcluding(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2, int joint_type);
+	oxygen::RigidBody* GetBodyPointer(oxygen::BodyInt *bodyID);
+	oxygen::Collider* GetColliderPointer(oxygen::ColliderInt *geomID);
 
-	virtual oxygen::ColliderInt *UpcastToCollider();
-	virtual oxygen::SpaceInt *UpcastToSpace();
+	static PhysicsStaticFuncsImp *lastCreatedInstance;
 };
 
-DECLARE_CLASS(PhysicsObjectImp);
 
-#endif //BULLETPHYSICSOBJECT_H
+DECLARE_CLASS(PhysicsStaticFuncsImp);
+
+#endif //BULLETSTATICFUNCS_H

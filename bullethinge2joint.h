@@ -23,22 +23,24 @@
 #include "bulletgeneric6dofjoint.h"
 #include <oxygen/physicsserver/int/hinge2jointint.h>
 
-class Hinge2JointImp : public oxygen::Hinge2JointInt, public Generic6DOFJointImp
+//namespace oxygen{class BodyInt;}
+
+class Hinge2JointImp : public oxygen::Hinge2JointInt , public Generic6DOFJointImp
 {
     /** See physicsserver/int/hinge2jointint.h for documentation. */
     
 public:
     Hinge2JointImp();
-    long CreateHinge2Joint(long worldID);
+    long CreateHinge2Joint(oxygen::WorldInt *worldID);
     void SetAnchor(const salt::Vector3f& gAnchor, 
                    const salt::Vector3f& up, 
-                   const salt::Vector3f& right,
-                   long jointID);
-    salt::Vector3f GetAnchor1(long jointID);
-    salt::Vector3f GetAnchor2(long jointID);
-    float GetAngle(long jointID);
-    float GetAngleRate1(long jointID);
-    float GetAngleRate2(long jointID);
+                   const salt::Vector3f& right);
+    salt::Vector3f GetAnchor1();
+    salt::Vector3f GetAnchor2();
+    float GetAngle();
+    float GetAngleRate1();
+    float GetAngleRate2();
+	void Attach(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
 };
 
 DECLARE_CLASS(Hinge2JointImp);

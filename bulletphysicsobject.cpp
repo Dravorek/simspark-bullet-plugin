@@ -21,6 +21,8 @@
 */
 
 #include "bulletphysicsobject.h"
+#include "bulletspace.h"
+#include "bulletcollider.h"
 
 using namespace oxygen;
 //using namespace boost;
@@ -58,22 +60,32 @@ void PhysicsObjectImp::ConvertRotationMatrix(const salt::Matrix& rot, GenericPhy
 
 void PhysicsObjectImp::ConvertRotationMatrix(const GenericPhysicsMatrix* matrix, salt::Matrix& rot) const
 {
-   btMatrix3x3& btMatrix = (btMatrix3x3&) matrix;
+   btMatrix3x3& btMatrix = *((btMatrix3x3 *) matrix);
     
-   rot.m[0]   = (float)btMatrix[0][0];
-   rot.m[1]   = (float)btMatrix[1][0];
-   rot.m[2]   = (float)btMatrix[2][0];
+   rot.m[0]   = (float)btMatrix[0].x();
+   rot.m[1]   = (float)btMatrix[1].x();
+   rot.m[2]   = (float)btMatrix[2].x();
    rot.m[3]   = 0.0f;
-   rot.m[4]   = (float)btMatrix[0][1];
-   rot.m[5]   = (float)btMatrix[1][1];
-   rot.m[6]   = (float)btMatrix[2][1];
+   rot.m[4]   = (float)btMatrix[0].y();
+   rot.m[5]   = (float)btMatrix[1].y();
+   rot.m[6]   = (float)btMatrix[2].y();
    rot.m[7]   = 0.0f;
-   rot.m[8]   = (float)btMatrix[0][2];
-   rot.m[9]   = (float)btMatrix[1][2];
-   rot.m[10]  = (float)btMatrix[2][2];
+   rot.m[8]   = (float)btMatrix[0].z();
+   rot.m[9]   = (float)btMatrix[1].z();
+   rot.m[10]  = (float)btMatrix[2].z();
    rot.m[11]  = 0.0f;
    rot.m[12]  = 0.0f;
    rot.m[13]  = 0.0f;
    rot.m[14]  = 0.0f;
    rot.m[15]  = 1.0f;
 }
+
+	oxygen::ColliderInt *PhysicsObjectImp::UpcastToCollider()
+	{
+		return static_cast<ColliderImp *>(this);
+	}
+	
+	oxygen::SpaceInt *PhysicsObjectImp::UpcastToSpace()
+	{
+		return static_cast<SpaceImp *>(this);
+	}

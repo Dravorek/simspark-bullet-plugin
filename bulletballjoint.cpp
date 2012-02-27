@@ -28,7 +28,7 @@ BallJointImp::BallJointImp() : Generic6DOFJointImp()
 	std::cerr << "(BallJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
-long BallJointImp::CreateBallJoint(long worldID)
+long BallJointImp::CreateBallJoint(WorldInt *worldID)
 {
     //dWorldID ODEWorld = (dWorldID) worldID;
     //dJointID ODEJoint = dJointCreateBall(ODEWorld, 0);
@@ -37,14 +37,14 @@ long BallJointImp::CreateBallJoint(long worldID)
     return 0;
 }
 
-void BallJointImp::SetAnchor(const Vector3f& gAnchor, long jointID)
+void BallJointImp::SetAnchor(const Vector3f& gAnchor)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetBallAnchor (ODEJoint, gAnchor[0], gAnchor[1], gAnchor[2]);
 	std::cerr << "(BallJointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
 }
 
-Vector3f BallJointImp::GetAnchor1(long jointID)
+Vector3f BallJointImp::GetAnchor1()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dReal anchor[3];
@@ -56,7 +56,7 @@ Vector3f BallJointImp::GetAnchor1(long jointID)
     return Vector3f();
 }
 
-Vector3f BallJointImp::GetAnchor2(long jointID)
+Vector3f BallJointImp::GetAnchor2()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dReal anchor[3];

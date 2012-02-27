@@ -27,7 +27,7 @@ AngularMotorImp::AngularMotorImp() : JointImp()
 
 }
 
-long AngularMotorImp::CreateAngularMotor(long worldID){
+long AngularMotorImp::CreateAngularMotor(WorldInt *worldID){
     //dWorldID ODEWorld = (dWorldID) worldID;
     //dJointID ODEJoint = dJointCreateAMotor(ODEWorld, 0);
     //return (long) ODEJoint;
@@ -35,19 +35,19 @@ long AngularMotorImp::CreateAngularMotor(long worldID){
 	return 0;
 }
 
-void AngularMotorImp::SetModeUserMode(long jointID){
+void AngularMotorImp::SetModeUserMode(){
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetAMotorMode(ODEJoint, dAMotorUser);
 	std::cerr << "(AngularMotorImp) ERROR called unimplemented method: SetModeUserMode(" << std::endl;
 }
 
-void AngularMotorImp::SetModeEulerMode(long jointID){
+void AngularMotorImp::SetModeEulerMode(){
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetAMotorMode(ODEJoint, dAMotorEuler);
 	std::cerr << "(AngularMotorImp) ERROR called unimplemented method: SetModeEulerMode(" << std::endl;
 }
 
-int AngularMotorImp::GetMode(long jointID){
+int AngularMotorImp::GetMode(){
     //dJointID ODEJoint = (dJointID) jointID;
     //int motorMode = dJointGetAMotorMode(ODEJoint);
     //if (motorMode = dAMotorUser) 
@@ -58,20 +58,20 @@ int AngularMotorImp::GetMode(long jointID){
     return 0;
 }
 
-void AngularMotorImp::SetNumAxes(int num, long jointID){
+void AngularMotorImp::SetNumAxes(int num){
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetAMotorNumAxes(ODEJoint, num);
 	std::cerr << "(AngularMotorImp) ERROR called unimplemented method: SetNumAxes(" << std::endl;
 }
 
-int AngularMotorImp::GetNumAxes(long jointID){
+int AngularMotorImp::GetNumAxes(){
     //dJointID ODEJoint = (dJointID) jointID;
     //return dJointGetAMotorNumAxes(ODEJoint);
 	std::cerr << "(AngularMotorImp) ERROR called unimplemented method: GetNumAxes(" << std::endl;
     return 1;
 }
 
-void AngularMotorImp::SetMotorAxis(int idx, int anchor, Vector3f axis, long jointID){
+void AngularMotorImp::SetMotorAxis(int idx, int anchor, Vector3f axis){
     //dJointID ODEJoint = (dJointID) jointID;
     //
     //dJointSetAMotorAxis (ODEJoint, idx, anchor,
@@ -79,14 +79,14 @@ void AngularMotorImp::SetMotorAxis(int idx, int anchor, Vector3f axis, long join
 	std::cerr << "(AngularMotorImp) ERROR called unimplemented method: SetMotorAxis(" << std::endl;
 }
 
-int AngularMotorImp::GetAxisAnchor(int idx, long jointID){
+int AngularMotorImp::GetAxisAnchor(int idx){
     //dJointID ODEJoint = (dJointID) jointID;
     //return dJointGetAMotorAxisRel(ODEJoint, idx);
 	std::cerr << "(AngularMotorImp) ERROR called unimplemented method: GetAxisAnchor(" << std::endl;
     return -1;
 }
 
-Vector3f AngularMotorImp::GetMotorAxis(int idx, long jointID){
+Vector3f AngularMotorImp::GetMotorAxis(int idx){
     //dJointID ODEJoint = (dJointID) jointID;
     //dVector3 dAxis;
     //dJointGetAMotorAxis(ODEJoint,idx,dAxis);
@@ -95,14 +95,14 @@ Vector3f AngularMotorImp::GetMotorAxis(int idx, long jointID){
     return Vector3f();
 }
 
-void AngularMotorImp::SetAxisAngle(int idx, float degAngle, long jointID)
+void AngularMotorImp::SetAxisAngle(int idx, float degAngle)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetAMotorAngle(ODEJoint, idx, gDegToRad(degAngle));
 	std::cerr << "(AngularMotorImp) ERROR called unimplemented method: SetAxisAngle(" << std::endl;
 }
 
-float AngularMotorImp::GetAxisAngle(int idx, long jointID)
+float AngularMotorImp::GetAxisAngle(int idx)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetAMotorAngle(ODEJoint, idx));
@@ -110,7 +110,7 @@ float AngularMotorImp::GetAxisAngle(int idx, long jointID)
     return 0.0f;
 }
 
-float AngularMotorImp::GetAxisAngleRate(int idx, long jointID)
+float AngularMotorImp::GetAxisAngleRate(int idx)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetAMotorAngleRate(ODEJoint,idx));

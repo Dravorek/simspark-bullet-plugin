@@ -24,13 +24,12 @@
 
 using namespace oxygen;
 using namespace salt;
-#include <map>
-extern std::map<btCollisionShape *,btGeom *> collidermap;
+
 PlaneColliderImp::PlaneColliderImp() : ColliderImp()
 {
 }
 
-void PlaneColliderImp::SetPlaneParams(float a, float b, float c, float d, long geomID)
+void PlaneColliderImp::SetPlaneParams(float a, float b, float c, float d)
 {
 	btStaticPlaneShape *plane = (btStaticPlaneShape *)geomID;
 	btStaticPlaneShape *new_plane = new btStaticPlaneShape( btVector3(btScalar(a),btScalar(b),btScalar(c)), btScalar(d) );
@@ -38,9 +37,9 @@ void PlaneColliderImp::SetPlaneParams(float a, float b, float c, float d, long g
 	*plane = std::move(*new_plane);
 	auto it = collidermap.find(plane);
 	if(it!=collidermap.end()){
-		it->second->wrld->removeRigidBody(it->second->obj);
+		it->second->wrld->removeCollisionObject(it->second->obj);
 		it->second->obj->setCollisionShape(plane);
-		it->second->wrld->addRigidBody(it->second->obj);
+		it->second->wrld->addCollisionObject(it->second->obj);
 	}
 	//memcpy(plane,new_plane,sizeof(new_plane));
 	//delete new_plane;
@@ -49,24 +48,42 @@ void PlaneColliderImp::SetPlaneParams(float a, float b, float c, float d, long g
 	//:HACK: seriously? copying dynamically allocated objects?
     //dGeomID ODEGeom = (dGeomID) geomID;
     //dGeomPlaneSetParams(ODEGeom, a, b, c, d);
+    //collidermap.insert(std::pair<btCollisionShape *,btGeom *>(newGeom->shp,newGeom));
+	
 }
 
 long PlaneColliderImp::CreatePlane()
 {
    // // a plane with normal pointing up, going through the origin
    btStaticPlaneShape *new_plane = new btStaticPlaneShape( btVector3(btScalar(0.0f),btScalar(1.0f),btScalar(0.0f)), btScalar(0.0f) );
-	return (long)new_plane;
+	btCollisionShape* BulletGeom = (btCollisionShape *) new_plane;
+    btCollisionObject *obj = new btCollisionObject();
+	obj->setUserPointer((void *)12);
+	btDiscreteDynamicsWorld *wrld=lastWorld; 
+	obj->setCollisionShape(BulletGeom);
+	wrld->addCollisionObject(obj);
+
+    btGeom *geom = new btGeom();
+	geom->isRigidBody=false;
+	geom->obj=obj;
+	geom->shp=new_plane;
+	geom->wrld = wrld;
+
+	geomID=new_plane;
+   collidermap.insert(std::pair<btCollisionShape *, btGeom *>(new_plane,geom));
+   return (long)new_plane;
 }
 
-void PlaneColliderImp::SetParams(const salt::Vector3f& pos, salt::Vector3f normal, long geomID)
+void PlaneColliderImp::SetParams(const salt::Vector3f& pos, salt::Vector3f normal)
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     normal.Normalize();
     float d = pos.Dot(normal);
-    SetPlaneParams(normal.x(), normal.y(), normal.z(), d,geomID);
+    SetPlaneParams(normal.x(), normal.y(), normal.z(), d);
+
 }
 
-float PlaneColliderImp::GetPointDepth(const Vector3f& pos, long geomID)
+float PlaneColliderImp::GetPointDepth(const Vector3f& pos)
 {
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomPlanePointDepth

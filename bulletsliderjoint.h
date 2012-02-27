@@ -34,10 +34,24 @@ class SliderJointImp : public oxygen::SliderJointInt, public Generic6DOFJointImp
     
 public:
     SliderJointImp();
-    long CreateSliderJoint(long world);
-    float GetPosition(long jointID);
-    float GetPositionRate(long jointID);
-    void SetSliderAxis(salt::Vector3f& up, long jointID);
+    long CreateSliderJoint(oxygen::WorldInt *world);
+    float GetPosition();
+    float GetPositionRate();
+    void SetSliderAxis(salt::Vector3f& up);
+	void Attach(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
+
+	void SetLowStopDeg(int idx, float deg);
+    float GetLowStopDeg(int idx) const;
+    void SetHighStopDeg(int idx, float deg);
+    float GetHighStopDeg(int idx) const;
+    void SetLowStopPos(int idx, float deg);
+    float GetLowStopPos(int idx) const;
+    void SetHighStopPos(int idx, float deg);
+    float GetHighStopPos(int idx) const;
+    
+private:
+	void recreateSliderJoint(oxygen::BodyInt *bodyID1,oxygen::BodyInt *bodyID2);
+	void recreateSliderJoint(btRigidBody *bodyID1,btRigidBody *bodyID2);
 };
 
 DECLARE_CLASS(SliderJointImp);

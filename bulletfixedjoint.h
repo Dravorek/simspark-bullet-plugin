@@ -23,13 +23,15 @@
 #include "bulletgeneric6dofjoint.h"
 #include <oxygen/physicsserver/int/fixedjointint.h>
 
-class FixedJointImp : public oxygen::FixedJointInt, public Generic6DOFJointImp{
+class FixedJointImp : public oxygen::FixedJointInt , public Generic6DOFJointImp
+{
     
     /* See physicsserver/int/fixedjointint.h for documentation */
 public:    
     FixedJointImp();
-    long CreateFixedJoint(long world);
-    void SetFixed(long jointID);
+	long CreateFixedJoint(oxygen::WorldInt *world);
+	void SetFixed();
+	virtual void Attach(oxygen::BodyInt *bodyID1, oxygen::BodyInt *bodyID2);
 };
 
 DECLARE_CLASS(FixedJointImp);

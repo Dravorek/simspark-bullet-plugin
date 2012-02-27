@@ -26,7 +26,8 @@
 #include <oxygen/physicsserver/int/angularmotorint.h>
 #include "bulletjoint.h"
 
-class AngularMotorImp : public oxygen::AngularMotorInt, public JointImp{
+class AngularMotorImp :  public oxygen::AngularMotorInt, public JointImp
+{
 
 /** An angular motor allows the relative angular velocities of two
     bodies to be controlled. The angular velocity can be controlled on
@@ -38,18 +39,18 @@ class AngularMotorImp : public oxygen::AngularMotorInt, public JointImp{
 
 public:
     AngularMotorImp();
-    long CreateAngularMotor(long worldID);
-    void SetModeUserMode(long jointID);
-    void SetModeEulerMode(long jointID);
-    int GetMode(long jointID);
-    void SetNumAxes(int num, long jointID);
-    int GetNumAxes(long jointID);
-    void SetMotorAxis(int idx, int anchor, salt::Vector3f axis, long jointID);
-    int GetAxisAnchor(int idx, long jointID);
-    salt::Vector3f GetMotorAxis(int idx, long jointID);
-    void SetAxisAngle(int idx, float degAngle, long jointID);
-    float GetAxisAngle(int idx, long jointID);
-    float GetAxisAngleRate(int idx, long jointID);
+    long CreateAngularMotor(oxygen::WorldInt* worldID);
+    void SetModeUserMode();
+    void SetModeEulerMode();
+    int GetMode();
+    void SetNumAxes(int num);
+    int GetNumAxes();
+    void SetMotorAxis(int idx, int anchor, salt::Vector3f axis);
+    int GetAxisAnchor(int idx);
+    salt::Vector3f GetMotorAxis(int idx);
+    void SetAxisAngle(int idx, float degAngle);
+    float GetAxisAngle(int idx);
+    float GetAxisAngleRate(int idx);
 };
 
 DECLARE_CLASS(AngularMotorImp);
