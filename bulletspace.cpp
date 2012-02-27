@@ -191,7 +191,7 @@ void SpaceImp::DisableInnerCollision(bool disable){
 				if(temp->isRigidBody)
 				{
 					temp->wrld->removeRigidBody(static_cast<btRigidBody*>(temp->obj));
-					temp->wrld->addRigidBody(static_cast<btRigidBody*>(temp->obj),4,~4);
+					temp->wrld->addRigidBody(static_cast<btRigidBody*>(temp->obj));
 					((btRigidBody *)temp->obj)->activate(true);
 					((btRigidBody *)temp->obj)->setActivationState(DISABLE_DEACTIVATION);
 
@@ -199,7 +199,7 @@ void SpaceImp::DisableInnerCollision(bool disable){
 				else
 				{
 					temp->wrld->removeCollisionObject(temp->obj);
-					temp->wrld->addCollisionObject(temp->obj,4,~4);
+					temp->wrld->addCollisionObject(temp->obj);
 				}
 			}
 		}

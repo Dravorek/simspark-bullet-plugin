@@ -287,14 +287,14 @@ void ColliderImp::SetSpace(SpaceInt *spaceID,Collider* collider){
 				if(temp->isRigidBody)
 				{
 					temp->wrld->removeRigidBody(static_cast<btRigidBody*>(temp->obj));
-					temp->wrld->addRigidBody(static_cast<btRigidBody*>(temp->obj),4,~4);
+					temp->wrld->addRigidBody(static_cast<btRigidBody*>(temp->obj));
 					((btRigidBody *)temp->obj)->activate(true);
 					((btRigidBody *)temp->obj)->setActivationState(DISABLE_DEACTIVATION);
 				}
 				else
 				{
 					temp->wrld->removeCollisionObject(temp->obj);
-					temp->wrld->addCollisionObject(temp->obj,4,~4);
+					temp->wrld->addCollisionObject(temp->obj);
 				}
 			}
 		}
@@ -353,7 +353,7 @@ void ColliderImp::SetBody(BodyInt *bodyID){
 	if(space != 0 && (long)space !=1 
 		&& !static_cast<SpaceImp *>(space)->innercollision)
 	{
-		bulletBody->wrld->addRigidBody(((btRigidBody *)bulletBody->obj),4,~4);
+		bulletBody->wrld->addRigidBody(((btRigidBody *)bulletBody->obj));
 	
 	}
 	else
