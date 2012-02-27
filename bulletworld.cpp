@@ -286,7 +286,7 @@ void WorldImp::SetCFM(float cfm)
 {
     btDiscreteDynamicsWorld *WorldImp =  worldID;
     btContactSolverInfo solverInfo = WorldImp->getSolverInfo();
-    solverInfo.m_globalCfm = 0.0f;//cfm;
+    solverInfo.m_globalCfm = 0.01f;//cfm;
 }
 
 float WorldImp::GetCFM() const

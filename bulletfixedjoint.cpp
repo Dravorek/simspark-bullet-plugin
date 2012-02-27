@@ -33,7 +33,8 @@ FixedJointImp::FixedJointImp() : Generic6DOFJointImp()
 long FixedJointImp::CreateFixedJoint(WorldInt *world)
 {
 	//btDiscreteDynamicsWorld *wrld = reinterpret_cast<btDiscreteDynamicsWorld *>(world);
-    btJointWrapper *wrp = new btJointWrapper();
+    
+	btJointWrapper *wrp = new btJointWrapper();
 	btRigidBody *rbA = new btRigidBody(0.0,0,0);
 	rbA->activate(true);
 	rbA->setActivationState(DISABLE_DEACTIVATION);
@@ -47,6 +48,8 @@ long FixedJointImp::CreateFixedJoint(WorldInt *world)
 	wrp->world = static_cast<WorldImp *>(world)->worldID;
 	jointID = wrp;
 	return reinterpret_cast<long>(wrp);
+	
+	
 	//dWorldID ODEworld = (dWorldID) world;
     //dJointID ODEJoint = dJointCreateFixed(ODEworld, 0);
     //return (long) ODEJoint;
@@ -73,9 +76,17 @@ void FixedJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 	btVector3 anchor(0.0,0.0,0.0);
 	btVector3 axis1(0.0,1.0,0.0);
 	btVector3 axis2(1.0,0.0,0.0);
-	if(wrp->joint){
-		lastWorld->removeConstraint(wrp->joint);
-		delete wrp->joint;
+	if(jointID)
+	{
+	if(jointID->joint){
+		if(jointID->added)lastWorld->removeConstraint(jointID->joint);
+		btRigidBody *rbaa = &(jointID->joint->getRigidBodyA());
+		btRigidBody *rbbb = &(jointID->joint->getRigidBodyB());
+		delete jointID->joint;
+		delete rbaa;
+		delete rbbb;
+	}
+	delete jointID;
 	}
 	//new btGeneric6DofConstraint(
 	btGeneric6DofConstraint * joint = new btGeneric6DofConstraint(*((btRigidBody *)rbA->obj),*((btRigidBody *)rbB->obj),btTransform::getIdentity(),trans1,false);
@@ -88,6 +99,7 @@ void FixedJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 	lastWorld->addConstraint(joint,true);
 	wrp->added = true;
 
+	jointID = wrp;
 	//{
 	//		btBoxShape *box1;
 	//		btBoxShape *box2;

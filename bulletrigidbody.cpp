@@ -159,7 +159,7 @@ long RigidBodyImp::CreateBody(WorldInt *worldID)
    btDiscreteDynamicsWorld *Wrld = static_cast<WorldImp *>(worldID)->worldID;
    //NewBdy->obj->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT | NewBdy->obj->getCollisionFlags());
    Wrld->addRigidBody(((btRigidBody *)NewBdy->obj));
-   NewBdy->obj->setFriction(100.0);
+   //NewBdy->obj->setFriction(100.0);
    static_cast<btRigidBody *>(NewBdy->obj)->activate(true);
    static_cast<btRigidBody *>(NewBdy->obj)->setActivationState(DISABLE_DEACTIVATION);
    NewBdy->wrld = Wrld;
