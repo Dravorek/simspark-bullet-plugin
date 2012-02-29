@@ -189,19 +189,19 @@ public:
 		////////////////////////////////////////////////////////////////////////////
 		////worldMutex not yet created, wait until it exists
 		//while(!worldMutex){
-		//	std::cerr << "mutex not created yet, waiting for it for 20ms"<< std::endl; 
+		//	//std::cerr << "mutex not created yet, waiting for it for 20ms"<< std::endl; 
 		//boost::this_thread::sleep(boost::posix_time::milliseconds(200));
 		//}
 		////////////////////////////////////////////////////////////////////////////
 		//worldMutex->lock();
-		////std::cerr << "aquired WORLDLOCK for BulletDraw" << std::endl;
+		//////std::cerr << "aquired WORLDLOCK for BulletDraw" << std::endl;
 
 		renderme();
 
 		//optional but useful: debug drawing to detect problems
 		if (m_dynamicsWorld)
 			m_dynamicsWorld->debugDrawWorld();
-		//std::cerr << "unlocking WORLDLOCK for BulletDraw" << std::endl;
+		////std::cerr << "unlocking WORLDLOCK for BulletDraw" << std::endl;
 		//worldMutex->unlock();
 		
 		glFlush();
@@ -300,7 +300,7 @@ float WorldImp::GetCFM() const
 void WorldImp::Step(float deltaTime)
 {
 	static int steps = 0;
-	std::cout << "step " << steps++ <<std::endl;
+	//std::cout << "step " << steps++ <<std::endl;
 	btDiscreteDynamicsWorld *WorldImp = worldID;
     WorldImp->stepSimulation(deltaTime,1,1.0/60);
 }

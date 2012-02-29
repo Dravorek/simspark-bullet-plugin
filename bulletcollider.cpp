@@ -90,8 +90,7 @@ void ColliderImp::SetPosition(const Vector3f& globalPos)
 void ColliderImp::SetLocalPosition(const Vector3f& pos)
 {
     //SetPosition(pos,geomID);
-	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::SetLocalPosition() called."
-		      << std::endl;
+	//std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::SetLocalPosition() called."		      << std::endl;
 }
 
 Vector3f ColliderImp::GetPosition() const
@@ -108,7 +107,7 @@ Vector3f ColliderImp::GetPosition() const
                 (float)trans.getOrigin().z()
             );
 	}
-	//std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::GetPosition() called."
+	////std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::GetPosition() called."
 	//	      << std::endl;
 	//return Vector3f(
  //               (float)0.0f,
@@ -120,8 +119,7 @@ Vector3f ColliderImp::GetPosition() const
 SpaceInt *ColliderImp::GetParentSpaceID()
 {
     //TODO: check how safe returning 0 is
-	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::GetSpaceID() called."
-		      << std::endl;
+	//std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::GetSpaceID() called."		      << std::endl;
 	for(auto it = spaces.begin();it!=spaces.end();it++){
 		if((long)it->second == (long)geomID)
 			return (SpaceInt *)it->first;
@@ -145,15 +143,13 @@ bool ColliderImp::Intersect(boost::shared_ptr<Collider> collider)
          sizeof(contact)
          ) > 0;
          */
-	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::Intersect() called."
-		      << std::endl;
+	//std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::Intersect() called."		      << std::endl;
 	return false;
 }
 
 void ColliderImp::DestroyGeom()
 {
-   std::cerr << "(bulletimps) WARNING notFinished ColliderImp::DestroyGeom() called."
-			  << std::endl;
+   //std::cerr << "(bulletimps) WARNING notFinished ColliderImp::DestroyGeom() called."			  << std::endl;
 	//TODO: check if deleting the internal pointer is necessary
     //delete (Collider *)BulletGeom->getUserPointer() or
     //even removing the collisionobject from the world
@@ -164,13 +160,13 @@ void ColliderImp::DestroyGeom()
     boost::shared_ptr<Scene> scene = GetScene();
     if (scene.get() == 0)
     {
-        std::cerr << "(BulletObject) ERROR: found no Scene node\n";
+        //std::cerr << "(BulletObject) ERROR: found no Scene node\n";
     }else{
         boost::shared_ptr<World> worldNode = boost::shared_dynamic_cast<World>
             (scene->GetChildOfClass("World"));
         if (worldNode.get() == 0)
         {
-            std::cerr << "(ODEObject) ERROR: found no World node\n";
+            //std::cerr << "(ODEObject) ERROR: found no World node\n";
         }
         wrld = worldNode;
     }
@@ -210,7 +206,7 @@ void ColliderImp::DestroyGeom()
 					collidermap.erase(it);
 					delete BulletGeom;
 				}else{
-					std::cerr << "ERROR (BulletCollider) called destroy collider in a broken configuration" <<std::endl;
+					//std::cerr << "ERROR (BulletCollider) called destroy collider in a broken configuration" <<std::endl;
 				}
 			}
 		}else{//Is part of CollisionObject
@@ -230,7 +226,7 @@ void ColliderImp::DestroyGeom()
 					collidermap.erase(it);
 					delete BulletGeom;
 				}else{
-					std::cerr << "ERROR (BulletCollider) called destroy collider in a broken configuration" <<std::endl;
+					//std::cerr << "ERROR (BulletCollider) called destroy collider in a broken configuration" <<std::endl;
 				}
 		}
 	}
@@ -242,8 +238,7 @@ void ColliderImp::TransformSetGeom(ColliderInt *parentGeomID){
     /*dGeomID parentODEGeom = (dGeomID) parentGeomID;
     dGeomID ODEGeom = (dGeomID) geomID;
     dGeomTransformSetGeom(parentODEGeom, ODEGeom);*/
-	std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::TransformSetGeom() called."
-		      << std::endl;
+	//std::cerr << "(bulletimps) ERROR unimplemented ColliderImp::TransformSetGeom() called."		      << std::endl;
 }
 
 void ColliderImp::SetSpace(SpaceInt *spaceID,Collider* collider){
@@ -262,7 +257,7 @@ void ColliderImp::SetSpace(SpaceInt *spaceID,Collider* collider){
 	
 	if(!shp)
 	{
-		std::cerr << "(bulletimps) (COLLIDER) ERROR  DID NOT FIND COLLIDER SHAPE"<< std::endl;
+		//std::cerr << "(bulletimps) (COLLIDER) ERROR  DID NOT FIND COLLIDER SHAPE"<< std::endl;
 		return;
 	}
 	shp->setUserPointer(static_cast<ColliderInt *>(this));
@@ -309,12 +304,11 @@ void ColliderImp::SetBody(BodyInt *bodyID){
     dGeomSetBody(ODEGeom, ODEBody);*/
 	if(!geomID)
 	{
-		std::cerr << "(bulletimps) (btCollider) tried to add NULL to a rigidbody"<<std::endl;
+		//std::cerr << "(bulletimps) (btCollider) tried to add NULL to a rigidbody"<<std::endl;
 		return;
 	}
 
-	std::cerr << "(bulletimps) DEBUG called ColliderImp::SetBody(body="<<bodyID<<",geom="<<geomID<<") called."
-		      << std::endl;
+	//std::cerr << "(bulletimps) DEBUG called ColliderImp::SetBody(body="<<bodyID<<",geom="<<geomID<<") called."		      << std::endl;
 	btCollisionShape* BulletGeom = (btCollisionShape *) geomID;
     auto it = collidermap.find(BulletGeom);
 	//part of CollisionObject?
@@ -371,8 +365,7 @@ void ColliderImp::RemoveFromSpace(SpaceInt *spaceID){
     /*dGeomID ODEGeom = (dGeomID) geomID;
     dSpaceID ODESpace = (dSpaceID) spaceID;
     dSpaceRemove(ODESpace, ODEGeom);*/
-	std::cerr << "(bulletimps) DEBUG called ColliderImp::RemoveFromSpace(geom="<<geomID<<",space="<<spaceID<<") called."
-		      << std::endl;
+	//std::cerr << "(bulletimps) DEBUG called ColliderImp::RemoveFromSpace(geom="<<geomID<<",space="<<spaceID<<") called."		      << std::endl;
 
 	auto range = spaces.equal_range((int)spaceID);
 	for(auto it = range.first;it!=range.second;it++){

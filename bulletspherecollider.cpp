@@ -71,8 +71,7 @@ float SphereColliderImp::GetPointDepth(const Vector3f& pos)
     //return dGeomSpherePointDepth
     //    (ODEGeom,pos[0],pos[1],pos[2]);
     
-	std::cerr <<" (SphereColliderImp) ERROR called unimplemented method GetPointDepth()"
-			  << std::endl;
+	//std::cerr <<" (SphereColliderImp) ERROR called unimplemented method GetPointDepth()"			  << std::endl;
 	//TODO: implement, ATTENTION Bullet doesn't keep position information in the Shape Classes
 	//return something that is outside as not to generate unnesessary collisions
 	return -0.1f;

@@ -28,7 +28,7 @@ using namespace salt;
 
 SliderJointImp::SliderJointImp() : Generic6DOFJointImp()
 {
-	std::cerr << "(SliderJointImp) ERROR called unimplemented constructor" << std::endl;
+	//std::cerr << "(SliderJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long SliderJointImp::CreateSliderJoint(WorldInt * worldID)
@@ -55,7 +55,7 @@ long SliderJointImp::CreateSliderJoint(WorldInt * worldID)
 	jointID = wrp;
 	return reinterpret_cast<long>(wrp);
 	
-	std::cerr << "(SliderJointImp) ERROR called unimplemented method CreateSliderJoint(" << std::endl;
+	//std::cerr << "(SliderJointImp) ERROR called unimplemented method CreateSliderJoint(" << std::endl;
     return (long)wrp;
 }
 
@@ -107,7 +107,7 @@ float SliderJointImp::GetPosition()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return dJointGetSliderPosition(ODEJoint);
-	std::cerr << "(SliderJointImp) ERROR called unimplemented method GetPosition(" << std::endl;
+	//std::cerr << "(SliderJointImp) ERROR called unimplemented method GetPosition(" << std::endl;
     return 0.0f;
 }
 
@@ -115,18 +115,18 @@ float SliderJointImp::GetPositionRate()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return dJointGetSliderPositionRate(ODEJoint);
-	std::cerr << "(SliderJointImp) ERROR called unimplemented method GetPositionRate(" << std::endl;
+	//std::cerr << "(SliderJointImp) ERROR called unimplemented method GetPositionRate(" << std::endl;
     return 0.0f;
 }
 
 void SliderJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
-	std::cout << "sliderjoint attach called" <<std::endl;
+	//std::cout << "sliderjoint attach called" <<std::endl;
 	btJointWrapper *wrap = (btJointWrapper *)jointID;
 	btTypedConstraint *joint = wrap->joint;
 	btSliderConstraint *hinge = 0;
 	//TODO: connect NULL with another body
 	if(!bodyID1 || !bodyID2){
-		std::cerr << "(BulletJointImp) ERROR can't attach a body to NULL yet" << std::endl;
+		//std::cerr << "(BulletJointImp) ERROR can't attach a body to NULL yet" << std::endl;
 		//return;
 	}
 	btGeom *rbA = bodyID1?static_cast<BodyImp *>(bodyID1)->btID:0;

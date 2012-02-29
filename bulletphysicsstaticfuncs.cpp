@@ -83,7 +83,7 @@ bool PhysicsStaticFuncsImp::AreConnected(oxygen::BodyInt *bodyID1, oxygen::BodyI
 	    //dBodyID ODEBody1 = (dBodyID) bodyID1;
     //dBodyID ODEBody2 = (dBodyID) bodyID2;
     //return dAreConnected(ODEBody1, ODEBody2) == 1;
-	std::cerr << "(JointImp) WARNING called unfinished (inefficient) method AreConnected(" << std::endl;
+	//std::cerr << "(JointImp) WARNING called unfinished (inefficient) method AreConnected(" << std::endl;
 	//:TODO: find out if this includes contact constraints in ODE?
 	// this: http://opende.sourceforge.net/wiki/index.php/Manual_(Joint_Types_and_Functions)
 	//would suggest that they are, what now?
@@ -112,7 +112,7 @@ bool PhysicsStaticFuncsImp::AreConnectedExcluding(oxygen::BodyInt *bodyID1, oxyg
 	    //dBodyID ODEBody1 = (dBodyID) bodyID1;
     //dBodyID ODEBody2 = (dBodyID) bodyID2;
     //return dAreConnectedExcluding(ODEBody1, ODEBody2, joint_type) == 1;
-	std::cerr << "(JointImp) ERROR called unfinished method AreConnectedExcluding(" << std::endl;
+	//std::cerr << "(JointImp) ERROR called unfinished method AreConnectedExcluding(" << std::endl;
 
 	BodyImp *imp1 = static_cast<BodyImp*>(bodyID1);
 	BodyImp *imp2 = static_cast<BodyImp*>(bodyID2);

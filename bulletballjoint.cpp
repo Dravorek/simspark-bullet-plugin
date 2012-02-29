@@ -25,7 +25,7 @@ using namespace salt;
 
 BallJointImp::BallJointImp() : Generic6DOFJointImp()
 {
-	std::cerr << "(BallJointImp) ERROR called unimplemented constructor" << std::endl;
+	//std::cerr << "(BallJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long BallJointImp::CreateBallJoint(WorldInt *worldID)
@@ -33,7 +33,7 @@ long BallJointImp::CreateBallJoint(WorldInt *worldID)
     //dWorldID ODEWorld = (dWorldID) worldID;
     //dJointID ODEJoint = dJointCreateBall(ODEWorld, 0);
     //return (long) ODEJoint;
-	std::cerr << "(BallJointImp) ERROR called unimplemented method: CreateBallJoint(" << std::endl;
+	//std::cerr << "(BallJointImp) ERROR called unimplemented method: CreateBallJoint(" << std::endl;
     return 0;
 }
 
@@ -41,7 +41,7 @@ void BallJointImp::SetAnchor(const Vector3f& gAnchor)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetBallAnchor (ODEJoint, gAnchor[0], gAnchor[1], gAnchor[2]);
-	std::cerr << "(BallJointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
+	//std::cerr << "(BallJointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
 }
 
 Vector3f BallJointImp::GetAnchor1()
@@ -52,7 +52,7 @@ Vector3f BallJointImp::GetAnchor1()
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //
     //return pos;
-	std::cerr << "(BallJointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
+	//std::cerr << "(BallJointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
     return Vector3f();
 }
 
@@ -64,6 +64,6 @@ Vector3f BallJointImp::GetAnchor2()
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //
     //return pos;
-	std::cerr << "(BallJointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
+	//std::cerr << "(BallJointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
     return Vector3f();
 }

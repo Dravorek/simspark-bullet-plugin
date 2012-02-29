@@ -81,16 +81,14 @@ void HingeJointImp::SetAnchor(const Vector3f& anchor)
 		newTransB.setBasis(joint->getBFrame().getBasis());//btMatrix3x3::getIdentity());
 
 		joint->setFrames(newTransA,newTransB);
-		std::cout << "Attaching hinge: " << jointID->joint << std::endl;
-		std::cout << "obj1: "<< &(joint->getRigidBodyA())<< std::endl;
-		std::cout << "position: "<< "X:"<<newTransA.getOrigin().x()<< " Y:"<< newTransA.getOrigin().y()<< " Z:"<< newTransA.getOrigin().z() << std::endl;
-		std::cout << "rotation: "<< "axis: X:"<<newTransA.getRotation().getAxis().x()<< " Y:"<< newTransA.getRotation().getAxis().y()<< " Z:"<< newTransA.getRotation().getAxis().z() 
-			<<"angle:" << newTransA.getRotation().getAngle()<< std::endl;
+		//std::cout << "Attaching hinge: " << jointID->joint << std::endl;
+		//std::cout << "obj1: "<< &(joint->getRigidBodyA())<< std::endl;
+		//std::cout << "position: "<< "X:"<<newTransA.getOrigin().x()<< " Y:"<< newTransA.getOrigin().y()<< " Z:"<< newTransA.getOrigin().z() << std::endl;
+		//std::cout << "rotation: "<< "axis: X:"<<newTransA.getRotation().getAxis().x()<< " Y:"<< newTransA.getRotation().getAxis().y()<< " Z:"<< newTransA.getRotation().getAxis().z() 			<<"angle:" << newTransA.getRotation().getAngle()<< std::endl;
 		
-		std::cout << "obj2: "<< &(joint->getRigidBodyB())<< std::endl;
-		std::cout << "position: "<< "X:"<< newTransB.getOrigin().x()<< " Y:"<< newTransB.getOrigin().y()<< " Z:"<< newTransB.getOrigin().z() << std::endl;
-		std::cout << "rotation: "<< "axis: X:"<<newTransB.getRotation().getAxis().x()<< " Y:"<< newTransB.getRotation().getAxis().y()<< " Z:"<< newTransB.getRotation().getAxis().z() 
-			<<"angle:" << newTransB.getRotation().getAngle()<< std::endl;
+		//std::cout << "obj2: "<< &(joint->getRigidBodyB())<< std::endl;
+		//std::cout << "position: "<< "X:"<< newTransB.getOrigin().x()<< " Y:"<< newTransB.getOrigin().y()<< " Z:"<< newTransB.getOrigin().z() << std::endl;
+		//std::cout << "rotation: "<< "axis: X:"<<newTransB.getRotation().getAxis().x()<< " Y:"<< newTransB.getRotation().getAxis().y()<< " Z:"<< newTransB.getRotation().getAxis().z() 			<<"angle:" << newTransB.getRotation().getAngle()<< std::endl;
 		if(jointID->world)
 		{
 			jointID->world->removeConstraint(joint);
@@ -115,7 +113,7 @@ Vector3f HingeJointImp::GetAnchor2()
 	//Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
 	//
 	//return pos;
-	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
+	//std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
 	return Vector3f();
 }
 
@@ -124,8 +122,7 @@ void HingeJointImp::SetAxis(const Vector3f& axis)
 	if(jointID && jointID->joint && jointID->type ==JT_HINGE)
 	{
 		static_cast<btHingeConstraint *>(jointID->joint)->setAxis(btVector3(axis.x(),axis.y(),axis.z()));
-		std::cout << "hinge: " << jointID->joint <<" setAxis to:" << 
-			"X:" << axis.x() << " Y:"<<axis.y() << " Z:" << axis.z()<< std::endl;
+		//std::cout << "hinge: " << jointID->joint <<" setAxis to:" << 			"X:" << axis.x() << " Y:"<<axis.y() << " Z:" << axis.z()<< std::endl;
 		if(jointID->world)
 		{
 			jointID->world->removeConstraint(jointID->joint);
@@ -159,7 +156,7 @@ float HingeJointImp::GetAngleRate() const
 {
 	//dJointID ODEJoint = (dJointID) jointID;
 	//return gRadToDeg(dJointGetHingeAngleRate(ODEJoint));
-	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAngleRate(" << std::endl;
+	//std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetAngleRate(" << std::endl;
 	return 0.0f;
 }
 
@@ -168,18 +165,18 @@ float HingeJointImp::GetTorque() const
 	//dJointID ODEJoint = (dJointID) jointID;
 	//dJointFeedback* fb = dJointGetFeedback(ODEJoint);
 	//return dLENGTH(fb->t1) + dLENGTH(fb->t2);
-	std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetTorque(" << std::endl;
+	//std::cerr << "(HingeJointImp) ERROR called unimplemented method: GetTorque(" << std::endl;
 	return 0.0f;
 }
 
 void HingeJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
-	std::cout << "hingjoint attach called" <<std::endl;
+	//std::cout << "hingjoint attach called" <<std::endl;
 	btJointWrapper *wrap = (btJointWrapper *)jointID;
 	btTypedConstraint *joint = wrap->joint;
 	btHingeConstraint *hinge = 0;
 	//TODO: connect NULL with another body
 	if(!bodyID1 || !bodyID2){
-		std::cerr << "(BulletJointImp) ERROR can't attach a body to NULL yet" << std::endl;
+		//std::cerr << "(BulletJointImp) ERROR can't attach a body to NULL yet" << std::endl;
 		//return;
 	}
 	btGeom *rbA = bodyID1?static_cast<BodyImp *>(bodyID1)->btID:0;
@@ -225,7 +222,7 @@ void HingeJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 		trans6.setBasis(trans6.getBasis().transpose());
 		trans5 = trans6 * trans5;
 
-		//std::cout << "x:" << trans5.getOrigin().x() << std::endl
+		////std::cout << "x:" << trans5.getOrigin().x() << std::endl
 		//	      << " y:" << trans5.getOrigin().y()<< std::endl
 		//	      << " z:" << trans5.getOrigin().z()<< std::endl
 		//	      << " w:" << trans5.getOrigin().w() << std::endl;
@@ -233,7 +230,7 @@ void HingeJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 
 		btScalar yaw, pitch, roll;
 		trans5.getBasis().getEulerYPR(yaw,pitch,roll);
-		//std::cout << "yaw : " << yaw*180.0/M_PI << std::endl
+		////std::cout << "yaw : " << yaw*180.0/M_PI << std::endl
 		//		  << "pitch: " << pitch*180.0/M_PI << std::endl
 		//		  << "roll: " << roll*180.0/M_PI << std::endl;
 
@@ -248,17 +245,14 @@ void HingeJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 		hinge = new btHingeConstraint (*((btRigidBody *)rbA->obj),*((btRigidBody *)rbB->obj),trans5,trans6);//anchor,anchor2,axis1,-1.0*axis1);
 		hinge->setAxis(axis);
 		lastWorld->addConstraint(hinge,true);
-		std::cout << "Attaching hinge: " << jointID->joint <<" setAxis to:" << 
-			"X:" << axis.x() << " Y:"<<axis.y() << " Z:" << axis.z()<< std::endl;
-		std::cout << "obj1: "<< (btRigidBody *)rbA->obj << std::endl;
-		std::cout << "position: "<< "X:"<<trans5.getOrigin().x()<< " Y:"<< trans5.getOrigin().y()<< " Z:"<< trans5.getOrigin().z() << std::endl;
-		std::cout << "rotation: "<< "axis: X:"<<trans5.getRotation().getAxis().x()<< " Y:"<< trans5.getRotation().getAxis().y()<< " Z:"<< trans5.getRotation().getAxis().z() 
-			<<"angle:" << trans5.getRotation().getAngle()<< std::endl;
+		//std::cout << "Attaching hinge: " << jointID->joint <<" setAxis to:" << 			"X:" << axis.x() << " Y:"<<axis.y() << " Z:" << axis.z()<< std::endl;
+		//std::cout << "obj1: "<< (btRigidBody *)rbA->obj << std::endl;
+		//std::cout << "position: "<< "X:"<<trans5.getOrigin().x()<< " Y:"<< trans5.getOrigin().y()<< " Z:"<< trans5.getOrigin().z() << std::endl;
+		//std::cout << "rotation: "<< "axis: X:"<<trans5.getRotation().getAxis().x()<< " Y:"<< trans5.getRotation().getAxis().y()<< " Z:"<< trans5.getRotation().getAxis().z() 			<<"angle:" << trans5.getRotation().getAngle()<< std::endl;
 		
-		std::cout << "obj2: "<< (btRigidBody *)rbB->obj << std::endl;
-		std::cout << "position: "<< "X:"<<trans6.getOrigin().x()<< " Y:"<< trans6.getOrigin().y()<< " Z:"<< trans6.getOrigin().z() << std::endl;
-		std::cout << "rotation: "<< "axis: X:"<<trans6.getRotation().getAxis().x()<< " Y:"<< trans6.getRotation().getAxis().y()<< " Z:"<< trans6.getRotation().getAxis().z() 
-			<<"angle:" << trans6.getRotation().getAngle()<< std::endl;
+		//std::cout << "obj2: "<< (btRigidBody *)rbB->obj << std::endl;
+		//std::cout << "position: "<< "X:"<<trans6.getOrigin().x()<< " Y:"<< trans6.getOrigin().y()<< " Z:"<< trans6.getOrigin().z() << std::endl;
+		//std::cout << "rotation: "<< "axis: X:"<<trans6.getRotation().getAxis().x()<< " Y:"<< trans6.getRotation().getAxis().y()<< " Z:"<< trans6.getRotation().getAxis().z() 			<<"angle:" << trans6.getRotation().getAngle()<< std::endl;
 
 	}
 	else

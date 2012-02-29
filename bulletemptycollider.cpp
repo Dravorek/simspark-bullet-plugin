@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 EmptyColliderImp::EmptyColliderImp() : ColliderImp(){
-	std::cerr << "(EmptyColliderImp) ERROR called unimplemented constructor" << std::endl;
+	//std::cerr << "(EmptyColliderImp) ERROR called unimplemented constructor" << std::endl;
 }

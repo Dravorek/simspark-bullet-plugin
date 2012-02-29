@@ -25,7 +25,7 @@ using namespace oxygen;
 
 RayColliderImp::RayColliderImp() : ColliderImp()
 {
-	std::cerr << "(RayColliderImp) ERROR called unimplemented constructor" << std::endl;
+	//std::cerr << "(RayColliderImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 void RayColliderImp::SetParams(salt::Vector3f pos,
@@ -34,13 +34,13 @@ void RayColliderImp::SetParams(salt::Vector3f pos,
     //dGeomID ODEGeom = (dGeomID) geomID;
     //dGeomRaySet(ODEGeom, pos[0], pos[1], pos[2], dir[0], dir[1], dir[2]);
     //dGeomRaySetLength(ODEGeom, length);
-	std::cerr << "(RayColliderImp) ERROR called unimplemented method SetParams(" << std::endl;
+	//std::cerr << "(RayColliderImp) ERROR called unimplemented method SetParams(" << std::endl;
 }
 
 long RayColliderImp::CreateRay()
 {
     //dGeomID ODEGeom = dCreateRay(0, 1.0f);
     //return (long) ODEGeom;
-	std::cerr << "(RayColliderImp) ERROR called unimplemented method CreateRay(" << std::endl;
+	//std::cerr << "(RayColliderImp) ERROR called unimplemented method CreateRay(" << std::endl;
     return 0l;
 }

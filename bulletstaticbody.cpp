@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 StaticBodyImp::StaticBodyImp() : BodyImp(){
-	std::cerr << "(StaticBodyImp) ERROR called unimplemented constructor" << std::endl;
+	//std::cerr << "(StaticBodyImp) ERROR called unimplemented constructor" << std::endl;
 }

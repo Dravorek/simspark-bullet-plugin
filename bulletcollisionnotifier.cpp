@@ -16,7 +16,7 @@ void 	BulletCollisionNotifier::updateAction (btCollisionWorld *collisionWorld, b
     //collisions.clear();
 
 
-	std::cerr << "(BulletCollisionNotifier) ERROR called un-finished updateAction()" << std::endl;
+	//std::cerr << "(BulletCollisionNotifier) ERROR called un-finished updateAction()" << std::endl;
 
 	int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
     for (int i=0;i<numManifolds;i++)

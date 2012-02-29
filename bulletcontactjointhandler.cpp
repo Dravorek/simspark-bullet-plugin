@@ -23,7 +23,7 @@
 using namespace oxygen;
 
 ContactJointHandlerImp::ContactJointHandlerImp() : ColliderImp(){
-		//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented constructor" << std::endl;
+		////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 GenericSurfaceParameter* ContactJointHandlerImp::Initialize(){        
@@ -42,7 +42,7 @@ GenericSurfaceParameter* ContactJointHandlerImp::Initialize(){
     //ODESurface->slip2 = 5e-3;
     //
     //return (GenericSurfaceParameter*) ODESurface;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: Initialize(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: Initialize(" << std::endl;
     static GenericSurfaceParameter param;
     return &param;
 }
@@ -51,7 +51,7 @@ BodyInt *ContactJointHandlerImp::RetrieveBody(ColliderInt *geomID){
     //dGeomID ODEGeom = (dGeomID) geomID;
     //dBodyID ODEBody = dGeomGetBody(ODEGeom);
     //return (long) ODEBody;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: RetrieveBody(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: RetrieveBody(" << std::endl;
     return 0;
 }
 
@@ -65,7 +65,7 @@ ContactJointHandlerImp::CreateContactJoint(WorldInt *worldID, PhysicsObjectInt *
     //    (ODEWorld, ODEJointGroup, &ODEContact);
     //    
     //return (long) ODEJoint;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: CreateContactJoint(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: CreateContactJoint(" << std::endl;
     return 0;
 }
 
@@ -75,7 +75,7 @@ void ContactJointHandlerImp::AttachContactJoint(PhysicsObjectInt *jointID, BodyI
     //dBodyID ODEBody2 = (dBodyID) bodyID2;
     //
     //dJointAttach (ODEJoint, ODEBody1, ODEBody2);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: AttachContactJoint(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: AttachContactJoint(" << std::endl;
 }
 
 void 
@@ -87,7 +87,7 @@ ContactJointHandlerImp::CalcSurfaceParam(GenericContact& surface,
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surfacePtr;
     //
     //CalcSurfaceParamInternal(ODEContact.surface, ODEParams, ODESurface);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: CalcSurfaceParam(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: CalcSurfaceParam(" << std::endl;
 }
 
 float
@@ -112,7 +112,7 @@ ContactJointHandlerImp::MixValues(const float v1, const float v2, const int n) c
     //        // both defined, return average
     //        return (v1 + v2) / 2.0f;
     //    }
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: MixValues(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: MixValues(" << std::endl;
     return 0.0f;
 }
 
@@ -212,7 +212,7 @@ ContactJointHandlerImp::GetContactMode(GenericSurfaceParameter* surface) const
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //return ODESurface->mode;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactMode(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactMode(" << std::endl;
     return 0;
 }
     
@@ -221,7 +221,7 @@ ContactJointHandlerImp::SetContactBounceMode(bool set, GenericSurfaceParameter* 
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //SetContactMode(dContactBounce, set, ODESurface);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactBounceMode(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactBounceMode(" << std::endl;
 }
 
 void
@@ -229,7 +229,7 @@ ContactJointHandlerImp::SetMinBounceVel(float vel, GenericSurfaceParameter* surf
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //ODESurface->bounce_vel = std::max<float>(0.0f,vel);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetMinBounceVel(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetMinBounceVel(" << std::endl;
 }
 
 float
@@ -237,7 +237,7 @@ ContactJointHandlerImp::GetMinBounceVel(GenericSurfaceParameter* surface) const
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //return ODESurface->bounce_vel;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetMinBounceVel(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetMinBounceVel(" << std::endl;
     return 0.0f;
 }
 
@@ -246,7 +246,7 @@ ContactJointHandlerImp::SetBounceValue(float bounce, GenericSurfaceParameter* su
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //ODESurface->bounce = std::max<float>(0.0f,bounce);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetBounceValue(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetBounceValue(" << std::endl;
 }
 
 float
@@ -254,7 +254,7 @@ ContactJointHandlerImp::GetBounceValue(GenericSurfaceParameter* surface) const
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //return ODESurface->bounce;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetBounceValue(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetBounceValue(" << std::endl;
     return 0.0f;
 }
 
@@ -263,7 +263,7 @@ ContactJointHandlerImp::SetContactSoftERPMode(bool set, GenericSurfaceParameter*
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //SetContactMode(dContactSoftERP, set, ODESurface);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSoftERPMode(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSoftERPMode(" << std::endl;
 }
 
 void
@@ -272,7 +272,7 @@ ContactJointHandlerImp::SetContactSoftERP(float erp, GenericSurfaceParameter* su
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //salt::gClamp(erp,0.0f,1.0f);
     //ODESurface->soft_erp = erp;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSoftERP(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSoftERP(" << std::endl;
 }
 
 float
@@ -280,7 +280,7 @@ ContactJointHandlerImp::GetContactSoftERP(GenericSurfaceParameter* surface) cons
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //return ODESurface->soft_erp;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactSoftERP(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactSoftERP(" << std::endl;
     return 0.0f;
 }
 
@@ -289,7 +289,7 @@ ContactJointHandlerImp::SetContactSoftCFMMode(bool set, GenericSurfaceParameter*
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //SetContactMode(dContactSoftCFM, set, ODESurface);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSoftCFMMode(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSoftCFMMode(" << std::endl;
 }
 
 void
@@ -297,14 +297,14 @@ ContactJointHandlerImp::SetContactSoftCFM(float cfm, GenericSurfaceParameter* su
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //ODESurface->soft_cfm = std::max<float>(0.0f,cfm);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSoftCFM(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSoftCFM(" << std::endl;
 }
 
 float ContactJointHandlerImp::GetContactSoftCFM(GenericSurfaceParameter* surface) const
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //return ODESurface->soft_cfm;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactSoftCFM(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactSoftCFM(" << std::endl;
     return 0.0f;
 }
 
@@ -313,7 +313,7 @@ void ContactJointHandlerImp::SetContactSlipMode (bool set, GenericSurfaceParamet
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //SetContactMode(dContactSlip1,set,ODESurface);
     //SetContactMode(dContactSlip2,set,ODESurface);
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSlipMode (" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSlipMode (" << std::endl;
 }
 
 void ContactJointHandlerImp::SetContactSlip(float slip, GenericSurfaceParameter* surface)
@@ -321,7 +321,7 @@ void ContactJointHandlerImp::SetContactSlip(float slip, GenericSurfaceParameter*
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //ODESurface->slip1 = slip;
     //ODESurface->slip2 = slip;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSlip(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactSlip(" << std::endl;
 }
 
 float
@@ -329,7 +329,7 @@ ContactJointHandlerImp::GetContactSlip1(GenericSurfaceParameter* surface) const
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //return ODESurface->slip1;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactSlip1(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactSlip1(" << std::endl;
     return 0.0f;
 }
 
@@ -338,7 +338,7 @@ ContactJointHandlerImp::GetContactSlip2(GenericSurfaceParameter* surface) const
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //return ODESurface->slip2;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactSlip2(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactSlip2(" << std::endl;
     return 0.0f;
 }
 
@@ -346,13 +346,13 @@ void ContactJointHandlerImp::SetContactMu(float mu, GenericSurfaceParameter* sur
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //ODESurface->mu = mu;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactMu(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: SetContactMu(" << std::endl;
 }
 
 float ContactJointHandlerImp::GetContactMu(GenericSurfaceParameter* surface) const
 {
     //dSurfaceParameters* ODESurface = (dSurfaceParameters*) surface;
     //return ODESurface->mu;
-	//std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactMu(" << std::endl;
+	////std::cerr << "(ContactJointHandlerImp) ERROR called unimplemented method: GetContactMu(" << std::endl;
     return 0.0f;
 }

@@ -153,8 +153,7 @@ float CapsuleColliderImp::GetPointDepth(const Vector3f& pos)
     //dGeomID ODEGeom = (dGeomID) geomID;
     //return dGeomCapsulePointDepth
     //    (ODEGeom,pos[0],pos[1],pos[2]);
-	std::cerr <<" (SphereColliderImp) ERROR called unimplemented method GetPointDepth()"
-		<< std::endl;
+	//std::cerr <<" (SphereColliderImp) ERROR called unimplemented method GetPointDepth()" << std::endl;
 
 	//:TODO: implement
 	//returning value that's considered to be on the outside, so as not to generate unnessesary collision events

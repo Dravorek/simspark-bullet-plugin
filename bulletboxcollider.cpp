@@ -38,7 +38,7 @@ void BoxColliderImp::SetBoxLengths(const Vector3f& extents)
     //                   extents[1],
     //                   extents[2]
     //                   );
-	std::cout << "RESCALED CUBE"<< std::endl;
+	//std::cout << "RESCALED CUBE"<< std::endl;
 	btBoxShape *shp = (btBoxShape *)geomID;
 	shp->setLocalScaling(btVector3(btScalar(extents.x()),btScalar(extents.y()),btScalar(extents.z())));
 }
@@ -87,7 +87,7 @@ float BoxColliderImp::GetPointDepth(const Vector3f& pos)
     //    (ODEGeom,pos[0],pos[1],pos[2]);
     
 	//TODO: implement
-	std::cerr << "(BoxColliderImp) ERROR called non-implemented function GetPointDepth()" << std::endl;
+	//std::cerr << "(BoxColliderImp) ERROR called non-implemented function GetPointDepth()" << std::endl;
 	//return a value that is considered outside of the Cube
 	return -0.1f;
 }

@@ -27,7 +27,7 @@ using namespace salt;
 
 UniversalJointImp::UniversalJointImp() : Generic6DOFJointImp()
 {
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented constructor" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long UniversalJointImp::CreateUniversalJoint(WorldInt *worldID)
@@ -48,7 +48,7 @@ long UniversalJointImp::CreateUniversalJoint(WorldInt *worldID)
 	jointID = wrp;
 	return reinterpret_cast<long>(wrp);
 	
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: CreateUniversalJoint(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: CreateUniversalJoint(" << std::endl;
     return (long)wrp;
 }
 
@@ -56,7 +56,7 @@ void UniversalJointImp::SetAnchor(const Vector3f& anchor)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAnchor (ODEJoint, anchor[0], anchor[1], anchor[2]);
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
 }
 
 Vector3f UniversalJointImp::GetAnchor1()
@@ -66,7 +66,7 @@ Vector3f UniversalJointImp::GetAnchor1()
     //dJointGetUniversalAnchor(ODEJoint, anchor);
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //return pos;
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
     return Vector3f();
 }
 
@@ -77,7 +77,7 @@ Vector3f UniversalJointImp::GetAnchor2()
     //dJointGetUniversalAnchor2(ODEJoint, anchor);
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //return pos;
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
     return Vector3f();
 }
 
@@ -85,14 +85,14 @@ void UniversalJointImp::SetAxis1(const Vector3f & axis)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAxis1(ODEJoint,axis[0],axis[1],axis[2]);
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAxis1(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAxis1(" << std::endl;
 }
 
 void UniversalJointImp::SetAxis2(const Vector3f & axis)
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //dJointSetUniversalAxis2(ODEJoint,axis[0],axis[1],axis[2]);
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAxis2(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: SetAxis2(" << std::endl;
 }
 
 Vector3f UniversalJointImp::GetAxis1() const
@@ -102,7 +102,7 @@ Vector3f UniversalJointImp::GetAxis1() const
     //dJointGetUniversalAxis1(ODEJoint, axis);
     //Vector3f vec = Vector3f(axis[0],axis[1],axis[2]);
     //return vec;
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAxis1(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAxis1(" << std::endl;
     return Vector3f();
 }
 
@@ -113,7 +113,7 @@ Vector3f UniversalJointImp::GetAxis2() const
     //dJointGetUniversalAxis2(ODEJoint, axis);
     //Vector3f vec = Vector3f(axis[0],axis[1],axis[2]);
     //return vec;
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAxis2(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAxis2(" << std::endl;
     return Vector3f();
 }
 
@@ -121,7 +121,7 @@ float UniversalJointImp::GetAngle1() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle1(ODEJoint));
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngle1(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngle1(" << std::endl;
     return 0.0f;
 }
 
@@ -129,7 +129,7 @@ float UniversalJointImp::GetAngle2() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle2(ODEJoint));
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngle2(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngle2(" << std::endl;
     return 0.0f;
 }
 
@@ -137,7 +137,7 @@ float UniversalJointImp::GetAngleRate1() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle1Rate(ODEJoint));
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngleRate1(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngleRate1(" << std::endl;
     return 0.0f;
 }
 
@@ -145,18 +145,18 @@ float UniversalJointImp::GetAngleRate2() const
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetUniversalAngle2Rate(ODEJoint));
-	std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngleRate2(" << std::endl;
+	//std::cerr << "(UniversalJointImp) ERROR called unimplemented method: GetAngleRate2(" << std::endl;
     return 0.0f;
 }
 
 void UniversalJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
-	std::cout << "hinge2joint attach called" <<std::endl;
+	//std::cout << "hinge2joint attach called" <<std::endl;
 	btJointWrapper *wrap = (btJointWrapper *)jointID;
 	btTypedConstraint *joint = wrap->joint;
 	btHinge2Constraint *hinge = 0;
 	//TODO: connect NULL with another body
 	if(!bodyID1 || !bodyID2){
-		std::cerr << "(BulletJointImp) ERROR can't attach a body to NULL yet" << std::endl;
+		//std::cerr << "(BulletJointImp) ERROR can't attach a body to NULL yet" << std::endl;
 		//return;
 	}
 	btGeom *rbA = bodyID1?static_cast<BodyImp *>(bodyID1)->btID:0;
@@ -202,7 +202,7 @@ void UniversalJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 			trans6.setBasis(trans6.getBasis().transpose());
 			trans5 = trans6 * trans5;
 			
-			//std::cout << "x:" << trans5.getOrigin().x() << std::endl
+			////std::cout << "x:" << trans5.getOrigin().x() << std::endl
 			//	      << " y:" << trans5.getOrigin().y()<< std::endl
 			//	      << " z:" << trans5.getOrigin().z()<< std::endl
 			//	      << " w:" << trans5.getOrigin().w() << std::endl;
@@ -210,7 +210,7 @@ void UniversalJointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 			
 			btScalar yaw, pitch, roll;
 			trans5.getBasis().getEulerYPR(yaw,pitch,roll);
-			//std::cout << "yaw : " << yaw*180.0/M_PI << std::endl
+			////std::cout << "yaw : " << yaw*180.0/M_PI << std::endl
 			//		  << "pitch: " << pitch*180.0/M_PI << std::endl
 			//		  << "roll: " << roll*180.0/M_PI << std::endl;
 			

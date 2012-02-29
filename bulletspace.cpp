@@ -32,7 +32,7 @@ void SpaceImp::collisionNearCallback(void* data, long obj1, long obj2)
 {
     //handled by the narrowphase collision handler which gets called in
     //stepWorld();
-	std::cerr << "(SpaceImp) ERROR called unimplemented method CreateSliderJoint(" << std::endl;
+	//std::cerr << "(SpaceImp) ERROR called unimplemented method CreateSliderJoint(" << std::endl;
 }
 
 SpaceImp::SpaceImp() : PhysicsObjectImp(), innercollision(true), spaceID(0)
@@ -49,7 +49,7 @@ void SpaceImp::Collide2(PhysicsObjectInt *obj1, PhysicsObjectInt *obj2, Space* c
 {
     //gets handled by the broadphase collision handler when
     //stepWorld() gets called
-	std::cerr << "(SpaceImp) ERROR called unimplemented method Collide2(" << std::endl;
+	//std::cerr << "(SpaceImp) ERROR called unimplemented method Collide2(" << std::endl;
 }
 
 SpaceInt *SpaceImp::GetParentSpaceID()
@@ -59,7 +59,7 @@ SpaceInt *SpaceImp::GetParentSpaceID()
     //dSpaceID parentSpace = dGeomGetSpace(SpaceImp);
     //return (long) parentSpace;
     
-	std::cerr << "(SpaceImp) DEBUG getParentSpace() "<< spaceID << std::endl; 
+	//std::cerr << "(SpaceImp) DEBUG getParentSpace() "<< spaceID << std::endl; 
     
 	if(spaceID==1)
 		return 0l;
@@ -68,7 +68,7 @@ SpaceInt *SpaceImp::GetParentSpaceID()
 		if((long)((*it).second)== spaceID)
 			return (SpaceInt *)it->first;
 	}
-	std::cerr << "(SpaceImp) DEBUG top level space found"<< spaceID << std::endl; 
+	//std::cerr << "(SpaceImp) DEBUG top level space found"<< spaceID << std::endl; 
 	return (SpaceInt *)1l;
 }
 
@@ -80,7 +80,7 @@ PhysicsObjectInt *SpaceImp::CreateContactGroup()
     //dJointGroupID ODEContactGroup = dJointGroupCreate(0);
 
     //return (long) ODEContactGroup;
-	std::cerr << "(SpaceImp) ERROR called unimplemented function CreateContactGroup()" << std::endl; 
+	//std::cerr << "(SpaceImp) ERROR called unimplemented function CreateContactGroup()" << std::endl; 
     return reinterpret_cast<PhysicsObjectInt *>(1l);
 }
 
@@ -103,7 +103,7 @@ long SpaceImp::CreateSpace(SpaceInt *spaceID2){
 	//dSpaceID SpaceImp = (dSpaceID) spaceID;
     //dSpaceID CreatedSpace = dHashSpaceCreate(SpaceImp);
     //return (long) CreatedSpace;
-	std::cerr << "(SpaceImp) DEBUG created space:" << newSpace << std::endl; 
+	//std::cerr << "(SpaceImp) DEBUG created space:" << newSpace << std::endl; 
 	spaceID = (long)this;//newSpace;
     return (long)this;
 }
@@ -134,34 +134,32 @@ void SpaceImp::DestroySpace(PhysicsObjectInt *contactGroup)
 	}
 	//delete the children entries
 	spaces.erase(range.first,range.second);
-	std::cerr << "(SpaceImp) DEBUG deleted space:" << spaceID
-		      << "  contact group:" << contactGroup << std::endl; 
+	//std::cerr << "(SpaceImp) DEBUG deleted space:" << spaceID		      << "  contact group:" << contactGroup << std::endl; 
 
 }
 
 bool SpaceImp::ObjectIsSpace(PhysicsObjectInt *objectID){
     //not supported by bullet
 	bool isSpace = spaces.find((int)objectID)!=spaces.end();
-	std::cerr << "(SpaceImp) DEBUG isSpace(" << objectID << ")="
-		      << isSpace << std::endl;
+	//std::cerr << "(SpaceImp) DEBUG isSpace(" << objectID << ")="		      << isSpace << std::endl;
 	return isSpace;
 }
 
 BodyInt *SpaceImp::FetchBody(ColliderInt *geomID){
     //not necessary, as only used by the unsupported Space::Collide()
-    std::cerr << "(SpaceImp) ERROR called unimplemented function FetchBody()" << std::endl; 
+    //std::cerr << "(SpaceImp) ERROR called unimplemented function FetchBody()" << std::endl; 
     return NULL;
 }
 
 SpaceInt *SpaceImp::FetchSpace(PhysicsObjectInt *geomID){
     //not necessary, as only used by the unsupported Space::Collide()
-    std::cerr << "(SpaceImp) ERROR called unimplemented function FetchSpace()" << std::endl; 
+    //std::cerr << "(SpaceImp) ERROR called unimplemented function FetchSpace()" << std::endl; 
     return NULL;
 }
 
 bool SpaceImp::AreConnectedWithJoint(const BodyInt *bodyID1,const  BodyInt *bodyID2){
     //only used by Space::Collide(); so not used in bullet implementation
-    std::cerr << "(SpaceImp) ERROR called unimplemented function AreConnectedWithJoint()" << std::endl; 
+    //std::cerr << "(SpaceImp) ERROR called unimplemented function AreConnectedWithJoint()" << std::endl; 
     return true;
 }
 

@@ -29,7 +29,7 @@ using namespace salt;
 
 Hinge2JointImp::Hinge2JointImp() : Generic6DOFJointImp()
 {
-	std::cerr << "(Hinge2JointImp) ERROR called unimplemented constructor" << std::endl;
+	//std::cerr << "(Hinge2JointImp) ERROR called unimplemented constructor" << std::endl;
 }
 
 long Hinge2JointImp::CreateHinge2Joint(WorldInt *worldID)
@@ -53,7 +53,7 @@ long Hinge2JointImp::CreateHinge2Joint(WorldInt *worldID)
 	jointID = wrp;
 	return reinterpret_cast<long>(wrp);
 	
-	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: CreateHinge2Joint(" << std::endl;
+	//std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: CreateHinge2Joint(" << std::endl;
     return (long)wrp;
 }
 
@@ -65,7 +65,7 @@ void Hinge2JointImp::SetAnchor(const Vector3f& gAnchor,
     //dJointSetHinge2Anchor (ODEJoint, gAnchor[0], gAnchor[1], gAnchor[2]);
     //dJointSetHinge2Axis1(ODEJoint,up[0],up[1],up[2]);
     //dJointSetHinge2Axis2(ODEJoint,right[0],right[1],right[2]);
-	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
+	//std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: SetAnchor(" << std::endl;
 }
 
 Vector3f Hinge2JointImp::GetAnchor1()
@@ -75,7 +75,7 @@ Vector3f Hinge2JointImp::GetAnchor1()
     //dJointGetHinge2Anchor (ODEJoint, anchor);
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //return pos;
-	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
+	//std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAnchor1(" << std::endl;
     return Vector3f();
 }
 
@@ -86,7 +86,7 @@ Vector3f Hinge2JointImp::GetAnchor2()
     //dJointGetHinge2Anchor2(ODEJoint, anchor);
     //Vector3f pos = Vector3f(anchor[0],anchor[1],anchor[2]);
     //return pos;
-	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
+	//std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAnchor2(" << std::endl;
     return Vector3f();
 }
 
@@ -94,7 +94,7 @@ float Hinge2JointImp::GetAngle()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetHinge2Angle1(ODEJoint));
-	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngle(" << std::endl;
+	//std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngle(" << std::endl;
     return 0.0f;
 }
 
@@ -102,7 +102,7 @@ float Hinge2JointImp::GetAngleRate1()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetHinge2Angle1Rate(ODEJoint));
-	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngleRate1(" << std::endl;
+	//std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngleRate1(" << std::endl;
     return 0.0f;
 }
 
@@ -110,18 +110,18 @@ float Hinge2JointImp::GetAngleRate2()
 {
     //dJointID ODEJoint = (dJointID) jointID;
     //return gRadToDeg(dJointGetHinge2Angle2Rate(ODEJoint));
-	std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngleRate2(" << std::endl;
+	//std::cerr << "(Hinge2JointImp) ERROR called unimplemented method: GetAngleRate2(" << std::endl;
     return 0.0f;
 }
 
 void Hinge2JointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
-	std::cout << "hinge2joint attach called" <<std::endl;
+	//std::cout << "hinge2joint attach called" <<std::endl;
 	btJointWrapper *wrap = (btJointWrapper *)jointID;
 	btTypedConstraint *joint = wrap->joint;
 	btHinge2Constraint *hinge = 0;
 	//TODO: connect NULL with another body
 	if(!bodyID1 || !bodyID2){
-		std::cerr << "(Hinge2JointImp) ERROR can't attach a body to NULL yet" << std::endl;
+		//std::cerr << "(Hinge2JointImp) ERROR can't attach a body to NULL yet" << std::endl;
 		//return;
 	}
 	btGeom *rbA = bodyID1?static_cast<BodyImp *>(bodyID1)->btID:0;
@@ -167,7 +167,7 @@ void Hinge2JointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 			trans6.setBasis(trans6.getBasis().transpose());
 			trans5 = trans6 * trans5;
 			
-			//std::cout << "x:" << trans5.getOrigin().x() << std::endl
+			////std::cout << "x:" << trans5.getOrigin().x() << std::endl
 			//	      << " y:" << trans5.getOrigin().y()<< std::endl
 			//	      << " z:" << trans5.getOrigin().z()<< std::endl
 			//	      << " w:" << trans5.getOrigin().w() << std::endl;
@@ -175,7 +175,7 @@ void Hinge2JointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 			
 			btScalar yaw, pitch, roll;
 			trans5.getBasis().getEulerYPR(yaw,pitch,roll);
-			//std::cout << "yaw : " << yaw*180.0/M_PI << std::endl
+			////std::cout << "yaw : " << yaw*180.0/M_PI << std::endl
 			//		  << "pitch: " << pitch*180.0/M_PI << std::endl
 			//		  << "roll: " << roll*180.0/M_PI << std::endl;
 			

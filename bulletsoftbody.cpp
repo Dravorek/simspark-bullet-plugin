@@ -25,5 +25,5 @@
 using namespace oxygen;
 
 SoftBodyImp::SoftBodyImp() : BodyImp(){
-	std::cerr << "(SoftBodyImp) ERROR called unimplemented constructor" << std::endl;
+	//std::cerr << "(SoftBodyImp) ERROR called unimplemented constructor" << std::endl;
 }

@@ -42,7 +42,7 @@ RigidBody* RigidBodyImp::GetBodyPointer()
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		//return 0;
 	}
 	//return static_cast<RigidBody*>(((btRigidBody *)BulletBody->obj)->getUserPointer());
@@ -53,7 +53,7 @@ void RigidBodyImp::Enable()
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
 	btRigidBody *bdy = ((btRigidBody *)BulletBody->obj);
@@ -64,7 +64,7 @@ void RigidBodyImp::Disable()
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
 	btRigidBody *bdy = ((btRigidBody *)BulletBody->obj);
@@ -76,7 +76,7 @@ bool RigidBodyImp::IsEnabled() const
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return true;
 	}
 	return (((btRigidBody *)BulletBody->obj)->isActive());
@@ -88,7 +88,7 @@ void RigidBodyImp::UseGravity(bool f)
     //Also if the gravity from the world should be read
     dBodyID BulletBody = (dBodyID) btID;
 	if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
 	if (f == true)
@@ -122,7 +122,7 @@ bool RigidBodyImp::UsesGravity() const
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return false;
 	}
 	//if the rigid body has the STATIC or KINEMATIC flag
@@ -172,7 +172,7 @@ void RigidBodyImp::DestroyRigidBody()
     //TODO check where the shape gets deleted and delete btGeom there
     dBodyID BulletBody = (dBodyID) btID;
 	if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to delete a CollisionObject as RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to delete a CollisionObject as RigidBody" <<std::endl;
 		return;
 	}
 	if(((btRigidBody *)BulletBody->obj)->getNumConstraintRefs()){
@@ -201,7 +201,7 @@ void RigidBodyImp::BodySetData(RigidBody* rb)
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to set RigidBody userdata on a CollisionObject" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to set RigidBody userdata on a CollisionObject" <<std::endl;
 		return;
 	}
 	userPointer = rb;
@@ -211,10 +211,10 @@ void RigidBodyImp::BodySetData(RigidBody* rb)
 void RigidBodyImp::SetMass(float mass)
 {
     //TODO remove rigid body from world and read it after adjusting mass
-    std::cout << "setting body mass"<< std::endl;
+    //std::cout << "setting body mass"<< std::endl;
 	dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to set mass on a CollisionObject" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to set mass on a CollisionObject" <<std::endl;
 		return;
 	}
 	btVector3 inertia = ((btRigidBody *)BulletBody->obj)->getInvInertiaDiagLocal();
@@ -241,7 +241,7 @@ float RigidBodyImp::GetMass() const
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to get mass from a CollisionObject" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to get mass from a CollisionObject" <<std::endl;
 		return 0.0f;
 	}
     return ((btRigidBody *)BulletBody->obj)->getInvMass()==0
@@ -251,9 +251,9 @@ float RigidBodyImp::GetMass() const
 
 Vector3f RigidBodyImp::AddMass(const btMass& Mass, const Matrix& matrix, Vector3f massTrans)
 {
-	std::cerr << "(RigidBodyImp) ERROR called unimplemented method addMass" << std::endl;
-	std::cerr << "mat:"; matrix.Dump();
-	std::cerr << "vec"; massTrans.Dump();
+	//std::cerr << "(RigidBodyImp) ERROR called unimplemented method addMass" << std::endl;
+	//std::cerr << "mat:"; matrix.Dump();
+	//std::cerr << "vec"; massTrans.Dump();
 
 
     dBodyID BulletBody = (dBodyID) btID;
@@ -566,7 +566,7 @@ Vector3f RigidBodyImp::GetVelocity() const
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to get velocity from a CollisionObject" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to get velocity from a CollisionObject" <<std::endl;
 		return Vector3f(0.0f,0.0f,0.0f);
 	}
 	const btVector3 &vel = ((btRigidBody *)BulletBody->obj)->getLinearVelocity();
@@ -577,7 +577,7 @@ void RigidBodyImp::SetVelocity(const Vector3f& vel)
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to set velocity on a CollisionObject" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to set velocity on a CollisionObject" <<std::endl;
 		return;
 	}
 	((btRigidBody *)BulletBody->obj)->setLinearVelocity( btVector3( btScalar(vel[0]), btScalar(vel[1]), btScalar(vel[2]) ) );
@@ -588,7 +588,7 @@ void RigidBodyImp::SetRotation(const Matrix& rot)
     //TODO: check whether to use MotionStates here instead of getWorldTransform()
     dBodyID BulletBody = (dBodyID) btID;
 	if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
     btTransform BulletMatrix = ((btRigidBody *)BulletBody->obj)->getWorldTransform();
@@ -603,7 +603,7 @@ salt::Matrix RigidBodyImp::GetRotation() const
     //TODO: check whether to use MotionStates here instead of getWorldTransform()
     dBodyID BulletBody = (dBodyID) btID;
 	if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return salt::Matrix();
 	}
     btMatrix3x3 BulletMatrix = ((btRigidBody *)BulletBody->obj)->getWorldTransform().getBasis();
@@ -618,7 +618,7 @@ Vector3f RigidBodyImp::GetLocalAngularVelocity() const
     //TODO: check whether motion states are better
     dBodyID BulletBody = (dBodyID) btID;
 	if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return Vector3f();
 	}
     const btVector3& vel = ((btRigidBody *)BulletBody->obj)->getAngularVelocity();
@@ -633,7 +633,7 @@ Vector3f RigidBodyImp::GetAngularVelocity() const
 {
     dBodyID BulletBody = (dBodyID) btID;
 	if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return Vector3f(0.0f,0.0f,0.0f);
 	}
     const btVector3& vel = ((btRigidBody *)BulletBody->obj)->getAngularVelocity();
@@ -644,7 +644,7 @@ void RigidBodyImp::SetAngularVelocity(const Vector3f& vel)
 {
     dBodyID BulletBody = (dBodyID) btID;
 	if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
     ((btRigidBody *)BulletBody->obj)->setAngularVelocity(btVector3( 
@@ -660,7 +660,7 @@ salt::Matrix RigidBodyImp::GetSynchronisationMatrix()
     //TODO: check whether getWorldTransform or MotionState is better
     dBodyID BulletBody = (dBodyID) btID;
 	if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return salt::Matrix();
 	}
     const btTransform& trans = ((btRigidBody *)BulletBody->obj)->getWorldTransform();
@@ -693,7 +693,7 @@ salt::Matrix RigidBodyImp::GetSynchronisationMatrix()
 RigidBody* RigidBodyImp::BodyGetData()
 {
 	if(!((dBodyID)btID)->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return 0;
 	}
 	return (RigidBody*) userPointer;
@@ -704,7 +704,7 @@ void RigidBodyImp::AddForce(const Vector3f& force)
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
 	((btRigidBody *)BulletBody->obj)->applyCentralForce(btVector3( 
@@ -718,7 +718,7 @@ Vector3f RigidBodyImp::GetForce() const
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return Vector3f();
 	}
 	const btVector3& f = ((btRigidBody *)BulletBody->obj)->getTotalForce();
@@ -729,7 +729,7 @@ void RigidBodyImp::AddTorque(const Vector3f& torque)
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
 	((btRigidBody *)BulletBody->obj)->applyTorque(btVector3( 
@@ -744,7 +744,7 @@ void RigidBodyImp::SetPosition(const Vector3f& pos)
     //TODO: use MotionStates?
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
 	btTransform & trans = ((btRigidBody *)BulletBody->obj)->getWorldTransform();
@@ -765,18 +765,18 @@ void RigidBodyImp::SetPosition(const Vector3f& pos)
 	
 	//// the parent node will be updated in the next physics cycle
 
-	//std::cout << "translated rigidbody"<<std::endl;
+	////std::cout << "translated rigidbody"<<std::endl;
 }
 
 Vector3f RigidBodyImp::GetPosition() const
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return Vector3f();
 	}
 	const btVector3& pos = ((btRigidBody *)BulletBody->obj)->getWorldTransform().getOrigin();
-    std::cout << "X:" << pos.getX() << "Y: " << pos.getY() << "Z:" << pos.getZ() << std::endl;
+    //std::cout << "X:" << pos.getX() << "Y: " << pos.getY() << "Z:" << pos.getZ() << std::endl;
 	return Vector3f(pos.getX(), pos.getY(), pos.getZ());
 }
 
@@ -784,7 +784,7 @@ void RigidBodyImp::TranslateMass(const Vector3f& v)
 {
     dBodyID BulletBody = (dBodyID) btID;
     if(!BulletBody->isRigidBody){
-		std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
+		//std::cerr << "WARNING (BulletRigidBodyImp): tried to treat a CollisionObject as a RigidBody" <<std::endl;
 		return;
 	}
 	//TODO: use native bullet calls instead of the abstract 
