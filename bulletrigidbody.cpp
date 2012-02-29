@@ -377,9 +377,9 @@ void RigidBodyImp::SetMassParameters(const float mass,
 {
     //TODO: apply btMass->transform to the rigid body
     dBodyID BulletBody = (dBodyID) btID;
-    btMass& BulletMass = (btMass&) mass;
+    //btMass& BulletMass = (btMass&) mass;
 
-    this->SetMass(BulletMass.mass);
+    this->SetMass(mass);//BulletMass.mass);
     //dBodySetMass(BulletBody, &ODEMass);
 }
 

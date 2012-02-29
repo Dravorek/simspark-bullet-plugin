@@ -20,8 +20,9 @@
 */
 
 #include "bulletworld.h"
+#include <iostream>
 
-#define  BULLETDEBUG
+//#define  BULLETDEBUG
 //#define BULLET_PARALLEL 1
 
 //using namespace boost;
@@ -298,6 +299,8 @@ float WorldImp::GetCFM() const
 
 void WorldImp::Step(float deltaTime)
 {
+	static int steps = 0;
+	std::cout << "step " << steps++ <<std::endl;
 	btDiscreteDynamicsWorld *WorldImp = worldID;
     WorldImp->stepSimulation(deltaTime,1,1.0/60);
 }

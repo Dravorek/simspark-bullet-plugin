@@ -121,7 +121,7 @@ void Hinge2JointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 	btHinge2Constraint *hinge = 0;
 	//TODO: connect NULL with another body
 	if(!bodyID1 || !bodyID2){
-		std::cerr << "(BulletJointImp) ERROR can't attach a body to NULL yet" << std::endl;
+		std::cerr << "(Hinge2JointImp) ERROR can't attach a body to NULL yet" << std::endl;
 		//return;
 	}
 	btGeom *rbA = bodyID1?static_cast<BodyImp *>(bodyID1)->btID:0;
@@ -198,10 +198,11 @@ void Hinge2JointImp::Attach(BodyInt *bodyID1, BodyInt *bodyID2){
 		}
 		else
 		{
-
-			btRigidBody *rbC = new btRigidBody(0.0,new btDefaultMotionState(rbA->obj->getWorldTransform()),0);
-			rbC->activate(true);
-			rbC->setActivationState(DISABLE_DEACTIVATION);
+			return;
+			//btRigidBody *rbC = new btRigidBody(0.0,new btDefaultMotionState(rbA->obj->getWorldTransform()),0);
+			//rbC->activate(true);
+			//rbC->setActivationState(DISABLE_DEACTIVATION);
+			
 			//hinge = new btHinge2Constraint (*((btRigidBody *)rbA->obj),*rbC,btTransform::getIdentity(),btTransform::getIdentity(),true);
 			//lastWorld->removeRigidBody((btRigidBody *)rbA->obj);
 			//lastWorld->addRigidBody((btRigidBody *)rbA->obj);

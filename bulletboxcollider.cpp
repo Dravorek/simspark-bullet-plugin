@@ -45,8 +45,6 @@ void BoxColliderImp::SetBoxLengths(const Vector3f& extents)
 
 long BoxColliderImp::CreateBox()
 {
-    //dGeomID ODEGeom = dCreateBox (0, 1.0f, 1.0f, 1.0f);
-    //return (long) ODEGeom;
 	btBoxShape * new_shp = new btBoxShape(btVector3(btScalar(0.5f),btScalar(0.5f),btScalar(0.5f)));
 	btCollisionShape* BulletGeom = (btCollisionShape *) new_shp;
     btCollisionObject *obj = new btCollisionObject();
@@ -62,7 +60,6 @@ long BoxColliderImp::CreateBox()
 	geom->wrld = wrld;
 
    collidermap.insert(std::pair<btCollisionShape *, btGeom *>(new_shp,geom));
-	
    geomID = new_shp;
 	return (long)new_shp;
 }

@@ -60,10 +60,8 @@ long SphereColliderImp::CreateSphere()
 	geom->shp=new_shp;
 	geom->wrld = wrld;
 
-
    collidermap.insert(std::pair<btCollisionShape *, btGeom *>(new_shp,geom));
    geomID=new_shp;
-
 	return (long)new_shp;
 }
 
