@@ -1,0 +1,1 @@
+This project aims to integrate bullet-physics into the simspark multi-agent simulation framework. This project is for the testing and unstable phases of the project and will be migrated to the simspark SVN as soon as it has a stable version
